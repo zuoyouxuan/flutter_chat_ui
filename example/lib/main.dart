@@ -46,18 +46,64 @@ class _ChatPageState extends State<ChatPage> {
     _loadMessages();
   }
 
+  bool is_darkMode = true;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Chat(
-          messages: _messages,
-          onAttachmentPressed: _handleAttachmentPressed,
-          onMessageTap: _handleMessageTap,
-          onPreviewDataFetched: _handlePreviewDataFetched,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: true,
-          showUserNames: true,
-          user: _user,
-        ),
+            messages: _messages,
+            onAttachmentPressed: _handleAttachmentPressed,
+            onMessageTap: _handleMessageTap,
+            onPreviewDataFetched: _handlePreviewDataFetched,
+            onSendPressed: _handleSendPressed,
+            showUserAvatars: true,
+            showUserNames: true,
+            tileLayout: true,
+            user: _user,
+            theme: DefaultChatTheme(
+                // deliveredIcon: Icon(
+                //   Icons.double_arrow,
+                //   size: 10,
+                // ),
+                errorIcon: Icon(
+                  Icons.warning,
+                  color: Colors.yellow,
+                ),
+                secondaryColor: is_darkMode
+                    ? const Color.fromRGBO(68, 70, 84, 1)
+                    : Color(0xFFD0E8D7),
+                primaryColor: is_darkMode
+                    ? Color.fromRGBO(52, 53, 65, 1)
+                    : Color.fromRGBO(52, 53, 65, 1),
+                backgroundColor: Color.fromRGBO(52, 53, 65, 1),
+                receivedMessageBodyTextStyle: TextStyle(
+                  color: is_darkMode ? Color(0xFFE4E2E6) : Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  height: 1.5,
+                ),
+                sentMessageBodyTextStyle: TextStyle(
+                  color: is_darkMode ? Colors.white : Colors.black87,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  height: 1.5,
+                ),
+                inputContainerDecoration: BoxDecoration(
+                    // gradient: LinearGradient(colors: [Colors.grey, Colors.white]), //背景渐变
+                    // borderRadius: BorderRadius.circular(0),
+                    border: Border(
+                        top: BorderSide(
+                            color: is_darkMode
+                                ? const Color(0xFF1D1E2C)
+                                : Color(0xFFE4E2E6)))),
+                messageBorderRadius: 10,
+                messageInsetsHorizontal: 20,
+                messageInsetsVertical: 12,
+                inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
+                inputTextColor:
+                    is_darkMode ? const Color(0xFFFFFFFF) : Color(0xFF1D1E2C),
+                inputBackgroundColor:
+                    is_darkMode ? Color(0xFF1B1B1F) : Color(0xFFFFFFFF),
+                inputBorderRadius: const BorderRadius.all(Radius.circular(0)))),
       );
 
   void _addMessage(types.Message message) {

@@ -11,21 +11,21 @@ import 'typing_indicator.dart';
 /// Animated list that handles automatic animations and pagination.
 class ChatList extends StatefulWidget {
   /// Creates a chat list widget.
-  const ChatList({
-    super.key,
-    this.bottomWidget,
-    required this.bubbleRtlAlignment,
-    this.isLastPage,
-    required this.itemBuilder,
-    required this.items,
-    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    this.onEndReached,
-    this.onEndReachedThreshold,
-    required this.scrollController,
-    this.scrollPhysics,
-    this.typingIndicatorOptions,
-    required this.useTopSafeAreaInset,
-  });
+  const ChatList(
+      {super.key,
+      this.bottomWidget,
+      required this.bubbleRtlAlignment,
+      this.isLastPage,
+      required this.itemBuilder,
+      required this.items,
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.onEndReached,
+      this.onEndReachedThreshold,
+      required this.scrollController,
+      this.scrollPhysics,
+      this.typingIndicatorOptions,
+      required this.useTopSafeAreaInset,
+      required this.tileLayout});
 
   /// A custom widget at the bottom of the list.
   final Widget? bottomWidget;
@@ -72,6 +72,8 @@ class ChatList extends StatefulWidget {
 
   /// Whether to use top safe area inset for the list.
   final bool useTopSafeAreaInset;
+
+  final bool tileLayout;
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -164,7 +166,7 @@ class _ChatListState extends State<ChatList>
             if (widget.bottomWidget != null)
               SliverToBoxAdapter(child: widget.bottomWidget),
             SliverPadding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
               sliver: SliverToBoxAdapter(
                 child: widget.typingIndicatorOptions?.customTypingIndicator ??
                     TypingIndicator(
@@ -177,7 +179,7 @@ class _ChatListState extends State<ChatList>
               ),
             ),
             SliverPadding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
               sliver: PatchedSliverAnimatedList(
                 findChildIndexCallback: (Key key) {
                   if (key is ValueKey<Object>) {
@@ -198,7 +200,7 @@ class _ChatListState extends State<ChatList>
             ),
             SliverPadding(
               padding: EdgeInsets.only(
-                top: 16 +
+                top: (widget.tileLayout ? 2 : 16) +
                     (widget.useTopSafeAreaInset
                         ? MediaQuery.of(context).padding.top
                         : 0),

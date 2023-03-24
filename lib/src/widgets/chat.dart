@@ -19,6 +19,7 @@ import 'chat_list.dart';
 import 'image_gallery.dart';
 import 'input/input.dart';
 import 'message/message.dart';
+import 'message/message_tile.dart';
 import 'message/system_message.dart';
 import 'message/text_message.dart';
 import 'state/inherited_chat_theme.dart';
@@ -31,71 +32,71 @@ import 'unread_header.dart';
 /// it should be full screen, set [SafeArea]'s `bottom` to `false`.
 class Chat extends StatefulWidget {
   /// Creates a chat widget.
-  const Chat({
-    super.key,
-    this.audioMessageBuilder,
-    this.avatarBuilder,
-    this.bubbleBuilder,
-    this.bubbleRtlAlignment = BubbleRtlAlignment.right,
-    this.customBottomWidget,
-    this.customDateHeaderText,
-    this.customMessageBuilder,
-    this.customStatusBuilder,
-    this.dateFormat,
-    this.dateHeaderBuilder,
-    this.dateHeaderThreshold = 900000,
-    this.dateIsUtc = false,
-    this.dateLocale,
-    this.disableImageGallery,
-    this.emojiEnlargementBehavior = EmojiEnlargementBehavior.multi,
-    this.emptyState,
-    this.fileMessageBuilder,
-    this.groupMessagesThreshold = 60000,
-    this.hideBackgroundOnEmojiMessages = true,
-    this.imageGalleryOptions = const ImageGalleryOptions(
-      maxScale: PhotoViewComputedScale.covered,
-      minScale: PhotoViewComputedScale.contained,
-    ),
-    this.imageHeaders,
-    this.imageMessageBuilder,
-    this.inputOptions = const InputOptions(),
-    this.isAttachmentUploading,
-    this.isLastPage,
-    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    this.l10n = const ChatL10nEn(),
-    this.listBottomWidget,
-    required this.messages,
-    this.nameBuilder,
-    this.onAttachmentPressed,
-    this.onAvatarTap,
-    this.onBackgroundTap,
-    this.onEndReached,
-    this.onEndReachedThreshold,
-    this.onMessageDoubleTap,
-    this.onMessageLongPress,
-    this.onMessageStatusLongPress,
-    this.onMessageStatusTap,
-    this.onMessageTap,
-    this.onMessageVisibilityChanged,
-    this.onPreviewDataFetched,
-    required this.onSendPressed,
-    this.scrollController,
-    this.scrollPhysics,
-    this.scrollToUnreadOptions = const ScrollToUnreadOptions(),
-    this.showUserAvatars = false,
-    this.showUserNames = false,
-    this.systemMessageBuilder,
-    this.textMessageBuilder,
-    this.textMessageOptions = const TextMessageOptions(),
-    this.theme = const DefaultChatTheme(),
-    this.timeFormat,
-    this.typingIndicatorOptions = const TypingIndicatorOptions(),
-    this.usePreviewData = true,
-    required this.user,
-    this.userAgent,
-    this.useTopSafeAreaInset,
-    this.videoMessageBuilder,
-  });
+  const Chat(
+      {super.key,
+      this.audioMessageBuilder,
+      this.avatarBuilder,
+      this.bubbleBuilder,
+      this.bubbleRtlAlignment = BubbleRtlAlignment.right,
+      this.customBottomWidget,
+      this.customDateHeaderText,
+      this.customMessageBuilder,
+      this.customStatusBuilder,
+      this.dateFormat,
+      this.dateHeaderBuilder,
+      this.dateHeaderThreshold = 900000,
+      this.dateIsUtc = false,
+      this.dateLocale,
+      this.disableImageGallery,
+      this.emojiEnlargementBehavior = EmojiEnlargementBehavior.multi,
+      this.emptyState,
+      this.fileMessageBuilder,
+      this.groupMessagesThreshold = 60000,
+      this.hideBackgroundOnEmojiMessages = true,
+      this.imageGalleryOptions = const ImageGalleryOptions(
+        maxScale: PhotoViewComputedScale.covered,
+        minScale: PhotoViewComputedScale.contained,
+      ),
+      this.imageHeaders,
+      this.imageMessageBuilder,
+      this.inputOptions = const InputOptions(),
+      this.isAttachmentUploading,
+      this.isLastPage,
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.l10n = const ChatL10nEn(),
+      this.listBottomWidget,
+      required this.messages,
+      this.nameBuilder,
+      this.onAttachmentPressed,
+      this.onAvatarTap,
+      this.onBackgroundTap,
+      this.onEndReached,
+      this.onEndReachedThreshold,
+      this.onMessageDoubleTap,
+      this.onMessageLongPress,
+      this.onMessageStatusLongPress,
+      this.onMessageStatusTap,
+      this.onMessageTap,
+      this.onMessageVisibilityChanged,
+      this.onPreviewDataFetched,
+      required this.onSendPressed,
+      this.scrollController,
+      this.scrollPhysics,
+      this.scrollToUnreadOptions = const ScrollToUnreadOptions(),
+      this.showUserAvatars = false,
+      this.showUserNames = false,
+      this.systemMessageBuilder,
+      this.textMessageBuilder,
+      this.textMessageOptions = const TextMessageOptions(),
+      this.theme = const DefaultChatTheme(),
+      this.timeFormat,
+      this.typingIndicatorOptions = const TypingIndicatorOptions(),
+      this.usePreviewData = true,
+      required this.user,
+      this.userAgent,
+      this.useTopSafeAreaInset,
+      this.videoMessageBuilder,
+      this.tileLayout = false});
 
   /// See [Message.audioMessageBuilder].
   final Widget Function(types.AudioMessage, {required int messageWidth})?
@@ -273,6 +274,7 @@ class Chat extends StatefulWidget {
 
   /// See [Message.showUserAvatars].
   final bool showUserAvatars;
+  final bool tileLayout;
 
   /// Show user names for received messages. Useful for a group chat. Will be
   /// shown only on text messages.
@@ -355,19 +357,17 @@ class ChatState extends State<Chat> {
     super.didUpdateWidget(oldWidget);
 
     if (widget.messages.isNotEmpty) {
-      final result = calculateChatMessages(
-        widget.messages,
-        widget.user,
-        customDateHeaderText: widget.customDateHeaderText,
-        dateFormat: widget.dateFormat,
-        dateHeaderThreshold: widget.dateHeaderThreshold,
-        dateIsUtc: widget.dateIsUtc,
-        dateLocale: widget.dateLocale,
-        groupMessagesThreshold: widget.groupMessagesThreshold,
-        lastReadMessageId: widget.scrollToUnreadOptions.lastReadMessageId,
-        showUserNames: widget.showUserNames,
-        timeFormat: widget.timeFormat,
-      );
+      final result = calculateChatMessages(widget.messages, widget.user,
+          customDateHeaderText: widget.customDateHeaderText,
+          dateFormat: widget.dateFormat,
+          dateHeaderThreshold: widget.dateHeaderThreshold,
+          dateIsUtc: widget.dateIsUtc,
+          dateLocale: widget.dateLocale,
+          groupMessagesThreshold: widget.groupMessagesThreshold,
+          lastReadMessageId: widget.scrollToUnreadOptions.lastReadMessageId,
+          showUserNames: widget.showUserNames,
+          timeFormat: widget.timeFormat,
+          tileLayout: widget.tileLayout);
 
       _chatMessages = result[0] as List<Object>;
       _gallery = result[1] as List<PreviewImage>;
@@ -431,6 +431,7 @@ class ChatState extends State<Chat> {
                                     BoxConstraints constraints,
                                   ) =>
                                       ChatList(
+                                    tileLayout: widget.tileLayout,
                                     bottomWidget: widget.listBottomWidget,
                                     bubbleRtlAlignment:
                                         widget.bubbleRtlAlignment!,
@@ -554,47 +555,91 @@ class ChatState extends State<Chat> {
                 ? min(constraints.maxWidth * 0.72, 440).floor()
                 : min(constraints.maxWidth * 0.78, 440).floor();
 
-        messageWidget = Message(
-          audioMessageBuilder: widget.audioMessageBuilder,
-          avatarBuilder: widget.avatarBuilder,
-          bubbleBuilder: widget.bubbleBuilder,
-          bubbleRtlAlignment: widget.bubbleRtlAlignment,
-          customMessageBuilder: widget.customMessageBuilder,
-          customStatusBuilder: widget.customStatusBuilder,
-          emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
-          fileMessageBuilder: widget.fileMessageBuilder,
-          hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
-          imageHeaders: widget.imageHeaders,
-          imageMessageBuilder: widget.imageMessageBuilder,
-          message: message,
-          messageWidth: messageWidth,
-          nameBuilder: widget.nameBuilder,
-          onAvatarTap: widget.onAvatarTap,
-          onMessageDoubleTap: widget.onMessageDoubleTap,
-          onMessageLongPress: widget.onMessageLongPress,
-          onMessageStatusLongPress: widget.onMessageStatusLongPress,
-          onMessageStatusTap: widget.onMessageStatusTap,
-          onMessageTap: (context, tappedMessage) {
-            if (tappedMessage is types.ImageMessage &&
-                widget.disableImageGallery != true) {
-              _onImagePressed(tappedMessage);
-            }
+        messageWidget = widget.tileLayout
+            ? TileMessage(
+                audioMessageBuilder: widget.audioMessageBuilder,
+                avatarBuilder: widget.avatarBuilder,
+                bubbleBuilder: widget.bubbleBuilder,
+                bubbleRtlAlignment: widget.bubbleRtlAlignment,
+                customMessageBuilder: widget.customMessageBuilder,
+                customStatusBuilder: widget.customStatusBuilder,
+                emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
+                fileMessageBuilder: widget.fileMessageBuilder,
+                hideBackgroundOnEmojiMessages:
+                    widget.hideBackgroundOnEmojiMessages,
+                imageHeaders: widget.imageHeaders,
+                imageMessageBuilder: widget.imageMessageBuilder,
+                message: message,
+                messageWidth: messageWidth,
+                nameBuilder: widget.nameBuilder,
+                onAvatarTap: widget.onAvatarTap,
+                onMessageDoubleTap: widget.onMessageDoubleTap,
+                onMessageLongPress: widget.onMessageLongPress,
+                onMessageStatusLongPress: widget.onMessageStatusLongPress,
+                onMessageStatusTap: widget.onMessageStatusTap,
+                onMessageTap: (context, tappedMessage) {
+                  if (tappedMessage is types.ImageMessage &&
+                      widget.disableImageGallery != true) {
+                    _onImagePressed(tappedMessage);
+                  }
 
-            widget.onMessageTap?.call(context, tappedMessage);
-          },
-          onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-          onPreviewDataFetched: _onPreviewDataFetched,
-          roundBorder: map['nextMessageInGroup'] == true,
-          showAvatar: map['nextMessageInGroup'] == false,
-          showName: map['showName'] == true,
-          showStatus: map['showStatus'] == true,
-          showUserAvatars: widget.showUserAvatars,
-          textMessageBuilder: widget.textMessageBuilder,
-          textMessageOptions: widget.textMessageOptions,
-          usePreviewData: widget.usePreviewData,
-          userAgent: widget.userAgent,
-          videoMessageBuilder: widget.videoMessageBuilder,
-        );
+                  widget.onMessageTap?.call(context, tappedMessage);
+                },
+                onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
+                onPreviewDataFetched: _onPreviewDataFetched,
+                roundBorder: map['nextMessageInGroup'] == true,
+                showAvatar: map['nextMessageInGroup'] == false,
+                showName: map['showName'] == true,
+                showStatus: map['showStatus'] == true,
+                showUserAvatars: widget.showUserAvatars,
+                textMessageBuilder: widget.textMessageBuilder,
+                textMessageOptions: widget.textMessageOptions,
+                usePreviewData: widget.usePreviewData,
+                userAgent: widget.userAgent,
+                videoMessageBuilder: widget.videoMessageBuilder,
+              )
+            : Message(
+                audioMessageBuilder: widget.audioMessageBuilder,
+                avatarBuilder: widget.avatarBuilder,
+                bubbleBuilder: widget.bubbleBuilder,
+                bubbleRtlAlignment: widget.bubbleRtlAlignment,
+                customMessageBuilder: widget.customMessageBuilder,
+                customStatusBuilder: widget.customStatusBuilder,
+                emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
+                fileMessageBuilder: widget.fileMessageBuilder,
+                hideBackgroundOnEmojiMessages:
+                    widget.hideBackgroundOnEmojiMessages,
+                imageHeaders: widget.imageHeaders,
+                imageMessageBuilder: widget.imageMessageBuilder,
+                message: message,
+                messageWidth: messageWidth,
+                nameBuilder: widget.nameBuilder,
+                onAvatarTap: widget.onAvatarTap,
+                onMessageDoubleTap: widget.onMessageDoubleTap,
+                onMessageLongPress: widget.onMessageLongPress,
+                onMessageStatusLongPress: widget.onMessageStatusLongPress,
+                onMessageStatusTap: widget.onMessageStatusTap,
+                onMessageTap: (context, tappedMessage) {
+                  if (tappedMessage is types.ImageMessage &&
+                      widget.disableImageGallery != true) {
+                    _onImagePressed(tappedMessage);
+                  }
+
+                  widget.onMessageTap?.call(context, tappedMessage);
+                },
+                onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
+                onPreviewDataFetched: _onPreviewDataFetched,
+                roundBorder: map['nextMessageInGroup'] == true,
+                showAvatar: map['nextMessageInGroup'] == false,
+                showName: map['showName'] == true,
+                showStatus: map['showStatus'] == true,
+                showUserAvatars: widget.showUserAvatars,
+                textMessageBuilder: widget.textMessageBuilder,
+                textMessageOptions: widget.textMessageOptions,
+                usePreviewData: widget.usePreviewData,
+                userAgent: widget.userAgent,
+                videoMessageBuilder: widget.videoMessageBuilder,
+              );
       }
 
       return AutoScrollTag(
