@@ -103,18 +103,17 @@ final isMobile = defaultTargetPlatform == TargetPlatform.android ||
 /// Parses provided messages to chat messages (with headers and spacers)
 /// and returns them with a gallery.
 List<Object> calculateChatMessages(
-  List<types.Message> messages,
-  types.User user, {
-  String Function(DateTime)? customDateHeaderText,
-  DateFormat? dateFormat,
-  required int dateHeaderThreshold,
-  bool dateIsUtc = false,
-  String? dateLocale,
-  required int groupMessagesThreshold,
-  String? lastReadMessageId,
-  required bool showUserNames,
-  DateFormat? timeFormat,
-}) {
+    List<types.Message> messages, types.User user,
+    {String Function(DateTime)? customDateHeaderText,
+    DateFormat? dateFormat,
+    required int dateHeaderThreshold,
+    bool dateIsUtc = false,
+    String? dateLocale,
+    required int groupMessagesThreshold,
+    String? lastReadMessageId,
+    required bool showUserNames,
+    DateFormat? timeFormat,
+    required bool tileLayout}) {
   final chatMessages = <Object>[];
   final gallery = <PreviewImage>[];
 
@@ -135,7 +134,7 @@ List<Object> calculateChatMessages(
     var nextMessageInGroup = false;
     var showName = false;
 
-    if (showUserNames) {
+    if (showUserNames && !tileLayout) {
       final previousMessage = isFirst ? null : messages[i + 1];
 
       final isFirstInGroup = notMyMessage &&
@@ -160,7 +159,7 @@ List<Object> calculateChatMessages(
       }
     }
 
-    if (messageHasCreatedAt && nextMessageHasCreatedAt) {
+    if (messageHasCreatedAt && nextMessageHasCreatedAt && !tileLayout) {
       nextMessageDateThreshold =
           nextMessage!.createdAt! - message.createdAt! >= dateHeaderThreshold;
 
@@ -178,7 +177,7 @@ List<Object> calculateChatMessages(
           nextMessage.createdAt! - message.createdAt! <= groupMessagesThreshold;
     }
 
-    if (isFirst && messageHasCreatedAt) {
+    if (isFirst && messageHasCreatedAt && !tileLayout) {
       chatMessages.insert(
         0,
         DateHeader(
@@ -213,7 +212,9 @@ List<Object> calculateChatMessages(
       'showStatus': message.showStatus ?? true,
     });
 
-    if (!nextMessageInGroup && message.type != types.MessageType.system) {
+    if (!nextMessageInGroup &&
+        message.type != types.MessageType.system &&
+        !tileLayout) {
       chatMessages.insert(
         0,
         MessageSpacer(
@@ -223,7 +224,7 @@ List<Object> calculateChatMessages(
       );
     }
 
-    if (nextMessageDifferentDay || nextMessageDateThreshold) {
+    if ((nextMessageDifferentDay || nextMessageDateThreshold) && !tileLayout) {
       chatMessages.insert(
         0,
         DateHeader(

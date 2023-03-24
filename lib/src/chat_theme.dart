@@ -56,6 +56,7 @@ const secondaryDark = Color(0xff2b2250);
 abstract class ChatTheme {
   /// Creates a new chat theme based on provided colors and text styles.
   const ChatTheme({
+    required this.messageBorderColor,
     required this.attachmentButtonIcon,
     required this.attachmentButtonMargin,
     required this.backgroundColor,
@@ -289,6 +290,8 @@ abstract class ChatTheme {
 
   /// User names text style. Color will be overwritten with [userAvatarNameColors].
   final TextStyle userNameTextStyle;
+
+  final Color messageBorderColor;
 }
 
 /// Default chat theme which extends [ChatTheme].
@@ -445,6 +448,7 @@ class DefaultChatTheme extends ChatTheme {
       ),
     ),
     super.userAvatarImageBackgroundColor = Colors.transparent,
+    super.messageBorderColor = const Color.fromRGBO(32, 33, 35, .5),
     super.userAvatarNameColors = colors,
     super.userAvatarTextStyle = const TextStyle(
       color: neutral7,
@@ -614,6 +618,7 @@ class DarkChatTheme extends ChatTheme {
       ),
     ),
     super.userAvatarImageBackgroundColor = Colors.transparent,
+    super.messageBorderColor = const Color.fromRGBO(32, 33, 35, .5),
     super.userAvatarNameColors = colors,
     super.userAvatarTextStyle = const TextStyle(
       color: neutral7,
