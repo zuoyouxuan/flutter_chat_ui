@@ -222,7 +222,7 @@ class TextMessageText extends StatelessWidget {
     // text = text.substring(0, text.length - 2);
     // }
     return CodeBox(
-      codeText: text.replaceAll('`', '').replaceFirst('\n', ''),
+      codeText: text.replaceAll('\n\n', '\n'),
       theme: 'atom-one-dark',
       language: 'python',
     );
