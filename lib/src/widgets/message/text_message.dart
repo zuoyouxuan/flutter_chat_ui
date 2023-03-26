@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flutter_chat_ui/src/widgets/message/code_box.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
@@ -211,28 +210,6 @@ class TextMessageText extends StatelessWidget {
   /// Text that is shown as markdown.
   final String text;
 
-  Widget codeText({
-    required String text,
-    required String pattern,
-  }) {
-    text = text.replaceAll('`', '').replaceFirst('\n', '');
-    // print(text.endsWith('\n'));
-    // if (text.endsWith('\n')) {
-    // text = text.substring(0, text.length - 2);
-    // }
-    return CodeBox(
-      codeText: text.replaceAll('\n\n', '\n'),
-      theme: 'atom-one-dark',
-      language: 'python',
-    );
-    //
-    // return CodeField(
-    //   readOnly: true,
-    //   lineNumbers: false,
-    //   controller: _codeController!,
-    //   textStyle: TextStyle(fontFamily: 'SourceCode'),
-    // );
-  }
   //
   // Widget _buildCodeField(CodeController _codeController) {
   //   return CodeField(
@@ -323,19 +300,19 @@ class TextMessageText extends StatelessWidget {
         //     ),
         //   },
         // ),
-        MatchText(
-          pattern: PatternStyle.code.pattern,
-          renderWidget: codeText,
-          onTap: (String text) => {},
-          style:
-              codeTextStyle ?? bodyTextStyle.merge(PatternStyle.code.textStyle),
-          // renderText: ({required String str, required String pattern}) => {
-          //   'display': str.replaceAll(
-          //     PatternStyle.code.from,
-          //     PatternStyle.code.replace,
-          //   ),
-          // },
-        ),
+        // MatchText(
+        //   pattern: PatternStyle.code.pattern,
+        //   renderWidget: codeText,
+        //   onTap: (String text) => {},
+        //   style:
+        //       codeTextStyle ?? bodyTextStyle.merge(PatternStyle.code.textStyle),
+        //   // renderText: ({required String str, required String pattern}) => {
+        //   //   'display': str.replaceAll(
+        //   //     PatternStyle.code.from,
+        //   //     PatternStyle.code.replace,
+        //   //   ),
+        //   // },
+        // ),
       ],
       maxLines: maxLines,
       overflow: overflow,
