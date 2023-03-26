@@ -170,6 +170,16 @@ class TileTextMessage extends StatelessWidget {
             SizedBox(
               width: 10,
             ),
+            // Expanded(
+            //     child: MarkdownBody(
+            //   styleSheetTheme: MarkdownStyleSheetBaseTheme.material,
+            //   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
+            //   data: message.text,
+            //   shrinkWrap: true,
+            //   selectable: true,
+            //   // softLineBreak: true,
+            // )),
+            //
             Flexible(
               child: Column(
                 children: [

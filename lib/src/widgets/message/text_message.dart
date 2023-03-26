@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_chat_ui/src/widgets/message/code_box.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../models/emoji_enlargement_behavior.dart';
-import '../../models/pattern_style.dart';
-import '../../util.dart';
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
-import 'user_name.dart';
 
 /// A class that represents text message widget with optional link preview.
 class TextMessage extends StatelessWidget {
@@ -213,101 +211,159 @@ class TextMessageText extends StatelessWidget {
   /// Text that is shown as markdown.
   final String text;
 
+  Widget codeText({
+    required String text,
+    required String pattern,
+  }) {
+    //
+    // CodeController _codeController = CodeController(
+    //   text: text.replaceAll('`', ''),
+    //   patternMap: {
+    //     r"\B#[a-zA-Z0-9]+\b": TextStyle(color: Colors.red),
+    //     r"\B@[a-zA-Z0-9]+\b": TextStyle(
+    //       fontWeight: FontWeight.w800,
+    //       color: Colors.blue,
+    //     ),
+    //     r"\B![a-zA-Z0-9]+\b":
+    //         TextStyle(color: Colors.yellow, fontStyle: FontStyle.italic),
+    //   },
+    //   stringMap: {
+    //     "bev": TextStyle(color: Colors.indigo),
+    //   },
+    //   language: allLanguages['dart'],
+    // );
+    // final styles = CODE_THEMES['idea'];
+    //
+    // if (styles == null) {
+    //   return _buildCodeField(_codeController);
+    // }
+
+    return CodeBox(
+      codeText: text.replaceAll('`', ''),
+      theme: 'atom-one-dark',
+      language: 'python',
+    );
+    //
+    // return CodeField(
+    //   readOnly: true,
+    //   lineNumbers: false,
+    //   controller: _codeController!,
+    //   textStyle: TextStyle(fontFamily: 'SourceCode'),
+    // );
+  }
+  //
+  // Widget _buildCodeField(CodeController _codeController) {
+  //   return CodeField(
+  //     readOnly: true,
+  //     lineNumbers: false,
+  //     controller: _codeController!,
+  //     textStyle: TextStyle(fontFamily: 'SourceCode'),
+  //   );
+  // }
+
   @override
-  Widget build(BuildContext context) => ParsedText(
-        parse: [
-          ...options.matchers,
-          MatchText(
-            onTap: (mail) async {
-              final url = Uri(scheme: 'mailto', path: mail);
-              if (await canLaunchUrl(url)) {
-                await launchUrl(url);
-              }
-            },
-            pattern: regexEmail,
-            style: bodyLinkTextStyle ??
-                bodyTextStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
-          MatchText(
-            onTap: (urlText) async {
-              final protocolIdentifierRegex = RegExp(
-                r'^((http|ftp|https):\/\/)',
-                caseSensitive: false,
-              );
-              if (!urlText.startsWith(protocolIdentifierRegex)) {
-                urlText = 'https://$urlText';
-              }
-              if (options.onLinkPressed != null) {
-                options.onLinkPressed!(urlText);
-              } else {
-                final url = Uri.tryParse(urlText);
-                if (url != null && await canLaunchUrl(url)) {
-                  await launchUrl(
-                    url,
-                    mode: LaunchMode.externalApplication,
-                  );
-                }
-              }
-            },
-            pattern: regexLink,
-            style: bodyLinkTextStyle ??
-                bodyTextStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
-          MatchText(
-            pattern: PatternStyle.bold.pattern,
-            style: boldTextStyle ??
-                bodyTextStyle.merge(PatternStyle.bold.textStyle),
-            renderText: ({required String str, required String pattern}) => {
-              'display': str.replaceAll(
-                PatternStyle.bold.from,
-                PatternStyle.bold.replace,
+  Widget build(BuildContext context) {
+    options.matchers.forEach((element) {
+      print(element.pattern);
+    });
+
+    return ParsedText(
+      parse: [
+        ...options.matchers,
+        MatchText(
+          onTap: (mail) async {
+            final url = Uri(scheme: 'mailto', path: mail);
+            if (await canLaunchUrl(url)) {
+              await launchUrl(url);
+            }
+          },
+          pattern: regexEmail,
+          style: bodyLinkTextStyle ??
+              bodyTextStyle.copyWith(
+                decoration: TextDecoration.underline,
               ),
-            },
-          ),
-          MatchText(
-            pattern: PatternStyle.italic.pattern,
-            style: bodyTextStyle.merge(PatternStyle.italic.textStyle),
-            renderText: ({required String str, required String pattern}) => {
-              'display': str.replaceAll(
-                PatternStyle.italic.from,
-                PatternStyle.italic.replace,
-              ),
-            },
-          ),
-          MatchText(
-            pattern: PatternStyle.lineThrough.pattern,
-            style: bodyTextStyle.merge(PatternStyle.lineThrough.textStyle),
-            renderText: ({required String str, required String pattern}) => {
-              'display': str.replaceAll(
-                PatternStyle.lineThrough.from,
-                PatternStyle.lineThrough.replace,
-              ),
-            },
-          ),
-          MatchText(
-            pattern: PatternStyle.code.pattern,
-            style: codeTextStyle ??
-                bodyTextStyle.merge(PatternStyle.code.textStyle),
-            renderText: ({required String str, required String pattern}) => {
-              'display': str.replaceAll(
-                PatternStyle.code.from,
-                PatternStyle.code.replace,
-              ),
-            },
-          ),
-        ],
-        maxLines: maxLines,
-        overflow: overflow,
-        regexOptions: const RegexOptions(multiLine: true, dotAll: true),
-        selectable: options.isTextSelectable,
-        style: bodyTextStyle,
-        text: text,
-        textWidthBasis: TextWidthBasis.longestLine,
-      );
+        ),
+        // MatchText(
+        //   onTap: (urlText) async {
+        //     final protocolIdentifierRegex = RegExp(
+        //       r'^((http|ftp|https):\/\/)',
+        //       caseSensitive: false,
+        //     );
+        //     if (!urlText.startsWith(protocolIdentifierRegex)) {
+        //       urlText = 'https://$urlText';
+        //     }
+        //     if (options.onLinkPressed != null) {
+        //       options.onLinkPressed!(urlText);
+        //     } else {
+        //       final url = Uri.tryParse(urlText);
+        //       if (url != null && await canLaunchUrl(url)) {
+        //         await launchUrl(
+        //           url,
+        //           mode: LaunchMode.externalApplication,
+        //         );
+        //       }
+        //     }
+        //   },
+        //   pattern: regexLink,
+        //   style: bodyLinkTextStyle ??
+        //       bodyTextStyle.copyWith(
+        //         decoration: TextDecoration.underline,
+        //       ),
+        // ),
+        MatchText(
+          pattern: PatternStyle.bold.pattern,
+          style:
+              boldTextStyle ?? bodyTextStyle.merge(PatternStyle.bold.textStyle),
+          renderText: ({required String str, required String pattern}) => {
+            'display': str.replaceAll(
+              PatternStyle.bold.from,
+              PatternStyle.bold.replace,
+            ),
+          },
+        ),
+        // MatchText(
+        //   pattern: PatternStyle.italic.pattern,
+        //   style: bodyTextStyle.merge(PatternStyle.italic.textStyle),
+        //   renderText: ({required String str, required String pattern}) => {
+        //     'display': str.replaceAll(
+        //       PatternStyle.italic.from,
+        //       PatternStyle.italic.replace,
+        //     ),
+        //   },
+        // ),
+        // MatchText(
+        //   pattern: PatternStyle.lineThrough.pattern,
+        //   style: bodyTextStyle.merge(PatternStyle.lineThrough.textStyle),
+        //   renderText: ({required String str, required String pattern}) => {
+        //     'display': str.replaceAll(
+        //       PatternStyle.lineThrough.from,
+        //       PatternStyle.lineThrough.replace,
+        //     ),
+        //   },
+        // ),
+        MatchText(
+          pattern: PatternStyle.code.pattern,
+          renderWidget: codeText,
+          onTap: (String text) => {},
+          style:
+              codeTextStyle ?? bodyTextStyle.merge(PatternStyle.code.textStyle),
+          // renderText: ({required String str, required String pattern}) => {
+          //   'display': str.replaceAll(
+          //     PatternStyle.code.from,
+          //     PatternStyle.code.replace,
+          //   ),
+          // },
+        ),
+      ],
+      maxLines: maxLines,
+      overflow: overflow,
+      // regexOptions: const RegexOptions(multiLine: true, dotAll: true),
+      selectable: options.isTextSelectable,
+      style: bodyTextStyle,
+      text: text,
+      textWidthBasis: TextWidthBasis.longestLine,
+    );
+  }
 }
 
 @immutable
