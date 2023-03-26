@@ -215,31 +215,13 @@ class TextMessageText extends StatelessWidget {
     required String text,
     required String pattern,
   }) {
-    //
-    // CodeController _codeController = CodeController(
-    //   text: text.replaceAll('`', ''),
-    //   patternMap: {
-    //     r"\B#[a-zA-Z0-9]+\b": TextStyle(color: Colors.red),
-    //     r"\B@[a-zA-Z0-9]+\b": TextStyle(
-    //       fontWeight: FontWeight.w800,
-    //       color: Colors.blue,
-    //     ),
-    //     r"\B![a-zA-Z0-9]+\b":
-    //         TextStyle(color: Colors.yellow, fontStyle: FontStyle.italic),
-    //   },
-    //   stringMap: {
-    //     "bev": TextStyle(color: Colors.indigo),
-    //   },
-    //   language: allLanguages['dart'],
-    // );
-    // final styles = CODE_THEMES['idea'];
-    //
-    // if (styles == null) {
-    //   return _buildCodeField(_codeController);
+    text = text.replaceAll('`', '').replaceFirst('\n', '');
+    // print(text.endsWith('\n'));
+    // if (text.endsWith('\n')) {
+    // text = text.substring(0, text.length - 2);
     // }
-
     return CodeBox(
-      codeText: text.replaceAll('`', ''),
+      codeText: text.replaceAll('`', '').replaceFirst('\n', ''),
       theme: 'atom-one-dark',
       language: 'python',
     );

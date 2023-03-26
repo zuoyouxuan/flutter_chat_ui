@@ -61,14 +61,14 @@ class TileTextMessage extends StatelessWidget {
     final user = InheritedUser.of(context).user;
     final width = MediaQuery.of(context).size.width;
 
-    if (usePreviewData && onPreviewDataFetched != null) {
-      final urlRegexp = RegExp(regexLink, caseSensitive: false);
-      final matches = urlRegexp.allMatches(message.text);
-
-      if (matches.isNotEmpty) {
-        return _linkPreview(user, width, context);
-      }
-    }
+    // if (usePreviewData && onPreviewDataFetched != null) {
+    //   final urlRegexp = RegExp(regexLink, caseSensitive: false);
+    //   final matches = urlRegexp.allMatches(message.text);
+    //
+    //   if (matches.isNotEmpty) {
+    //     return _linkPreview(user, width, context);
+    //   }
+    // }
 
     return Container(
       margin: EdgeInsets.symmetric(
