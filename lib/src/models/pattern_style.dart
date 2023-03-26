@@ -20,7 +20,7 @@ class PatternStyle {
 
   static PatternStyle get code => PatternStyle(
         '`',
-        RegExp('`[^`]+`'),
+        RegExp('```([\\s\\S]*?)```[\\s]?'),
         '',
         TextStyle(
           fontFamily: defaultTargetPlatform == TargetPlatform.iOS

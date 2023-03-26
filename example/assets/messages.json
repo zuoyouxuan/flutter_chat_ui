@@ -9,7 +9,9 @@
     "createdAt": 1655648404000,
     "id": "c67ed376-52bf-4d4e-ba2a-7a0f8467b22a",
     "status": "seen",
-    "text": "Flutter是跨平台的移动应用程序开发框架，可以在Mac、Windows和Linux上进行开发。但是，如果你想要打包Flutter Windows应用程序，你需要在Windows上进行打包。以下是在Mac电脑上打包Flutter Windows应用程序的步骤：\n\n1. 在Mac电脑上安装VirtualBox和Windows虚拟机。\n\n2. 在Windows虚拟机中安装Flutter和相关依赖项。\n\n3. 在Windows虚拟机中使用Flutter命令行工具创建Flutter Windows应用程序。\n\n4. 在Windows虚拟机中使用Flutter命令行工具打包Flutter Windows应用程序。\n\n5. 将打包好的Flutter Windows应用程序从Windows虚拟机中复制到Mac电脑上。\n\n6. 在Mac电脑上使用Wine软件运行打包好的Flutter Windows应用程序。️",
+    "text": " ``` \n{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"age\": 25\n}\n  ️",
+
+
     "type": "text"
   },
 
@@ -23,7 +25,7 @@
     "createdAt": 1655648401000,
     "id": "64747b28-df19-4a0c-8c47-316dc3546e3c",
     "status": "seen",
-    "text": "Here you go buddy! 💪",
+    "text": "Here you go buddy! 💪 ``` \n{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"age\": 25\n}\n ``` ",
     "type": "text"
   },
 

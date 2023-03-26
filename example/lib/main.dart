@@ -46,6 +46,15 @@ class _ChatPageState extends State<ChatPage> {
     _loadMessages();
   }
 
+  static PatternStyle get code => PatternStyle(
+        '`',
+        RegExp(r'```([\\s\\S]*?)```[\\s]?'),
+        '',
+        TextStyle(
+          fontFamily: 'monospace',
+        ),
+      );
+
   bool is_darkMode = true;
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -67,6 +76,19 @@ class _ChatPageState extends State<ChatPage> {
                 errorIcon: Icon(
                   Icons.warning,
                   color: Colors.yellow,
+                ),
+                sentMessageBodyCodeTextStyle: TextStyle(
+                  color: Colors.redAccent,
+                  fontSize: 14,
+                  backgroundColor: Colors.black,
+                  fontWeight: FontWeight.normal,
+                  height: 1.5,
+                ),
+                receivedMessageBodyCodeTextStyle: TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  height: 1.5,
                 ),
                 secondaryColor: is_darkMode
                     ? const Color.fromRGBO(68, 70, 84, 1)
