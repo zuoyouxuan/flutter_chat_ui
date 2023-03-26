@@ -222,9 +222,9 @@ class TextMessageText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    options.matchers.forEach((element) {
-      print(element.pattern);
-    });
+    // options.matchers.forEach((element) {
+    //   print(element.pattern);
+    // });
 
     return ParsedText(
       parse: [
