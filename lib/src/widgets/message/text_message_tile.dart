@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
@@ -157,6 +158,10 @@ class TileTextMessage extends StatelessWidget {
           children: [
             // if (showName)
             Column(
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 UserAvatar(
                   author: message.author,
@@ -164,11 +169,23 @@ class TileTextMessage extends StatelessWidget {
                   // imageHeaders: message.author.,
                   // onAvatarTap: onAvatarTap,
                 ),
+                Padding(
+                    padding: EdgeInsets.only(left: 0, right: 10, top: 5),
+                    child: IconButton(
+                        tooltip: '点击复制',
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: message.text));
+                        },
+                        icon: const Icon(
+                          size: 14,
+                          Icons.copy_all_sharp,
+                          color: Colors.white54,
+                        ))),
               ],
             ),
             // if (showName)
             SizedBox(
-              width: 10,
+              width: 5,
             ),
             // Expanded(
             //     child: MarkdownBody(
