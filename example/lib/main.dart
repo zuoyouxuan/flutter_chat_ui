@@ -55,7 +55,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
       );
 
-  bool is_darkMode = true;
+  bool is_darkMode = false;
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Chat(

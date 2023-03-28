@@ -179,7 +179,7 @@ class TileTextMessage extends StatelessWidget {
                         icon: const Icon(
                           size: 14,
                           Icons.copy_all_sharp,
-                          color: Colors.white54,
+                          color: Colors.green,
                         ))),
               ],
             ),
