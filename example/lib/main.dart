@@ -68,6 +68,8 @@ class _ChatPageState extends State<ChatPage> {
             showUserNames: true,
             tileLayout: true,
             user: _user,
+            inputOptions: InputOptions(
+                sendButtonVisibilityMode: SendButtonVisibilityMode.always),
             theme: DefaultChatTheme(
                 // deliveredIcon: Icon(
                 //   Icons.double_arrow,
