@@ -4,6 +4,8 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
+import 'package:markdown_widget/config/configs.dart';
+import 'package:markdown_widget/widget/markdown.dart';
 
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
@@ -146,7 +148,7 @@ class TileTextMessage extends StatelessWidget {
     final emojiTextStyle = user.id == message.author.id
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
-
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -197,23 +199,32 @@ class TileTextMessage extends StatelessWidget {
             //   // softLineBreak: true,
             // )),
             //
-            Flexible(
+            Expanded(
+              flex: 1,
               child: Column(
                 children: [
-                  if (enlargeEmojis)
-                    if (options.isTextSelectable)
-                      SelectableText(message.text, style: emojiTextStyle)
-                    else
-                      Text(message.text, style: emojiTextStyle)
-                  else
-                    TextMessageText(
-                      bodyLinkTextStyle: bodyLinkTextStyle,
-                      bodyTextStyle: bodyTextStyle,
-                      boldTextStyle: boldTextStyle,
-                      codeTextStyle: codeTextStyle,
-                      options: options,
-                      text: message.text,
-                    ),
+                  MarkdownWidget(
+                      data: message.text,
+                      shrinkWrap: true,
+                      selectable: true,
+                      config: isDark
+                          ? MarkdownConfig.darkConfig
+                          : MarkdownConfig.defaultConfig)
+                  //
+                  // if (enlargeEmojis)
+                  //   if (options.isTextSelectable)
+                  //     SelectableText(message.text, style: emojiTextStyle)
+                  //   else
+                  //     Text(message.text, style: emojiTextStyle)
+                  // else
+                  //   TextMessageText(
+                  //     bodyLinkTextStyle: bodyLinkTextStyle,
+                  //     bodyTextStyle: bodyTextStyle,
+                  //     boldTextStyle: boldTextStyle,
+                  //     codeTextStyle: codeTextStyle,
+                  //     options: options,
+                  //     text: message.text,
+                  //   ),
                 ],
               ),
             )
