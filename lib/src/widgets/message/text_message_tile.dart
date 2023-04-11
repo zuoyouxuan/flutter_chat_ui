@@ -4,8 +4,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
-import 'package:markdown_widget/config/configs.dart';
-import 'package:markdown_widget/widget/markdown.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
@@ -41,7 +40,7 @@ class TileTextMessage extends StatelessWidget {
 
   /// See [LinkPreview.onPreviewDataFetched].
   final void Function(types.TextMessage, types.PreviewData)?
-      onPreviewDataFetched;
+  onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
@@ -83,22 +82,22 @@ class TileTextMessage extends StatelessWidget {
   }
 
   Widget _linkPreview(
-    types.User user,
-    double width,
-    BuildContext context,
-  ) {
+      types.User user,
+      double width,
+      BuildContext context,
+      ) {
     final linkDescriptionTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context)
-            .theme
-            .sentMessageLinkDescriptionTextStyle
+        .theme
+        .sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkDescriptionTextStyle;
+        .theme
+        .receivedMessageLinkDescriptionTextStyle;
     final linkTitleTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkTitleTextStyle;
+        .theme
+        .receivedMessageLinkTitleTextStyle;
 
     return LinkPreview(
       enableAnimation: true,
@@ -110,7 +109,7 @@ class TileTextMessage extends StatelessWidget {
       openOnPreviewTitleTap: options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
         horizontal:
-            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
+        InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
       previewData: message.previewData,
@@ -128,10 +127,10 @@ class TileTextMessage extends StatelessWidget {
   }
 
   Widget _textWidgetBuilder(
-    types.User user,
-    BuildContext context,
-    bool enlargeEmojis,
-  ) {
+      types.User user,
+      BuildContext context,
+      bool enlargeEmojis,
+      ) {
     final theme = InheritedChatTheme.of(context).theme;
     final bodyLinkTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
@@ -171,18 +170,7 @@ class TileTextMessage extends StatelessWidget {
                   // imageHeaders: message.author.,
                   // onAvatarTap: onAvatarTap,
                 ),
-                Padding(
-                    padding: EdgeInsets.only(left: 0, right: 10, top: 5),
-                    child: IconButton(
-                        tooltip: '点击复制',
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(text: message.text));
-                        },
-                        icon: const Icon(
-                          size: 14,
-                          Icons.copy_all_sharp,
-                          color: Colors.green,
-                        ))),
+
               ],
             ),
             // if (showName)
@@ -207,9 +195,20 @@ class TileTextMessage extends StatelessWidget {
                       data: message.text,
                       shrinkWrap: true,
                       selectable: true,
-                      config: isDark
-                          ? MarkdownConfig.darkConfig
-                          : MarkdownConfig.defaultConfig)
+                      config: MarkdownConfig(configs: [
+                        HrConfig.darkConfig,
+                        H1Config.darkConfig,
+                        H2Config.darkConfig,
+                        H3Config.darkConfig,
+                        H4Config.darkConfig,
+                        H5Config.darkConfig,
+                        H6Config.darkConfig,
+                        PreConfig.darkConfig,
+                        PConfig.darkConfig,
+                        CodeConfig.darkConfig,
+                      ]),
+                  ),
+
                   //
                   // if (enlargeEmojis)
                   //   if (options.isTextSelectable)
@@ -227,7 +226,20 @@ class TileTextMessage extends StatelessWidget {
                   //   ),
                 ],
               ),
-            )
+            ),
+
+            Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                    tooltip: '点击复制',
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: message.text));
+                    },
+                    icon:  Icon(
+                      size: 14,
+                      Icons.copy_all_sharp,
+                      color: theme.primaryColor,
+                    ))),
           ],
         )
       ],
