@@ -9,7 +9,7 @@
     "createdAt": 1655648404000,
     "id": "c67ed376-52bf-4d4e-ba2a-7a0f8467b22a",
     "status": "seen",
-    "text": " ``` \n{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"age\": 25\n}\n  ️",
+    "text": "Run the following command to switch to the Windows platform: \n ``` \n{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"age\": 25\n}\n  ️",
 
 
     "type": "text"
@@ -52,7 +52,7 @@
     "createdAt": 1655624463000,
     "id": "113bb2e8-f74e-42cd-aa30-4085a0f52c58",
     "status": "seen",
-    "text": "Awesome! 😍",
+    "text": "3. Run the following command to switch to the Windows platform:",
     "type": "text"
   },
 

@@ -70,64 +70,7 @@ class _ChatPageState extends State<ChatPage> {
             user: _user,
             inputOptions: InputOptions(
                 sendButtonVisibilityMode: SendButtonVisibilityMode.always),
-            theme: DefaultChatTheme(
-                // deliveredIcon: Icon(
-                //   Icons.double_arrow,
-                //   size: 10,
-                // ),
-                errorIcon: Icon(
-                  Icons.warning,
-                  color: Colors.yellow,
-                ),
-                sentMessageBodyCodeTextStyle: TextStyle(
-                  color: Colors.redAccent,
-                  fontSize: 14,
-                  backgroundColor: Colors.black,
-                  fontWeight: FontWeight.normal,
-                  height: 1.5,
-                ),
-                receivedMessageBodyCodeTextStyle: TextStyle(
-                  color: Colors.greenAccent,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  height: 1.5,
-                ),
-                secondaryColor: is_darkMode
-                    ? const Color.fromRGBO(68, 70, 84, 1)
-                    : Color(0xFFD0E8D7),
-                primaryColor: is_darkMode
-                    ? Color.fromRGBO(52, 53, 65, 1)
-                    : Color.fromRGBO(52, 53, 65, 1),
-                backgroundColor: Color.fromRGBO(52, 53, 65, 1),
-                receivedMessageBodyTextStyle: TextStyle(
-                  color: is_darkMode ? Color(0xFFE4E2E6) : Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  height: 1.5,
-                ),
-                sentMessageBodyTextStyle: TextStyle(
-                  color: is_darkMode ? Colors.white : Colors.black87,
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                  height: 1.5,
-                ),
-                inputContainerDecoration: BoxDecoration(
-                    // gradient: LinearGradient(colors: [Colors.grey, Colors.white]), //背景渐变
-                    // borderRadius: BorderRadius.circular(0),
-                    border: Border(
-                        top: BorderSide(
-                            color: is_darkMode
-                                ? const Color(0xFF1D1E2C)
-                                : Color(0xFFE4E2E6)))),
-                messageBorderRadius: 10,
-                messageInsetsHorizontal: 20,
-                messageInsetsVertical: 12,
-                inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
-                inputTextColor:
-                    is_darkMode ? const Color(0xFFFFFFFF) : Color(0xFF1D1E2C),
-                inputBackgroundColor:
-                    is_darkMode ? Color(0xFF1B1B1F) : Color(0xFFFFFFFF),
-                inputBorderRadius: const BorderRadius.all(Radius.circular(0)))),
+            ),
       );
 
   void _addMessage(types.Message message) {
@@ -285,7 +228,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    final textMessage = types.TextMessage(
+    final textMessage = types.SystemMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),

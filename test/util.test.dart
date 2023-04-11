@@ -112,7 +112,7 @@ void main() {
           user,
           dateHeaderThreshold: 1000,
           groupMessagesThreshold: 1000,
-          showUserNames: true,
+          showUserNames: true, tileLayout: false,
         ),
         [
           [
@@ -158,7 +158,7 @@ void main() {
             dateHeaderThreshold: 1000,
             groupMessagesThreshold: 1000,
             lastReadMessageId: message.id,
-            showUserNames: true,
+            showUserNames: true, tileLayout: false,
           ),
           [
             [
@@ -204,7 +204,7 @@ void main() {
             dateHeaderThreshold: 1000,
             groupMessagesThreshold: 1000,
             lastReadMessageId: imageMessage.id,
-            showUserNames: true,
+            showUserNames: true, tileLayout: false,
           ),
           [
             [
@@ -253,7 +253,7 @@ void main() {
               dateHeaderThreshold: 1000,
               groupMessagesThreshold: 1000,
               lastReadMessageId: message.id,
-              showUserNames: true,
+              showUserNames: true, tileLayout: false,
             ),
             [
               [
