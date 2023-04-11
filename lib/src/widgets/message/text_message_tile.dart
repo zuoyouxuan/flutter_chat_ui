@@ -195,18 +195,7 @@ class TileTextMessage extends StatelessWidget {
                       data: message.text,
                       shrinkWrap: true,
                       selectable: true,
-                      config: MarkdownConfig(configs: [
-                        HrConfig.darkConfig,
-                        H1Config.darkConfig,
-                        H2Config.darkConfig,
-                        H3Config.darkConfig,
-                        H4Config.darkConfig,
-                        H5Config.darkConfig,
-                        H6Config.darkConfig,
-                        PreConfig.darkConfig,
-                        PConfig.darkConfig,
-                        CodeConfig.darkConfig,
-                      ]),
+                      config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
                   ),
 
                   //
