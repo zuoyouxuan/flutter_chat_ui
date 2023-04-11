@@ -238,7 +238,7 @@ class TileTextMessage extends StatelessWidget {
                     icon:  Icon(
                       size: 14,
                       Icons.copy_all_sharp,
-                      color: theme.primaryColor,
+                      color: bodyTextStyle.color,
                     ))),
           ],
         )
