@@ -40,7 +40,7 @@ class TileTextMessage extends StatelessWidget {
 
   /// See [LinkPreview.onPreviewDataFetched].
   final void Function(types.TextMessage, types.PreviewData)?
-  onPreviewDataFetched;
+      onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
@@ -82,22 +82,22 @@ class TileTextMessage extends StatelessWidget {
   }
 
   Widget _linkPreview(
-      types.User user,
-      double width,
-      BuildContext context,
-      ) {
+    types.User user,
+    double width,
+    BuildContext context,
+  ) {
     final linkDescriptionTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context)
-        .theme
-        .sentMessageLinkDescriptionTextStyle
+            .theme
+            .sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context)
-        .theme
-        .receivedMessageLinkDescriptionTextStyle;
+            .theme
+            .receivedMessageLinkDescriptionTextStyle;
     final linkTitleTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context)
-        .theme
-        .receivedMessageLinkTitleTextStyle;
+            .theme
+            .receivedMessageLinkTitleTextStyle;
 
     return LinkPreview(
       enableAnimation: true,
@@ -109,7 +109,7 @@ class TileTextMessage extends StatelessWidget {
       openOnPreviewTitleTap: options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
         horizontal:
-        InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
+            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
       previewData: message.previewData,
@@ -127,10 +127,10 @@ class TileTextMessage extends StatelessWidget {
   }
 
   Widget _textWidgetBuilder(
-      types.User user,
-      BuildContext context,
-      bool enlargeEmojis,
-      ) {
+    types.User user,
+    BuildContext context,
+    bool enlargeEmojis,
+  ) {
     final theme = InheritedChatTheme.of(context).theme;
     final bodyLinkTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
@@ -149,9 +149,14 @@ class TileTextMessage extends StatelessWidget {
         : theme.receivedEmojiMessageTextStyle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    var markdownConfig = isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    var markdownConfig =
+        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    TextStyle codeConfigStyle = isDark
+        ? TextStyle(backgroundColor: Color(0xff555555) , fontSize: 12)
+        : TextStyle(backgroundColor: Color(0xffeff1f3), fontSize: 12);
     markdownConfig = markdownConfig.copy(configs: [
       const PConfig(textStyle: TextStyle(fontSize: 14)),
+      CodeConfig(style: codeConfigStyle),
     ]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,11 +188,10 @@ class TileTextMessage extends StatelessWidget {
               child: Column(
                 children: [
                   MarkdownWidget(
-                      data: message.text,
-                      shrinkWrap: true,
-                      selectable: true,
-
-                      config: markdownConfig,
+                    data: message.text,
+                    shrinkWrap: true,
+                    selectable: true,
+                    config: markdownConfig,
                   ),
                   //
                   //
@@ -208,7 +212,7 @@ class TileTextMessage extends StatelessWidget {
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: message.text));
                     },
-                    icon:  Icon(
+                    icon: Icon(
                       size: 14,
                       Icons.copy_all_sharp,
                       color: bodyTextStyle.color?.withOpacity(0.5),
