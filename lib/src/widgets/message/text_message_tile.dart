@@ -156,7 +156,7 @@ class TileTextMessage extends StatelessWidget {
 
     final darkPreConfig = PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14) ,
       decoration: const BoxDecoration(
-        color: Color(0xff666666),
+        color: Color(0xFF232c33),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),);
 
