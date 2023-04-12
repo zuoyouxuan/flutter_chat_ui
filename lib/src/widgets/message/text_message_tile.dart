@@ -54,6 +54,8 @@ class TileTextMessage extends StatelessWidget {
   /// User agent to fetch preview data with.
   final String? userAgent;
 
+
+
   @override
   Widget build(BuildContext context) {
     final enlargeEmojis =
@@ -151,13 +153,19 @@ class TileTextMessage extends StatelessWidget {
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+
+    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14) ,
+      decoration: const BoxDecoration(
+        color: Color(0xff666666),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),);
+
     PreConfig preConfig = isDark
-        ? PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14))
+        ? darkPreConfig
         : PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
     markdownConfig = markdownConfig.copy(configs: [
       const PConfig(textStyle: TextStyle(fontSize: 14)),
-      // CodeConfig(style: codeConfigStyle),
       preConfig
     ]);
     return Column(
