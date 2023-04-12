@@ -151,12 +151,12 @@ class TileTextMessage extends StatelessWidget {
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
-    TextStyle codeConfigStyle = isDark
-        ? TextStyle(backgroundColor: Color(0xff555555) , fontSize: 12)
-        : TextStyle(backgroundColor: Color(0xffeff1f3), fontSize: 12);
+
     markdownConfig = markdownConfig.copy(configs: [
       const PConfig(textStyle: TextStyle(fontSize: 14)),
-      CodeConfig(style: codeConfigStyle),
+      const PreConfig(
+        textStyle: const TextStyle(fontSize: 14),
+      ),
     ]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
