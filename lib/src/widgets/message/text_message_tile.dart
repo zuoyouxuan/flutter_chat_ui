@@ -148,6 +148,11 @@ class TileTextMessage extends StatelessWidget {
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    var markdownConfig = isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    markdownConfig = markdownConfig.copy(configs: [
+      const PConfig(textStyle: TextStyle(fontSize: 14)),
+    ]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -157,36 +162,22 @@ class TileTextMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            // if (showName)
             Column(
               // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 UserAvatar(
                   author: message.author,
-                  // bubbleRtlAlignment: BubbleRtlAlignment.left,
-                  // imageHeaders: message.author.,
-                  // onAvatarTap: onAvatarTap,
                 ),
-
               ],
             ),
             // if (showName)
             SizedBox(
               width: 5,
             ),
-            // Expanded(
-            //     child: MarkdownBody(
-            //   styleSheetTheme: MarkdownStyleSheetBaseTheme.material,
-            //   styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context)),
-            //   data: message.text,
-            //   shrinkWrap: true,
-            //   selectable: true,
-            //   // softLineBreak: true,
-            // )),
-            //
+
             Expanded(
               flex: 1,
               child: Column(
@@ -195,24 +186,17 @@ class TileTextMessage extends StatelessWidget {
                       data: message.text,
                       shrinkWrap: true,
                       selectable: true,
-                      config: isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig,
-                  ),
 
+                      config: markdownConfig,
+                  ),
+                  //
                   //
                   // if (enlargeEmojis)
                   //   if (options.isTextSelectable)
                   //     SelectableText(message.text, style: emojiTextStyle)
                   //   else
                   //     Text(message.text, style: emojiTextStyle)
-                  // else
-                  //   TextMessageText(
-                  //     bodyLinkTextStyle: bodyLinkTextStyle,
-                  //     bodyTextStyle: bodyTextStyle,
-                  //     boldTextStyle: boldTextStyle,
-                  //     codeTextStyle: codeTextStyle,
-                  //     options: options,
-                  //     text: message.text,
-                  //   ),
+                  //
                 ],
               ),
             ),
