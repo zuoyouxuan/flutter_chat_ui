@@ -242,33 +242,33 @@ class TextMessageText extends StatelessWidget {
                 decoration: TextDecoration.underline,
               ),
         ),
-        // MatchText(
-        //   onTap: (urlText) async {
-        //     final protocolIdentifierRegex = RegExp(
-        //       r'^((http|ftp|https):\/\/)',
-        //       caseSensitive: false,
-        //     );
-        //     if (!urlText.startsWith(protocolIdentifierRegex)) {
-        //       urlText = 'https://$urlText';
-        //     }
-        //     if (options.onLinkPressed != null) {
-        //       options.onLinkPressed!(urlText);
-        //     } else {
-        //       final url = Uri.tryParse(urlText);
-        //       if (url != null && await canLaunchUrl(url)) {
-        //         await launchUrl(
-        //           url,
-        //           mode: LaunchMode.externalApplication,
-        //         );
-        //       }
-        //     }
-        //   },
-        //   pattern: regexLink,
-        //   style: bodyLinkTextStyle ??
-        //       bodyTextStyle.copyWith(
-        //         decoration: TextDecoration.underline,
-        //       ),
-        // ),
+        MatchText(
+          onTap: (urlText) async {
+            final protocolIdentifierRegex = RegExp(
+              r'^((http|ftp|https):\/\/)',
+              caseSensitive: false,
+            );
+            if (!urlText.startsWith(protocolIdentifierRegex)) {
+              urlText = 'https://$urlText';
+            }
+            if (options.onLinkPressed != null) {
+              options.onLinkPressed!(urlText);
+            } else {
+              final url = Uri.tryParse(urlText);
+              if (url != null && await canLaunchUrl(url)) {
+                await launchUrl(
+                  url,
+                  mode: LaunchMode.externalApplication,
+                );
+              }
+            }
+          },
+          pattern: regexLink,
+          style: bodyLinkTextStyle ??
+              bodyTextStyle.copyWith(
+                decoration: TextDecoration.underline,
+              ),
+        ),
         MatchText(
           pattern: PatternStyle.bold.pattern,
           style:
@@ -280,26 +280,26 @@ class TextMessageText extends StatelessWidget {
             ),
           },
         ),
-        // MatchText(
-        //   pattern: PatternStyle.italic.pattern,
-        //   style: bodyTextStyle.merge(PatternStyle.italic.textStyle),
-        //   renderText: ({required String str, required String pattern}) => {
-        //     'display': str.replaceAll(
-        //       PatternStyle.italic.from,
-        //       PatternStyle.italic.replace,
-        //     ),
-        //   },
-        // ),
-        // MatchText(
-        //   pattern: PatternStyle.lineThrough.pattern,
-        //   style: bodyTextStyle.merge(PatternStyle.lineThrough.textStyle),
-        //   renderText: ({required String str, required String pattern}) => {
-        //     'display': str.replaceAll(
-        //       PatternStyle.lineThrough.from,
-        //       PatternStyle.lineThrough.replace,
-        //     ),
-        //   },
-        // ),
+        MatchText(
+          pattern: PatternStyle.italic.pattern,
+          style: bodyTextStyle.merge(PatternStyle.italic.textStyle),
+          renderText: ({required String str, required String pattern}) => {
+            'display': str.replaceAll(
+              PatternStyle.italic.from,
+              PatternStyle.italic.replace,
+            ),
+          },
+        ),
+        MatchText(
+          pattern: PatternStyle.lineThrough.pattern,
+          style: bodyTextStyle.merge(PatternStyle.lineThrough.textStyle),
+          renderText: ({required String str, required String pattern}) => {
+            'display': str.replaceAll(
+              PatternStyle.lineThrough.from,
+              PatternStyle.lineThrough.replace,
+            ),
+          },
+        ),
         // MatchText(
         //   pattern: PatternStyle.code.pattern,
         //   renderWidget: codeText,

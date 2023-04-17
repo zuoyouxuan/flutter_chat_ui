@@ -197,12 +197,26 @@ class TileTextMessage extends StatelessWidget {
               flex: 1,
               child: Column(
                 children: [
-                  MarkdownWidget(
-                    data: message.text,
-                    shrinkWrap: true,
-                    selectable: true,
-                    config: markdownConfig,
-                  ),
+                  if(user.id != message.author.id)
+                    MarkdownWidget(
+                      data: message.text,
+                      shrinkWrap: true,
+                      selectable: true,
+                      config: markdownConfig,
+                    ),
+
+                  if(user.id == message.author.id)
+                    if (enlargeEmojis)
+                      SelectableText(message.text, style: emojiTextStyle)
+                    else
+                      TextMessageText(
+                        bodyLinkTextStyle: bodyLinkTextStyle,
+                        bodyTextStyle: bodyTextStyle,
+                        boldTextStyle: boldTextStyle,
+                        codeTextStyle: codeTextStyle,
+                        options: options,
+                        text: message.text,
+                      ),
                   //
                   //
                   // if (enlargeEmojis)
