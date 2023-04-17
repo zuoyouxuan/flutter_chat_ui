@@ -196,6 +196,9 @@ class TileTextMessage extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   if(user.id != message.author.id)
                     MarkdownWidget(
