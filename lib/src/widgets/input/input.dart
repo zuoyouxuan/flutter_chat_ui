@@ -200,7 +200,7 @@ class _InputState extends State<Input> {
                                       .withOpacity(0.5),
                                 ),
                             hintText:
-                                InheritedL10n.of(context).l10n.inputPlaceholder,
+                            widget.options.hitText,
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: TextInputType.multiline,
@@ -250,10 +250,13 @@ class InputOptions {
     this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
     this.inputVisibilityMode = SendButtonVisibilityMode.editing,
     this.textEditingController,
-  });
+    this.hitText = 'Message...',
+});
 
   /// Controls the [Input] clear behavior. Defaults to [InputClearMode.always].
   final InputClearMode inputClearMode;
+
+  final String? hitText;
 
   /// Will be called whenever the text inside [TextField] changes.
   final void Function(String)? onTextChanged;
