@@ -154,7 +154,7 @@ class TileTextMessage extends StatelessWidget {
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
-    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14) ,
+    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: bodyTextStyle ,
       decoration: const BoxDecoration(
         color: Color(0xFF232c33),
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -162,10 +162,10 @@ class TileTextMessage extends StatelessWidget {
 
     PreConfig preConfig = isDark
         ? darkPreConfig
-        : PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
+        : PreConfig().copy(textStyle: bodyTextStyle);
 
     markdownConfig = markdownConfig.copy(configs: [
-      const PConfig(textStyle: TextStyle(fontSize: 14)),
+      PConfig(textStyle: bodyTextStyle),
       preConfig
     ]);
     return Column(
