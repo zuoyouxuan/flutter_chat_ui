@@ -6,6 +6,10 @@ import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
 import 'package:markdown_widget/markdown_widget.dart';
 
+import 'package:flutter_highlight/themes/atom-one-light.dart';
+import 'package:flutter_highlight/themes/atom-one-dark-reasonable.dart';
+import 'package:flutter_highlight/themes/idea.dart';
+
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
@@ -149,20 +153,19 @@ class TileTextMessage extends StatelessWidget {
     final emojiTextStyle = user.id == message.author.id
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
-    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: bodyTextStyle ,
-      decoration: const BoxDecoration(
-        color: Color(0xFF232c33),
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),);
+    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14) ,
+        theme : atomOneDarkReasonableTheme,
+      );
 
-    PreConfig preConfig = isDark
+    var preConfig = isDark
         ? darkPreConfig
-        : PreConfig().copy(textStyle: bodyTextStyle);
+        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14) );
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
