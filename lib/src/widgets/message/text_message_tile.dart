@@ -168,7 +168,11 @@ class TileTextMessage extends StatelessWidget {
         : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
     final codeDarkConfig = isDark
-        ? const CodeConfig(style: TextStyle(backgroundColor: Colors.black))
+        ? const CodeConfig(
+            style: TextStyle(
+                backgroundColor: Colors.transparent,
+                fontWeight: FontWeight.bold,
+                color: Colors.green))
         : const CodeConfig();
 
     markdownConfig = markdownConfig.copy(configs: [
