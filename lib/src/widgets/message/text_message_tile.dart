@@ -148,8 +148,8 @@ class TileTextMessage extends StatelessWidget {
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
 
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
-    final isDark = true;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // final isDark = true;
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
@@ -237,8 +237,12 @@ class TileTextMessage extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: IconButton(
                     tooltip: '点击复制',
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: message.text));
+                    onPressed: () async {
+                      await Clipboard.setData(ClipboardData(text: message.text))
+                          .then((value) => {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('已复制 !')))
+                              });
                     },
                     icon: Icon(
                       size: 14,
