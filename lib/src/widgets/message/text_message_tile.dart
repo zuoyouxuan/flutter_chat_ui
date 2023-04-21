@@ -6,10 +6,6 @@ import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
 import 'package:markdown_widget/markdown_widget.dart';
 
-import 'package:flutter_highlight/themes/atom-one-light.dart';
-import 'package:flutter_highlight/themes/atom-one-dark-reasonable.dart';
-import 'package:flutter_highlight/themes/idea.dart';
-
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
@@ -57,8 +53,6 @@ class TileTextMessage extends StatelessWidget {
 
   /// User agent to fetch preview data with.
   final String? userAgent;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -154,23 +148,27 @@ class TileTextMessage extends StatelessWidget {
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
 
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = true;
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
-    final darkPreConfig = PreConfig.darkConfig.copy(textStyle: const TextStyle(fontSize: 14) ,
-        theme : atomOneDarkReasonableTheme,
-      );
+    final darkPreConfig = PreConfig.darkConfig.copy(
+      textStyle: const TextStyle(fontSize: 14),
+      // theme : a11yDarkTheme,
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+    );
 
     var preConfig = isDark
         ? darkPreConfig
-        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14) );
+        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
-    markdownConfig = markdownConfig.copy(configs: [
-      PConfig(textStyle: bodyTextStyle),
-      preConfig
-    ]);
+    markdownConfig = markdownConfig
+        .copy(configs: [PConfig(textStyle: bodyTextStyle), preConfig]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -203,7 +201,7 @@ class TileTextMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if(user.id != message.author.id)
+                  if (user.id != message.author.id)
                     MarkdownWidget(
                       data: message.text,
                       shrinkWrap: true,
@@ -211,7 +209,7 @@ class TileTextMessage extends StatelessWidget {
                       config: markdownConfig,
                     ),
 
-                  if(user.id == message.author.id)
+                  if (user.id == message.author.id)
                     if (enlargeEmojis)
                       SelectableText(message.text, style: emojiTextStyle)
                     else
