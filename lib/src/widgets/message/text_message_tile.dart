@@ -163,12 +163,19 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
-    var preConfig = isDark
+    final preConfig = isDark
         ? darkPreConfig
         : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
-    markdownConfig = markdownConfig
-        .copy(configs: [PConfig(textStyle: bodyTextStyle), preConfig]);
+    final codeDarkConfig = isDark
+        ? const CodeConfig(style: TextStyle(backgroundColor: Colors.black))
+        : const CodeConfig();
+
+    markdownConfig = markdownConfig.copy(configs: [
+      PConfig(textStyle: bodyTextStyle),
+      preConfig,
+      codeDarkConfig
+    ]);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -239,10 +246,7 @@ class TileTextMessage extends StatelessWidget {
                     tooltip: '点击复制',
                     onPressed: () async {
                       await Clipboard.setData(ClipboardData(text: message.text))
-                          .then((value) => {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('已复制 !')))
-                              });
+                          .then((value) => {});
                     },
                     icon: Icon(
                       size: 14,
