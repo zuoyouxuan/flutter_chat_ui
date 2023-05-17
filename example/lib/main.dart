@@ -46,6 +46,78 @@ class _ChatPageState extends State<ChatPage> {
     _loadMessages();
   }
 
+  static PatternStyle get code => PatternStyle(
+        '`',
+        RegExp(r'```([\\s\\S]*?)```[\\s]?'),
+        '',
+        TextStyle(
+          fontFamily: 'monospace',
+        ),
+      );
+
+  bool is_darkMode = true;
+  @override
+  Widget build(BuildContext context) => Scaffold(
+        body: Chat(
+            messages: _messages,
+            onAttachmentPressed: _handleAttachmentPressed,
+            onMessageTap: _handleMessageTap,
+            onPreviewDataFetched: _handlePreviewDataFetched,
+            onSendPressed: _handleSendPressed,
+            showUserAvatars: true,
+            showUserNames: true,
+            tileLayout: true,
+            user: _user,
+            inputOptions: InputOptions(
+                sendButtonVisibilityMode: SendButtonVisibilityMode.always),
+          theme: DefaultChatTheme(
+              messageBorderColor:
+              is_darkMode ? Color.fromRGBO(32, 33, 35, .5) : Color.fromRGBO(0, 0, 0, .1),
+              // deliveredIcon: Icon(
+              //   Icons.double_arrow,
+              //   size: 10,
+              // ),
+              errorIcon: Icon(
+                Icons.warning,
+                color: Colors.yellow,
+              ),
+              primaryColor:
+              is_darkMode ? Color.fromRGBO(52, 53, 65, 1) : Color.fromRGBO(255, 255, 255, 1),
+              secondaryColor:
+              is_darkMode ? Color.fromRGBO(68, 70, 84, 1) : Color.fromRGBO(247, 247, 248, 1),
+              backgroundColor: is_darkMode ? Color.fromRGBO(40, 42, 58, 1) : Colors.white54,
+              receivedMessageBodyTextStyle: TextStyle(
+                color:
+                is_darkMode ? Color.fromRGBO(236, 236, 241, 1) : Color.fromRGBO(52, 53, 65, 1),
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                height: 1.5,
+              ),
+              sentMessageBodyTextStyle: TextStyle(
+                color:
+                is_darkMode ? Color.fromRGBO(236, 236, 241, 1) : Color.fromRGBO(52, 53, 65, 1),
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                height: 1.5,
+              ),
+              inputContainerDecoration: BoxDecoration(
+                // gradient: LinearGradient(colors: [Colors.grey, Colors.white]), //背景渐变
+                // borderRadius: BorderRadius.circular(0),
+                  border: Border(
+                      top: BorderSide(
+                          color: is_darkMode ? const Color(0xFF1D1E2C) : Color(0xFFE4E2E6)))),
+              messageBorderRadius: 10,
+              messageInsetsHorizontal: 20,
+              messageInsetsVertical: 12,
+              attachmentButtonIcon: Icon(Icons.tips_and_updates_outlined),
+              inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
+              inputTextStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+              inputTextColor: is_darkMode ? const Color(0xFFFFFFFF) : Color(0xFF1D1E2C),
+              inputBackgroundColor: is_darkMode ? Color(0xFF1B1B1F) : Color(0xFFFFFFFF),
+              inputBorderRadius: const BorderRadius.all(Radius.circular(0))),
+            ),
+      );
+
   void _addMessage(types.Message message) {
     setState(() {
       _messages.insert(0, message);
@@ -221,18 +293,4 @@ class _ChatPageState extends State<ChatPage> {
       _messages = messages;
     });
   }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: Chat(
-          messages: _messages,
-          onAttachmentPressed: _handleAttachmentPressed,
-          onMessageTap: _handleMessageTap,
-          onPreviewDataFetched: _handlePreviewDataFetched,
-          onSendPressed: _handleSendPressed,
-          showUserAvatars: true,
-          showUserNames: true,
-          user: _user,
-        ),
-      );
 }
