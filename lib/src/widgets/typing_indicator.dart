@@ -80,109 +80,12 @@ class _TypingIndicatorState extends State<TypingIndicator>
     }
   }
 
-  @override
-  void didUpdateWidget(TypingIndicator oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.showIndicator != oldWidget.showIndicator) {
-      if (widget.showIndicator) {
-        _appearanceController.forward();
-      } else {
-        _appearanceController.reverse();
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _appearanceController.dispose();
-    _animatedCirclesController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-        animation: _indicatorSpaceAnimation,
-        builder: (context, child) => SizedBox(
-          height: _indicatorSpaceAnimation.value,
-          child: child,
-        ),
-        child: Row(
-          mainAxisAlignment: widget.bubbleAlignment == BubbleRtlAlignment.right
-              ? MainAxisAlignment.start
-              : MainAxisAlignment.end,
-          children: <Widget>[
-            widget.bubbleAlignment == BubbleRtlAlignment.left
-                ? Container(
-                    margin: const EdgeInsets.only(right: 12),
-                    child: TypingWidget(
-                      widget: widget,
-                      context: context,
-                      mode: widget.options.typingMode,
-                    ),
-                  )
-                : const SizedBox(),
-            Container(
-              margin: widget.bubbleAlignment == BubbleRtlAlignment.right
-                  ? const EdgeInsets.fromLTRB(24, 24, 0, 24)
-                  : const EdgeInsets.fromLTRB(0, 24, 24, 24),
-              decoration: BoxDecoration(
-                borderRadius: InheritedChatTheme.of(context)
-                    .theme
-                    .typingIndicatorTheme
-                    .bubbleBorder,
-                color: InheritedChatTheme.of(context)
-                    .theme
-                    .typingIndicatorTheme
-                    .bubbleColor,
-              ),
-              child: Wrap(
-                spacing: 3.0,
-                children: <Widget>[
-                  AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
-                    animationOffset: _firstCircleOffsetAnimation,
-                  ),
-                  AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
-                    animationOffset: _secondCircleOffsetAnimation,
-                  ),
-                  AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
-                    animationOffset: _thirdCircleOffsetAnimation,
-                  ),
-                ],
-              ),
-            ),
-            widget.bubbleAlignment == BubbleRtlAlignment.right
-                ? Container(
-                    margin: const EdgeInsets.only(left: 12),
-                    child: TypingWidget(
-                      widget: widget,
-                      context: context,
-                      mode: widget.options.typingMode,
-                    ),
-                  )
-                : const SizedBox(),
-          ],
-        ),
-      );
-
   /// Handler for circles offset.
   Animation<Offset> _circleOffset(
-    Offset? start,
-    Offset? end,
-    Interval animationInterval,
-  ) =>
+      Offset? start,
+      Offset? end,
+      Interval animationInterval,
+      ) =>
       TweenSequence<Offset>(
         <TweenSequenceItem<Offset>>[
           TweenSequenceItem<Offset>(
@@ -205,6 +108,103 @@ class _TypingIndicatorState extends State<TypingIndicator>
         curve: animationInterval,
         reverseCurve: animationInterval,
       ));
+
+  @override
+  void didUpdateWidget(TypingIndicator oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.showIndicator != oldWidget.showIndicator) {
+      if (widget.showIndicator) {
+        _appearanceController.forward();
+      } else {
+        _appearanceController.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _appearanceController.dispose();
+    _animatedCirclesController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => AnimatedBuilder(
+    animation: _indicatorSpaceAnimation,
+    builder: (context, child) => SizedBox(
+      height: _indicatorSpaceAnimation.value,
+      child: child,
+    ),
+    child: Row(
+      mainAxisAlignment: widget.bubbleAlignment == BubbleRtlAlignment.right
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end,
+      children: <Widget>[
+        widget.bubbleAlignment == BubbleRtlAlignment.left
+            ? Container(
+          margin: const EdgeInsets.only(right: 12),
+          child: TypingWidget(
+            widget: widget,
+            context: context,
+            mode: widget.options.typingMode,
+          ),
+        )
+            : const SizedBox(),
+        Container(
+          margin: widget.bubbleAlignment == BubbleRtlAlignment.right
+              ? const EdgeInsets.fromLTRB(24, 24, 0, 24)
+              : const EdgeInsets.fromLTRB(0, 24, 24, 24),
+          decoration: BoxDecoration(
+            borderRadius: InheritedChatTheme.of(context)
+                .theme
+                .typingIndicatorTheme
+                .bubbleBorder,
+            color: InheritedChatTheme.of(context)
+                .theme
+                .typingIndicatorTheme
+                .bubbleColor,
+          ),
+          child: Wrap(
+            spacing: 3.0,
+            children: <Widget>[
+              AnimatedCircles(
+                circlesColor: InheritedChatTheme.of(context)
+                    .theme
+                    .typingIndicatorTheme
+                    .animatedCirclesColor,
+                animationOffset: _firstCircleOffsetAnimation,
+              ),
+              AnimatedCircles(
+                circlesColor: InheritedChatTheme.of(context)
+                    .theme
+                    .typingIndicatorTheme
+                    .animatedCirclesColor,
+                animationOffset: _secondCircleOffsetAnimation,
+              ),
+              AnimatedCircles(
+                circlesColor: InheritedChatTheme.of(context)
+                    .theme
+                    .typingIndicatorTheme
+                    .animatedCirclesColor,
+                animationOffset: _thirdCircleOffsetAnimation,
+              ),
+            ],
+          ),
+        ),
+        widget.bubbleAlignment == BubbleRtlAlignment.right
+            ? Container(
+          margin: const EdgeInsets.only(left: 12),
+          child: TypingWidget(
+            widget: widget,
+            context: context,
+            mode: widget.options.typingMode,
+          ),
+        )
+            : const SizedBox(),
+      ],
+    ),
+  );
 }
 
 /// Typing Widget.
@@ -219,6 +219,30 @@ class TypingWidget extends StatelessWidget {
   final TypingIndicator widget;
   final BuildContext context;
   final TypingIndicatorMode mode;
+
+  /// Handler for multi user typing text.
+  String _multiUserTextBuilder(List<types.User> author) {
+    if (author.isEmpty) {
+      return '';
+    } else if (author.length == 1) {
+      return '${author.first.firstName} is typing';
+    } else if (author.length == 2) {
+      return '${author.first.firstName} and ${author[1].firstName}';
+    } else {
+      return '${author.first.firstName} and ${author.length - 1} others';
+    }
+  }
+
+  /// Used to specify width of stacking avatars based on number of authors.
+  double _getStackingWidth(List<types.User> author, double indicatorWidth) {
+    if (author.length == 1) {
+      return indicatorWidth * 0.06;
+    } else if (author.length == 2) {
+      return indicatorWidth * 0.11;
+    } else {
+      return indicatorWidth * 0.15;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,30 +288,6 @@ class TypingWidget extends StatelessWidget {
           ),
         ],
       );
-    }
-  }
-
-  /// Handler for multi user typing text.
-  String _multiUserTextBuilder(List<types.User> author) {
-    if (author.isEmpty) {
-      return '';
-    } else if (author.length == 1) {
-      return '${author.first.firstName} is typing';
-    } else if (author.length == 2) {
-      return '${author.first.firstName} and ${author[1].firstName}';
-    } else {
-      return '${author.first.firstName} and ${author.length - 1} others';
-    }
-  }
-
-  /// Used to specify width of stacking avatars based on number of authors.
-  double _getStackingWidth(List<types.User> author, double indicatorWidth) {
-    if (author.length == 1) {
-      return indicatorWidth * 0.06;
-    } else if (author.length == 2) {
-      return indicatorWidth * 0.11;
-    } else {
-      return indicatorWidth * 0.15;
     }
   }
 }
@@ -387,10 +387,10 @@ class TypingAvatar extends StatelessWidget {
       radius: 13,
       child: !hasImage
           ? Text(
-              initials,
-              style: InheritedChatTheme.of(context).theme.userAvatarTextStyle,
-              textScaleFactor: 0.7,
-            )
+        initials,
+        style: InheritedChatTheme.of(context).theme.userAvatarTextStyle,
+        textScaleFactor: 0.7,
+      )
           : null,
     );
   }
@@ -408,22 +408,22 @@ class AnimatedCircles extends StatelessWidget {
   final Animation<Offset> animationOffset;
   @override
   Widget build(BuildContext context) => SlideTransition(
-        position: animationOffset,
-        child: Container(
-          height: InheritedChatTheme.of(context)
-              .theme
-              .typingIndicatorTheme
-              .animatedCircleSize,
-          width: InheritedChatTheme.of(context)
-              .theme
-              .typingIndicatorTheme
-              .animatedCircleSize,
-          decoration: BoxDecoration(
-            color: circlesColor,
-            shape: BoxShape.circle,
-          ),
-        ),
-      );
+    position: animationOffset,
+    child: Container(
+      height: InheritedChatTheme.of(context)
+          .theme
+          .typingIndicatorTheme
+          .animatedCircleSize,
+      width: InheritedChatTheme.of(context)
+          .theme
+          .typingIndicatorTheme
+          .animatedCircleSize,
+      decoration: BoxDecoration(
+        color: circlesColor,
+        shape: BoxShape.circle,
+      ),
+    ),
+  );
 }
 
 @immutable

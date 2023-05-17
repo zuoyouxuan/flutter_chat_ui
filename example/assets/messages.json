@@ -1,47 +1,5 @@
 [
-  {
-    "author": {
-      "firstName": "John",
-      "id": "4c2307ba-3d40-442f-b1ff-b271f63904ca",
-      "lastName": "K",
-      "imageUrl" : "https://extyy.oss-cn-shenzhen.aliyuncs.com/assets/ChatGPT_logo.png"
-    },
-    "createdAt": 1655648404000,
-    "id": "c67ed376-52bf-4d4e-ba2a-7a0f8467b22a",
-    "status": "seen",
-    "text": "Run the following command to switch to the Windows platform: \n ``` \n{\n  \"firstName\": \"John\",\n  \"lastName\": \"Smith\",\n  \"age\": 25\n}\n  ️",
 
-
-    "type": "text"
-  },
-
-
-  {
-    "author": {
-      "firstName": "Matthew",
-      "id": "82091008-a484-4a89-ae75-a22bf8d6f3a1",
-      "lastName": "White"
-    },
-    "createdAt": 1655648401000,
-    "id": "64747b28-df19-4a0c-8c47-316dc3546e31",
-    "status": "seen",
-    "text": "Pandas DataFrame `groupby()` function is used to group the rows of a` DataFrame` based on one or more columns. It returns a DataFrameGroupBy object that can be used to perform various operations on the groups.\nGroup_concat is a function that concatenates the values of a column for each group. It is similar to the GROUP_CONCAT function in SQL.\nTo use groupby() and group_concat in Pandas, you can follow these steps:\n1. Import the necessary libraries:\n   ```\n   import pandas as pd\n   from pandasql import sqldf\n   ```\n2. Load the data into a DataFrame:\n   ```\n   df = pd.read_csv('data.csv')\n   ```\n3. Group the data by one or more columns:\n   ```\n   grouped = df.groupby(['column1', 'column2'])\n   ```\n4. Apply the group_concat function to a column:\n   ```\n   result = grouped['column3'].apply(lambda x: ', '.join(x)).reset_index()\n   ```\n   This will concatenate the values of column3 for each group and return a new DataFrame with the grouped columns and the concatenated column.\n5. Alternatively, you can use the Pandasql library to perform the same operation using SQL syntax:\n   ```\n  \n   ```\n   This will return the same result as the previous step, but using SQL syntax. ",
-    "type": "text"
-  },
-
-  {
-    "author": {
-      "firstName": "John",
-      "id": "4c2307ba-3d40-442f-b1ff-b271f63904ca",
-      "lastName": "Doe",
-      "imageUrl" : "https://extyy.oss-cn-shenzhen.aliyuncs.com/assets/ChatGPT_logo.png"
-    },
-    "createdAt": 1655624464000,
-    "id": "38681a33-2563-42aa-957b-cfc12f791d16",
-    "status": "seen",
-    "text": "Pandas DataFrame groupby() function is used to group the rows of a DataFrame based on one or more columns. It returns a DataFrameGroupBy object that can be used to perform various operations on the groups.\nGroup_concat is a function that concatenates the values of a column for each group. It is similar to the GROUP_CONCAT function in SQL.\nTo use groupby() and group_concat in Pandas, you can follow these steps:\n1. Import the necessary libraries:\n   ```\n   import pandas as pd\n   from pandasql import sqldf\n   ```\n2. Load the data into a DataFrame:\n   ```\n   df = pd.read_csv('data.csv')\n   ```\n3. Group the data by one or more columns:\n   ```\n   grouped = df.groupby(['column1', 'column2'])\n   ```\n4. Apply the group_concat function to a column:\n   ```\n   result = grouped['column3'].apply(lambda x: ', '.join(x)).reset_index()\n   ```\n   This will concatenate the values of column3 for each group and return a new DataFrame with the grouped columns and the concatenated column.\n5. Alternatively, you can use the Pandasql library to perform the same operation using SQL syntax:\n   ```\n   result = sqldf('SELECT column1, column2, GROUP_CONCAT(column3) FROM df GROUP BY column1, column2')\n   ```\n   This will return the same result as the previous step, but using SQL syntax.",
-    "type": "text"
-  },
   {
     "author": {
       "firstName": "Matthew",

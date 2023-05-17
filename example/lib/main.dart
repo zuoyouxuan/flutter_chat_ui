@@ -7,9 +7,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:http/http.dart' as http;
+
 // import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:mime/mime.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -40,10 +40,13 @@ class _ChatPageState extends State<ChatPage> {
     id: '82091008-a484-4a89-ae75-a22bf8d6f3ac',
   );
 
+  final TextEditingController _textEditingController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
     _loadMessages();
+
   }
 
   static PatternStyle get code => PatternStyle(
@@ -56,66 +59,88 @@ class _ChatPageState extends State<ChatPage> {
       );
 
   bool is_darkMode = true;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Chat(
-            messages: _messages,
-            onAttachmentPressed: _handleAttachmentPressed,
-            onMessageTap: _handleMessageTap,
-            onPreviewDataFetched: _handlePreviewDataFetched,
-            onSendPressed: _handleSendPressed,
-            showUserAvatars: true,
-            showUserNames: true,
-            tileLayout: true,
-            user: _user,
-            inputOptions: InputOptions(
-                sendButtonVisibilityMode: SendButtonVisibilityMode.always),
+          messages: _messages,
+          onAttachmentPressed: _handleAttachmentPressed,
+          onMessageTap: _handleMessageTap,
+          onPreviewDataFetched: _handlePreviewDataFetched,
+          onSendPressed: _handleSendPressed,
+          showUserAvatars: true,
+          showUserNames: true,
+          tileLayout: true,
+          user: _user,
+          typingIndicatorOptions: TypingIndicatorOptions(
+            animationSpeed: const Duration(milliseconds: 500),
+            typingUsers: [_user],
+            typingMode: TypingIndicatorMode.name,
+          ),
+          inputOptions: InputOptions(
+            textEditingController: _textEditingController,
+            sendButtonVisibilityMode: SendButtonVisibilityMode.always,
+          ),
           theme: DefaultChatTheme(
-              messageBorderColor:
-              is_darkMode ? Color.fromRGBO(32, 33, 35, .5) : Color.fromRGBO(0, 0, 0, .1),
-              // deliveredIcon: Icon(
-              //   Icons.double_arrow,
-              //   size: 10,
-              // ),
-              errorIcon: Icon(
-                Icons.warning,
-                color: Colors.yellow,
-              ),
-              primaryColor:
-              is_darkMode ? Color.fromRGBO(52, 53, 65, 1) : Color.fromRGBO(255, 255, 255, 1),
-              secondaryColor:
-              is_darkMode ? Color.fromRGBO(68, 70, 84, 1) : Color.fromRGBO(247, 247, 248, 1),
-              backgroundColor: is_darkMode ? Color.fromRGBO(40, 42, 58, 1) : Colors.white54,
-              receivedMessageBodyTextStyle: TextStyle(
-                color:
-                is_darkMode ? Color.fromRGBO(236, 236, 241, 1) : Color.fromRGBO(52, 53, 65, 1),
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                height: 1.5,
-              ),
-              sentMessageBodyTextStyle: TextStyle(
-                color:
-                is_darkMode ? Color.fromRGBO(236, 236, 241, 1) : Color.fromRGBO(52, 53, 65, 1),
-                fontSize: 16,
-                fontWeight: FontWeight.normal,
-                height: 1.5,
-              ),
-              inputContainerDecoration: BoxDecoration(
-                // gradient: LinearGradient(colors: [Colors.grey, Colors.white]), //背景渐变
-                // borderRadius: BorderRadius.circular(0),
-                  border: Border(
-                      top: BorderSide(
-                          color: is_darkMode ? const Color(0xFF1D1E2C) : Color(0xFFE4E2E6)))),
-              messageBorderRadius: 10,
-              messageInsetsHorizontal: 20,
-              messageInsetsVertical: 12,
-              attachmentButtonIcon: Icon(Icons.tips_and_updates_outlined),
-              inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
-              inputTextStyle: TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
-              inputTextColor: is_darkMode ? const Color(0xFFFFFFFF) : Color(0xFF1D1E2C),
-              inputBackgroundColor: is_darkMode ? Color(0xFF1B1B1F) : Color(0xFFFFFFFF),
-              inputBorderRadius: const BorderRadius.all(Radius.circular(0))),
+            messageBorderColor: is_darkMode
+                ? Color.fromRGBO(32, 33, 35, .5)
+                : Color.fromRGBO(0, 0, 0, .1),
+            // deliveredIcon: Icon(
+            //   Icons.double_arrow,
+            //   size: 10,
+            // ),
+            errorIcon: Icon(
+              Icons.warning,
+              color: Colors.yellow,
             ),
+            primaryColor: is_darkMode
+                ? Color.fromRGBO(52, 53, 65, 1)
+                : Color.fromRGBO(255, 255, 255, 1),
+            secondaryColor: is_darkMode
+                ? Color.fromRGBO(68, 70, 84, 1)
+                : Color.fromRGBO(247, 247, 248, 1),
+            backgroundColor:
+                is_darkMode ? Color.fromRGBO(40, 42, 58, 1) : Colors.white54,
+            receivedMessageBodyTextStyle: TextStyle(
+              color: is_darkMode
+                  ? Color.fromRGBO(236, 236, 241, 1)
+                  : Color.fromRGBO(52, 53, 65, 1),
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              height: 1.5,
+            ),
+            sentMessageBodyTextStyle: TextStyle(
+              color: is_darkMode
+                  ? Color.fromRGBO(236, 236, 241, 1)
+                  : Color.fromRGBO(52, 53, 65, 1),
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              height: 1.5,
+            ),
+            inputContainerDecoration: BoxDecoration(
+              // gradient: LinearGradient(colors: [Colors.grey, Colors.white]), //背景渐变
+              // borderRadius: BorderRadius.circular(0),
+              border: Border(
+                top: BorderSide(
+                  color:
+                      is_darkMode ? const Color(0xFF1D1E2C) : Color(0xFFE4E2E6),
+                ),
+              ),
+            ),
+            messageBorderRadius: 10,
+            messageInsetsHorizontal: 20,
+            messageInsetsVertical: 12,
+            attachmentButtonIcon: const Icon(Icons.tips_and_updates_outlined),
+            inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),
+            inputTextStyle:
+                const TextStyle(fontWeight: FontWeight.normal, fontSize: 16),
+            inputTextColor:
+                is_darkMode ? const Color(0xFFFFFFFF) : Color(0xFF1D1E2C),
+            inputBackgroundColor:
+                is_darkMode ? Color(0xFF1B1B1F) : Color(0xFFFFFFFF),
+            inputBorderRadius: const BorderRadius.all(Radius.circular(0)),
+          ),
+        ),
       );
 
   void _addMessage(types.Message message) {
@@ -125,6 +150,8 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleAttachmentPressed() {
+    _textEditingController.text = 'test...';
+    return;
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) => SafeArea(

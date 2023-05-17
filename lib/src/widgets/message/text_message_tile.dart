@@ -61,7 +61,7 @@ class TileTextMessage extends StatelessWidget {
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
-    final width = MediaQuery.of(context).size.width;
+    // final width = MediaQuery.of(context).size.width;
 
     // if (usePreviewData && onPreviewDataFetched != null) {
     //   final urlRegexp = RegExp(regexLink, caseSensitive: false);
@@ -81,50 +81,6 @@ class TileTextMessage extends StatelessWidget {
     );
   }
 
-  Widget _linkPreview(
-    types.User user,
-    double width,
-    BuildContext context,
-  ) {
-    final linkDescriptionTextStyle = user.id == message.author.id
-        ? InheritedChatTheme.of(context)
-            .theme
-            .sentMessageLinkDescriptionTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == message.author.id
-        ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkTitleTextStyle;
-
-    return LinkPreview(
-      enableAnimation: true,
-      metadataTextStyle: linkDescriptionTextStyle,
-      metadataTitleStyle: linkTitleTextStyle,
-      onLinkPressed: options.onLinkPressed,
-      onPreviewDataFetched: _onPreviewDataFetched,
-      openOnPreviewImageTap: options.openOnPreviewImageTap,
-      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
-      padding: EdgeInsets.symmetric(
-        horizontal:
-            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
-        vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
-      ),
-      previewData: message.previewData,
-      text: message.text,
-      textWidget: _textWidgetBuilder(user, context, false),
-      userAgent: userAgent,
-      width: width,
-    );
-  }
-
-  void _onPreviewDataFetched(types.PreviewData previewData) {
-    if (message.previewData == null) {
-      onPreviewDataFetched?.call(message, previewData);
-    }
-  }
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -181,8 +137,7 @@ class TileTextMessage extends StatelessWidget {
       // codeConfig
     ]);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
+
       children: [
         Row(
           mainAxisSize: MainAxisSize.max,
@@ -258,7 +213,7 @@ class TileTextMessage extends StatelessWidget {
                       color: bodyTextStyle.color?.withOpacity(0.5),
                     ))),
           ],
-        )
+        ),
       ],
     );
   }

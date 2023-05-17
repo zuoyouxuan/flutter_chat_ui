@@ -1,9 +1,9 @@
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/src/widgets/patched_sliver_animated_list.dart';
 
 import '../models/bubble_rtl_alignment.dart';
-import 'patched_sliver_animated_list.dart';
 import 'state/inherited_chat_theme.dart';
 import 'state/inherited_user.dart';
 import 'typing_indicator.dart';
@@ -11,21 +11,21 @@ import 'typing_indicator.dart';
 /// Animated list that handles automatic animations and pagination.
 class ChatList extends StatefulWidget {
   /// Creates a chat list widget.
-  const ChatList(
-      {super.key,
-      this.bottomWidget,
-      required this.bubbleRtlAlignment,
-      this.isLastPage,
-      required this.itemBuilder,
-      required this.items,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.onEndReached,
-      this.onEndReachedThreshold,
-      required this.scrollController,
-      this.scrollPhysics,
-      this.typingIndicatorOptions,
-      required this.useTopSafeAreaInset,
-      required this.tileLayout});
+  const ChatList({
+    super.key,
+    this.bottomWidget,
+    required this.bubbleRtlAlignment,
+    this.isLastPage,
+    required this.itemBuilder,
+    required this.items,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.onEndReached,
+    this.onEndReachedThreshold,
+    required this.scrollController,
+    this.scrollPhysics,
+    this.typingIndicatorOptions,
+    required this.useTopSafeAreaInset, required this.tileLayout,
+  });
 
   /// A custom widget at the bottom of the list.
   final Widget? bottomWidget;
@@ -52,11 +52,7 @@ class ChatList extends StatefulWidget {
   /// A representation of how a [ScrollView] should dismiss the on-screen keyboard.
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
-  /// Used for pagination (infinite scroll) together with [onEndReached].
-  /// Can be anything from 0 to 1, where 0 is immediate load of the next page
-  /// as soon as scroll starts, and 1 is load of the next page only if scrolled
-  /// to the very end of the list. Default value is 0.75, e.g. start loading
-  /// next page when scrolled through about 3/4 of the available content.
+  /// Used for pagination (infinite scroll) together with [onEndReached]. Can be anything from 0 to 1, where 0 is immediate load of the next page as soon as scroll starts, and 1 is load of the next page only if scrolled to the very end of the list. Default value is 0.75, e.g. start loading next page when scrolled through about 3/4 of the available content.
   final double? onEndReachedThreshold;
 
   /// Scroll controller for the main [CustomScrollView]. Also used to auto scroll
@@ -72,7 +68,6 @@ class ChatList extends StatefulWidget {
 
   /// Whether to use top safe area inset for the list.
   final bool useTopSafeAreaInset;
-
   final bool tileLayout;
 
   @override
@@ -90,8 +85,8 @@ class _ChatListState extends State<ChatList>
 
   bool _indicatorOnScrollStatus = false;
   bool _isNextPageLoading = false;
-  final GlobalKey<PatchedSliverAnimatedListState> _listKey =
-      GlobalKey<PatchedSliverAnimatedListState>();
+  final GlobalKey<SliverAnimatedListState> _listKey =
+  GlobalKey<SliverAnimatedListState>();
   late List<Object> _oldData = List.from(widget.items);
 
   @override
@@ -99,6 +94,114 @@ class _ChatListState extends State<ChatList>
     super.initState();
 
     didUpdateWidget(widget);
+  }
+
+  void _calculateDiffs(List<Object> oldList) async {
+    final diffResult = calculateListDiff<Object>(
+      oldList,
+      widget.items,
+      equalityChecker: (item1, item2) {
+        if (item1 is Map<String, Object> && item2 is Map<String, Object>) {
+          final message1 = item1['message']! as types.Message;
+          final message2 = item2['message']! as types.Message;
+
+          return message1.id == message2.id;
+        } else {
+          return item1 == item2;
+        }
+      },
+    );
+
+    for (final update in diffResult.getUpdates(batch: false)) {
+      update.when(
+        insert: (pos, count) {
+          _listKey.currentState?.insertItem(pos);
+        },
+        remove: (pos, count) {
+          final item = oldList[pos];
+          _listKey.currentState?.removeItem(
+            pos,
+                (_, animation) => _removedMessageBuilder(item, animation),
+          );
+        },
+        change: (pos, payload) {},
+        move: (from, to) {},
+      );
+    }
+
+    _scrollToBottomIfNeeded(oldList);
+
+    _oldData = List.from(widget.items);
+  }
+
+  Widget _newMessageBuilder(int index, Animation<double> animation) {
+    try {
+      final item = _oldData[index];
+
+      return SizeTransition(
+        key: _valueKeyForItem(item),
+        axisAlignment: -1,
+        sizeFactor: animation.drive(CurveTween(curve: Curves.easeOutQuad)),
+        child: widget.itemBuilder(item, index),
+      );
+    } catch (e) {
+      return const SizedBox();
+    }
+  }
+
+  Widget _removedMessageBuilder(Object item, Animation<double> animation) =>
+      SizeTransition(
+        key: _valueKeyForItem(item),
+        axisAlignment: -1,
+        sizeFactor: animation.drive(CurveTween(curve: Curves.easeInQuad)),
+        child: FadeTransition(
+          opacity: animation.drive(CurveTween(curve: Curves.easeInQuad)),
+          child: widget.itemBuilder(item, null),
+        ),
+      );
+
+  // Hacky solution to reconsider.
+  void _scrollToBottomIfNeeded(List<Object> oldList) {
+    try {
+      // Take index 1 because there is always a spacer on index 0.
+      final oldItem = oldList[1];
+      final item = widget.items[1];
+
+      if (oldItem is Map<String, Object> && item is Map<String, Object>) {
+        final oldMessage = oldItem['message']! as types.Message;
+        final message = item['message']! as types.Message;
+
+        // Compare items to fire only on newly added messages.
+        if (oldMessage.id != message.id) {
+          // Run only for sent message.
+          if (message.author.id == InheritedUser.of(context).user.id) {
+            // Delay to give some time for Flutter to calculate new
+            // size after new message was added.
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (widget.scrollController.hasClients) {
+                widget.scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInQuad,
+                );
+              }
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // Do nothing if there are no items.
+    }
+  }
+
+  Key? _valueKeyForItem(Object item) =>
+      _mapMessage(item, (message) => ValueKey(message.id));
+
+  T? _mapMessage<T>(Object maybeMessage, T Function(types.Message) f) {
+    if (maybeMessage is Map<String, Object>) {
+      return f(maybeMessage['message'] as types.Message);
+    }
+    return null;
   }
 
   @override
@@ -173,18 +276,18 @@ class _ChatListState extends State<ChatList>
                       bubbleAlignment: widget.bubbleRtlAlignment,
                       options: widget.typingIndicatorOptions!,
                       showIndicator: (widget
-                              .typingIndicatorOptions!.typingUsers.isNotEmpty &&
+                          .typingIndicatorOptions!.typingUsers.isNotEmpty &&
                           !_indicatorOnScrollStatus),
                     ),
               ),
             ),
             SliverPadding(
               padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
-              sliver: PatchedSliverAnimatedList(
+              sliver: SliverAnimatedList(
                 findChildIndexCallback: (Key key) {
                   if (key is ValueKey<Object>) {
                     final newIndex = widget.items.indexWhere(
-                      (v) => _valueKeyForItem(v) == key,
+                          (v) => _valueKeyForItem(v) == key,
                     );
                     if (newIndex != -1) {
                       return newIndex;
@@ -219,14 +322,14 @@ class _ChatListState extends State<ChatList>
                         width: 16,
                         child: _isNextPageLoading
                             ? CircularProgressIndicator(
-                                backgroundColor: Colors.transparent,
-                                strokeWidth: 1.5,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  InheritedChatTheme.of(context)
-                                      .theme
-                                      .primaryColor,
-                                ),
-                              )
+                          backgroundColor: Colors.transparent,
+                          strokeWidth: 1.5,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            InheritedChatTheme.of(context)
+                                .theme
+                                .primaryColor,
+                          ),
+                        )
                             : null,
                       ),
                     ),
@@ -237,112 +340,4 @@ class _ChatListState extends State<ChatList>
           ],
         ),
       );
-
-  void _calculateDiffs(List<Object> oldList) async {
-    final diffResult = calculateListDiff<Object>(
-      oldList,
-      widget.items,
-      equalityChecker: (item1, item2) {
-        if (item1 is Map<String, Object> && item2 is Map<String, Object>) {
-          final message1 = item1['message']! as types.Message;
-          final message2 = item2['message']! as types.Message;
-
-          return message1.id == message2.id;
-        } else {
-          return item1 == item2;
-        }
-      },
-    );
-
-    for (final update in diffResult.getUpdates(batch: false)) {
-      update.when(
-        insert: (pos, count) {
-          _listKey.currentState?.insertItem(pos);
-        },
-        remove: (pos, count) {
-          final item = oldList[pos];
-          _listKey.currentState?.removeItem(
-            pos,
-            (_, animation) => _removedMessageBuilder(item, animation),
-          );
-        },
-        change: (pos, payload) {},
-        move: (from, to) {},
-      );
-    }
-
-    _scrollToBottomIfNeeded(oldList);
-
-    _oldData = List.from(widget.items);
-  }
-
-  Widget _newMessageBuilder(int index, Animation<double> animation) {
-    try {
-      final item = _oldData[index];
-
-      return SizeTransition(
-        key: _valueKeyForItem(item),
-        axisAlignment: -1,
-        sizeFactor: animation.drive(CurveTween(curve: Curves.easeOutQuad)),
-        child: widget.itemBuilder(item, index),
-      );
-    } catch (e) {
-      return const SizedBox();
-    }
-  }
-
-  Widget _removedMessageBuilder(Object item, Animation<double> animation) =>
-      SizeTransition(
-        key: _valueKeyForItem(item),
-        axisAlignment: -1,
-        sizeFactor: animation.drive(CurveTween(curve: Curves.easeInQuad)),
-        child: FadeTransition(
-          opacity: animation.drive(CurveTween(curve: Curves.easeInQuad)),
-          child: widget.itemBuilder(item, null),
-        ),
-      );
-
-  // Hacky solution to reconsider.
-  void _scrollToBottomIfNeeded(List<Object> oldList) {
-    try {
-      // Take index 1 because there is always a spacer on index 0.
-      final oldItem = oldList[1];
-      final item = widget.items[1];
-
-      if (oldItem is Map<String, Object> && item is Map<String, Object>) {
-        final oldMessage = oldItem['message']! as types.Message;
-        final message = item['message']! as types.Message;
-
-        // Compare items to fire only on newly added messages.
-        if (oldMessage.id != message.id) {
-          // Run only for sent message.
-          if (message.author.id == InheritedUser.of(context).user.id) {
-            // Delay to give some time for Flutter to calculate new
-            // size after new message was added
-            Future.delayed(const Duration(milliseconds: 100), () {
-              if (widget.scrollController.hasClients) {
-                widget.scrollController.animateTo(
-                  0,
-                  duration: const Duration(milliseconds: 200),
-                  curve: Curves.easeInQuad,
-                );
-              }
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Do nothing if there are no items.
-    }
-  }
-
-  Key? _valueKeyForItem(Object item) =>
-      _mapMessage(item, (message) => ValueKey(message.id));
-
-  T? _mapMessage<T>(Object maybeMessage, T Function(types.Message) f) {
-    if (maybeMessage is Map<String, Object>) {
-      return f(maybeMessage['message'] as types.Message);
-    }
-    return null;
-  }
 }
