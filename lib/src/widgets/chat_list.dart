@@ -1,6 +1,7 @@
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/src/widgets/patched_sliver_animated_list.dart';
 
 import '../models/bubble_rtl_alignment.dart';
 import 'state/inherited_chat_theme.dart';
@@ -23,7 +24,7 @@ class ChatList extends StatefulWidget {
     required this.scrollController,
     this.scrollPhysics,
     this.typingIndicatorOptions,
-    required this.useTopSafeAreaInset,
+    required this.useTopSafeAreaInset, required this.tileLayout,
   });
 
   /// A custom widget at the bottom of the list.
@@ -67,6 +68,7 @@ class ChatList extends StatefulWidget {
 
   /// Whether to use top safe area inset for the list.
   final bool useTopSafeAreaInset;
+  final bool tileLayout;
 
   @override
   State<ChatList> createState() => _ChatListState();
@@ -83,6 +85,8 @@ class _ChatListState extends State<ChatList>
 
   bool _indicatorOnScrollStatus = false;
   bool _isNextPageLoading = false;
+  final GlobalKey<SliverAnimatedListState> _listKey =
+  GlobalKey<SliverAnimatedListState>();
   final GlobalKey<SliverAnimatedListState> _listKey =
       GlobalKey<SliverAnimatedListState>();
   late List<Object> _oldData = List.from(widget.items);
@@ -267,25 +271,27 @@ class _ChatListState extends State<ChatList>
             if (widget.bottomWidget != null)
               SliverToBoxAdapter(child: widget.bottomWidget),
             SliverPadding(
-              padding: const EdgeInsets.only(bottom: 4),
+              padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
               sliver: SliverToBoxAdapter(
                 child: widget.typingIndicatorOptions?.customTypingIndicator ??
                     TypingIndicator(
                       bubbleAlignment: widget.bubbleRtlAlignment,
                       options: widget.typingIndicatorOptions!,
                       showIndicator: (widget
-                              .typingIndicatorOptions!.typingUsers.isNotEmpty &&
+                          .typingIndicatorOptions!.typingUsers.isNotEmpty &&
                           !_indicatorOnScrollStatus),
                     ),
               ),
             ),
             SliverPadding(
+              padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
+              sliver: SliverAnimatedList(
               padding: const EdgeInsets.only(bottom: 4),
               sliver: SliverAnimatedList(
                 findChildIndexCallback: (Key key) {
                   if (key is ValueKey<Object>) {
                     final newIndex = widget.items.indexWhere(
-                      (v) => _valueKeyForItem(v) == key,
+                          (v) => _valueKeyForItem(v) == key,
                     );
                     if (newIndex != -1) {
                       return newIndex;
@@ -301,7 +307,7 @@ class _ChatListState extends State<ChatList>
             ),
             SliverPadding(
               padding: EdgeInsets.only(
-                top: 16 +
+                top: (widget.tileLayout ? 2 : 16) +
                     (widget.useTopSafeAreaInset
                         ? MediaQuery.of(context).padding.top
                         : 0),
@@ -320,14 +326,14 @@ class _ChatListState extends State<ChatList>
                         width: 16,
                         child: _isNextPageLoading
                             ? CircularProgressIndicator(
-                                backgroundColor: Colors.transparent,
-                                strokeWidth: 1.5,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  InheritedChatTheme.of(context)
-                                      .theme
-                                      .primaryColor,
-                                ),
-                              )
+                          backgroundColor: Colors.transparent,
+                          strokeWidth: 1.5,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            InheritedChatTheme.of(context)
+                                .theme
+                                .primaryColor,
+                          ),
+                        )
                             : null,
                       ),
                     ),
@@ -338,4 +344,112 @@ class _ChatListState extends State<ChatList>
           ],
         ),
       );
+
+  void _calculateDiffs(List<Object> oldList) async {
+    final diffResult = calculateListDiff<Object>(
+      oldList,
+      widget.items,
+      equalityChecker: (item1, item2) {
+        if (item1 is Map<String, Object> && item2 is Map<String, Object>) {
+          final message1 = item1['message']! as types.Message;
+          final message2 = item2['message']! as types.Message;
+
+          return message1.id == message2.id;
+        } else {
+          return item1 == item2;
+        }
+      },
+    );
+
+    for (final update in diffResult.getUpdates(batch: false)) {
+      update.when(
+        insert: (pos, count) {
+          _listKey.currentState?.insertItem(pos);
+        },
+        remove: (pos, count) {
+          final item = oldList[pos];
+          _listKey.currentState?.removeItem(
+            pos,
+            (_, animation) => _removedMessageBuilder(item, animation),
+          );
+        },
+        change: (pos, payload) {},
+        move: (from, to) {},
+      );
+    }
+
+    _scrollToBottomIfNeeded(oldList);
+
+    _oldData = List.from(widget.items);
+  }
+
+  Widget _newMessageBuilder(int index, Animation<double> animation) {
+    try {
+      final item = _oldData[index];
+
+      return SizeTransition(
+        key: _valueKeyForItem(item),
+        axisAlignment: -1,
+        sizeFactor: animation.drive(CurveTween(curve: Curves.easeOutQuad)),
+        child: widget.itemBuilder(item, index),
+      );
+    } catch (e) {
+      return const SizedBox();
+    }
+  }
+
+  Widget _removedMessageBuilder(Object item, Animation<double> animation) =>
+      SizeTransition(
+        key: _valueKeyForItem(item),
+        axisAlignment: -1,
+        sizeFactor: animation.drive(CurveTween(curve: Curves.easeInQuad)),
+        child: FadeTransition(
+          opacity: animation.drive(CurveTween(curve: Curves.easeInQuad)),
+          child: widget.itemBuilder(item, null),
+        ),
+      );
+
+  // Hacky solution to reconsider.
+  void _scrollToBottomIfNeeded(List<Object> oldList) {
+    try {
+      // Take index 1 because there is always a spacer on index 0.
+      final oldItem = oldList[1];
+      final item = widget.items[1];
+
+      if (oldItem is Map<String, Object> && item is Map<String, Object>) {
+        final oldMessage = oldItem['message']! as types.Message;
+        final message = item['message']! as types.Message;
+
+        // Compare items to fire only on newly added messages.
+        if (oldMessage.id != message.id) {
+          // Run only for sent message.
+          if (message.author.id == InheritedUser.of(context).user.id) {
+            // Delay to give some time for Flutter to calculate new
+            // size after new message was added
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (widget.scrollController.hasClients) {
+                widget.scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeInQuad,
+                );
+              }
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // Do nothing if there are no items.
+    }
+  }
+
+  Key? _valueKeyForItem(Object item) =>
+      _mapMessage(item, (message) => ValueKey(message.id));
+
+  T? _mapMessage<T>(Object maybeMessage, T Function(types.Message) f) {
+    if (maybeMessage is Map<String, Object>) {
+      return f(maybeMessage['message'] as types.Message);
+    }
+    return null;
+  }
 }

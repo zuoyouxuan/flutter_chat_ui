@@ -180,7 +180,7 @@ class _InputState extends State<Input> {
                                       .withOpacity(0.5),
                                 ),
                             hintText:
-                                InheritedL10n.of(context).l10n.inputPlaceholder,
+                            widget.options.hitText,
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: widget.options.keyboardType,
@@ -251,7 +251,9 @@ class InputOptions {
     this.onTextChanged,
     this.onTextFieldTap,
     this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
+    this.inputVisibilityMode = SendButtonVisibilityMode.editing,
     this.textEditingController,
+    this.hitText = 'Message...',
     this.autocorrect = true,
     this.enableSuggestions = true,
     this.enabled = true,
@@ -263,6 +265,8 @@ class InputOptions {
   /// Controls the [Input] keyboard type. Defaults to [TextInputType.multiline].
   final TextInputType keyboardType;
 
+  final String? hitText;
+
   /// Will be called whenever the text inside [TextField] changes.
   final void Function(String)? onTextChanged;
 
@@ -273,6 +277,7 @@ class InputOptions {
   /// [TextField] state inside the [Input] widget.
   /// Defaults to [SendButtonVisibilityMode.editing].
   final SendButtonVisibilityMode sendButtonVisibilityMode;
+  final SendButtonVisibilityMode inputVisibilityMode;
 
   /// Custom [TextEditingController]. If not provided, defaults to the
   /// [InputTextFieldController], which extends [TextEditingController] and has
