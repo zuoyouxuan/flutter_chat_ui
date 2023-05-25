@@ -76,10 +76,12 @@ class TileTextMessage extends StatelessWidget {
     // }
 
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: theme.messageInsetsHorizontal,
-        vertical: theme.messageInsetsVertical,
-      ),
+      // margin: EdgeInsets.symmetric(
+      //   horizontal: theme.messageInsetsHorizontal,
+      //   vertical: theme.messageInsetsVertical,
+      // ),
+      //
+      margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal, theme.messageInsetsVertical, theme.messageInsetsHorizontal, 0),
       child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
@@ -163,7 +165,7 @@ class TileTextMessage extends StatelessWidget {
             ),
 
             Expanded(
-              flex: 1,
+              // flex: 1,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
