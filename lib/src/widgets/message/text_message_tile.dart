@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
@@ -23,6 +22,7 @@ class TileTextMessage extends StatelessWidget {
     required this.showName,
     required this.usePreviewData,
     this.userAgent,
+    this.msgExtraBarBuild,
   });
 
   /// See [Message.emojiEnlargementBehavior].
@@ -54,6 +54,9 @@ class TileTextMessage extends StatelessWidget {
   /// User agent to fetch preview data with.
   final String? userAgent;
 
+  final Widget Function(types.Message message, {required BuildContext context})?
+      msgExtraBarBuild;
+
   @override
   Widget build(BuildContext context) {
     final enlargeEmojis =
@@ -80,7 +83,6 @@ class TileTextMessage extends StatelessWidget {
       child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
-
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -123,12 +125,12 @@ class TileTextMessage extends StatelessWidget {
         ? darkPreConfig
         : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
-    const codeConfig =  CodeConfig(
-            style: TextStyle(
-                inherit:false,
-                backgroundColor: Colors.transparent,
-                fontWeight: FontWeight.bold,
-                color: Colors.green));
+    const codeConfig = CodeConfig(
+        style: TextStyle(
+            inherit: false,
+            backgroundColor: Colors.transparent,
+            fontWeight: FontWeight.bold,
+            color: Colors.green));
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
@@ -137,7 +139,7 @@ class TileTextMessage extends StatelessWidget {
       // codeConfig
     ]);
     return Column(
-
+      mainAxisSize: MainAxisSize.min,
       children: [
         Row(
           mainAxisSize: MainAxisSize.max,
@@ -174,7 +176,6 @@ class TileTextMessage extends StatelessWidget {
                       selectable: true,
                       config: markdownConfig,
                     ),
-
                   if (user.id == message.author.id)
                     if (enlargeEmojis)
                       SelectableText(message.text, style: emojiTextStyle)
@@ -199,21 +200,66 @@ class TileTextMessage extends StatelessWidget {
               ),
             ),
 
-            Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                    tooltip: '点击复制',
-                    onPressed: () async {
-                      await Clipboard.setData(ClipboardData(text: message.text))
-                          .then((value) => {});
-                    },
-                    icon: Icon(
-                      size: 14,
-                      Icons.copy_all_sharp,
-                      color: bodyTextStyle.color?.withOpacity(0.5),
-                    ))),
+            // Align(
+            //     alignment: Alignment.topRight,
+            //     child: IconButton(
+            //         tooltip: '点击复制',
+            //         onPressed: () async {
+            //           await Clipboard.setData(ClipboardData(text: message.text))
+            //               .then((value) => {});
+            //         },
+            //         icon: Icon(
+            //           size: 14,
+            //           Icons.copy_all_sharp,
+            //           color: bodyTextStyle.color?.withOpacity(0.5),
+            //         ))),
           ],
         ),
+        Container(
+          padding: EdgeInsets.zero,
+          // padding: const EdgeInsets.all(5.0),
+          alignment: Alignment.bottomRight,
+          // decoration: BoxDecoration(
+          //   gradient: LinearGradient(
+          //     begin: Alignment.topCenter,
+          //     end: Alignment.bottomCenter,
+          //     colors: <Color>[
+          //       Colors.black.withAlpha(0),
+          //       Colors.black12,
+          //       Colors.black45
+          //     ],
+          //   ),
+          // ),
+          child: (msgExtraBarBuild != null)
+              ? msgExtraBarBuild!(message, context: context)
+              : Text(""),
+        ),
+
+        //
+        // Row(
+        //   mainAxisSize: MainAxisSize.max,
+        //   // crossAxisAlignment: CrossAxisAlignment.end,
+        //   mainAxisAlignment: MainAxisAlignment.end,
+        //   children: msgExtraBarBuild!(message),
+        //
+        //   //
+        //   // children: [
+        //   //   IconButton(
+        //   //     color: Colors.grey.withOpacity(0.5),
+        //   //     iconSize: 14,
+        //   //     onPressed: () {},
+        //   //     icon: Icon(Icons.copy),
+        //   //   ),
+        //   //   SizedBox(
+        //   //     width: 5,
+        //   //   ),
+        //   //   Icon(
+        //   //     Icons.refresh,
+        //   //     color: Colors.grey.withOpacity(0.5),
+        //   //     size: 16,
+        //   //   ),
+        //   // ],
+        // )
       ],
     );
   }

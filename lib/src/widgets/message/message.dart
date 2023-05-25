@@ -54,7 +54,11 @@ class Message extends StatelessWidget {
     required this.usePreviewData,
     this.userAgent,
     this.videoMessageBuilder,
+    this.msgExtraBarBuild,
   });
+
+  final Widget Function(types.Message message, {required BuildContext context})?
+      msgExtraBarBuild;
 
   /// Build an audio message inside predefined bubble.
   final Widget Function(types.AudioMessage, {required int messageWidth})?

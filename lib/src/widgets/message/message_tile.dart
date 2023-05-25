@@ -46,6 +46,7 @@ class TileMessage extends Message {
     required super.usePreviewData,
     super.userAgent,
     super.videoMessageBuilder,
+    super.msgExtraBarBuild
   });
 
   @override
@@ -237,6 +238,7 @@ class TileMessage extends Message {
                 showName: showName,
                 usePreviewData: usePreviewData,
                 userAgent: userAgent,
+                msgExtraBarBuild : msgExtraBarBuild
               );
       case types.MessageType.video:
         final videoMessage = message as types.VideoMessage;
