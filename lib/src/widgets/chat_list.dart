@@ -218,8 +218,7 @@ class _ChatListState extends State<ChatList>
   }
 
   @override
-  Widget build(BuildContext context) =>
-      NotificationListener<ScrollNotification>(
+  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           if (notification.metrics.pixels > 10.0 && !_indicatorOnScrollStatus) {
             setState(() {
@@ -268,7 +267,6 @@ class _ChatListState extends State<ChatList>
           slivers: [
             if (widget.bottomWidget != null)
               SliverToBoxAdapter(child: widget.bottomWidget),
-
             SliverPadding(
               padding: EdgeInsets.only(bottom: (widget.tileLayout ? 0 : 4)),
               sliver: SliverToBoxAdapter(
@@ -302,42 +300,7 @@ class _ChatListState extends State<ChatList>
                     _newMessageBuilder(index, animation),
               ),
             ),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                top: (widget.tileLayout ? 2 : 16) +
-                    (widget.useTopSafeAreaInset
-                        ? MediaQuery.of(context).padding.top
-                        : 0),
-              ),
-              sliver: SliverToBoxAdapter(
-                child: SizeTransition(
-                  axisAlignment: 1,
-                  sizeFactor: _animation,
-                  child: Center(
-                    child: Container(
-                      alignment: Alignment.center,
-                      height: 32,
-                      width: 32,
-                      child: SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: _isNextPageLoading
-                            ? CircularProgressIndicator(
-                                backgroundColor: Colors.transparent,
-                                strokeWidth: 1.5,
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                  InheritedChatTheme.of(context)
-                                      .theme
-                                      .primaryColor,
-                                ),
-                              )
-                            : null,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+
           ],
         ),
       );
