@@ -261,7 +261,7 @@ class _ChatListState extends State<ChatList>
         },
         child: CustomScrollView(
           controller: widget.scrollController,
-          keyboardDismissBehavior: widget.keyboardDismissBehavior,
+          // keyboardDismissBehavior: widget.keyboardDismissBehavior,
           physics: widget.scrollPhysics,
           reverse: true,
           slivers: [
@@ -300,7 +300,42 @@ class _ChatListState extends State<ChatList>
                     _newMessageBuilder(index, animation),
               ),
             ),
-
+            SliverPadding(
+              padding: EdgeInsets.only(
+                top: (widget.tileLayout ? 2 : 16) +
+                    (widget.useTopSafeAreaInset
+                        ? MediaQuery.of(context).padding.top
+                        : 0),
+              ),
+              sliver: SliverToBoxAdapter(
+                child: SizeTransition(
+                  axisAlignment: 1,
+                  sizeFactor: _animation,
+                  child: Center(
+                    child: Container(
+                      alignment: Alignment.center,
+                      height: 32,
+                      width: 32,
+                      child: SizedBox(
+                        height: 16,
+                        width: 16,
+                        child: _isNextPageLoading
+                            ? CircularProgressIndicator(
+                                backgroundColor: Colors.transparent,
+                                strokeWidth: 1.5,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  InheritedChatTheme.of(context)
+                                      .theme
+                                      .primaryColor,
+                                ),
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       );
