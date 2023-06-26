@@ -25,7 +25,7 @@ dependencies:
   url_launcher: ^6.1.11
   visibility_detector: ^0.4.0+2
   code_text_field: ^1.1.0
-  markdown_widget: ^2.1.0
+  markdown_widget: ^2.2.0
 
 dev_dependencies:
   dart_code_metrics: ^5.7.3
