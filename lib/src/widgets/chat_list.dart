@@ -261,7 +261,7 @@ class _ChatListState extends State<ChatList>
         },
         child: CustomScrollView(
           controller: widget.scrollController,
-          // keyboardDismissBehavior: widget.keyboardDismissBehavior,
+          keyboardDismissBehavior: widget.keyboardDismissBehavior,
           physics: widget.scrollPhysics,
           reverse: true,
           slivers: [
