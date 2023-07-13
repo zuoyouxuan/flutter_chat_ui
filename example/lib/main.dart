@@ -100,6 +100,7 @@ class _ChatPageState extends State<ChatPage> {
           showUserNames: true,
           tileLayout: true,
           user: _user,
+          avatarBuilder: (String userId) {return Icon(Icons.shuffle_on);},
           inputOptions: InputOptions(
               sendButtonVisibilityMode: SendButtonVisibilityMode.always),
           theme: DefaultChatTheme(

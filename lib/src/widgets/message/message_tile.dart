@@ -83,31 +83,31 @@ class TileMessage extends Message {
           //   // minWidth:
           // ),
           child: GestureDetector(
-              onDoubleTap: () => onMessageDoubleTap?.call(context, message),
-              onLongPress: () => onMessageLongPress?.call(context, message),
-              onTap: () => onMessageTap?.call(context, message),
-              child: onMessageVisibilityChanged != null
-            ? VisibilityDetector(
-                key: Key(message.id),
-                onVisibilityChanged: (visibilityInfo) =>
-                    onMessageVisibilityChanged!(
-                  message,
-                  visibilityInfo.visibleFraction > 0.1,
-                ),
-                child: _bubbleBuilder(
-                  context,
-                  BorderRadius.zero,
-                  currentUserIsAuthor,
-                  enlargeEmojis,
-                ),
-              )
-            : _bubbleBuilder(
-                context,
-                BorderRadius.zero,
-                currentUserIsAuthor,
-                enlargeEmojis,
-              ),
-            ),
+            onDoubleTap: () => onMessageDoubleTap?.call(context, message),
+            onLongPress: () => onMessageLongPress?.call(context, message),
+            onTap: () => onMessageTap?.call(context, message),
+            child: onMessageVisibilityChanged != null
+                ? VisibilityDetector(
+                    key: Key(message.id),
+                    onVisibilityChanged: (visibilityInfo) =>
+                        onMessageVisibilityChanged!(
+                      message,
+                      visibilityInfo.visibleFraction > 0.1,
+                    ),
+                    child: _bubbleBuilder(
+                      context,
+                      BorderRadius.zero,
+                      currentUserIsAuthor,
+                      enlargeEmojis,
+                    ),
+                  )
+                : _bubbleBuilder(
+                    context,
+                    BorderRadius.zero,
+                    currentUserIsAuthor,
+                    enlargeEmojis,
+                  ),
+          ),
         ),
         //
         // if (currentUserIsAuthor)
@@ -165,7 +165,6 @@ class TileMessage extends Message {
                   ),
                 );
 
-
   Widget _messageBuilder() {
     switch (message.type) {
       case types.MessageType.audio:
@@ -210,7 +209,8 @@ class TileMessage extends Message {
                 showName: showName,
                 usePreviewData: usePreviewData,
                 userAgent: userAgent,
-                msgExtraBarBuild : msgExtraBarBuild
+                msgExtraBarBuild: msgExtraBarBuild,
+                avatarBuilder: super.avatarBuilder,
               );
       case types.MessageType.video:
         final videoMessage = message as types.VideoMessage;
