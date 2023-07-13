@@ -6,7 +6,6 @@ import '../../models/input_clear_mode.dart';
 import '../../models/send_button_visibility_mode.dart';
 import '../../util.dart';
 import '../state/inherited_chat_theme.dart';
-import '../state/inherited_l10n.dart';
 import 'attachment_button.dart';
 import 'input_text_field_controller.dart';
 import 'send_button.dart';
@@ -180,13 +179,12 @@ class _InputState extends State<Input> {
                                       .inputTextColor
                                       .withOpacity(0.5),
                                 ),
-                            hintText:
-                            widget.options.hitText,
+                            hintText: widget.options.hitText,
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: widget.options.keyboardType,
                       maxLines: 5,
-                      minLines: 1,
+                      minLines: widget.options.minLines,
                       onChanged: widget.options.onTextChanged,
                       onTap: widget.options.onTextFieldTap,
                       style: InheritedChatTheme.of(context)
@@ -259,6 +257,7 @@ class InputOptions {
     this.autofocus = false,
     this.enableSuggestions = true,
     this.enabled = true,
+    this.minLines = 1,
   });
 
   /// Controls the [Input] clear behavior. Defaults to [InputClearMode.always].
@@ -268,6 +267,8 @@ class InputOptions {
   final TextInputType keyboardType;
 
   final String? hitText;
+
+  final int? minLines;
 
   /// Will be called whenever the text inside [TextField] changes.
   final void Function(String)? onTextChanged;

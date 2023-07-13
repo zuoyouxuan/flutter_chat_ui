@@ -100,9 +100,8 @@ class _ChatPageState extends State<ChatPage> {
           showUserNames: true,
           tileLayout: true,
           user: _user,
-          avatarBuilder: (String userId) {
-            return userId == _user.id
-                ? CircleAvatar(
+          avatarBuilder: (String userId) => userId == _user.id
+                ? const CircleAvatar(
               child: Icon(
                 Icons.rocket,
                 color: Colors.white,
@@ -110,18 +109,17 @@ class _ChatPageState extends State<ChatPage> {
               backgroundColor: Color.fromRGBO(25, 195, 125 , 1),
             )
                 : CircleAvatar(
-              child: Icon(
+              backgroundColor: Colors.blue.withOpacity(0.3),
+              child: const Icon(
                 Icons.question_mark,
                 color: Colors.white,
               ),
-              backgroundColor: Colors.blue.withOpacity(0.3),
-            );
-          },
-          inputOptions: InputOptions(
-              sendButtonVisibilityMode: SendButtonVisibilityMode.always),
+            ),
+          inputOptions: const InputOptions(
+              sendButtonVisibilityMode: SendButtonVisibilityMode.always,minLines: 3,),
           theme: DefaultChatTheme(
               messageBorderColor: is_darkMode
-                  ? Color.fromRGBO(32, 33, 35, .5)
+                  ? const Color.fromRGBO(32, 33, 35, .5)
                   : Color.fromRGBO(0, 0, 0, .1),
               // deliveredIcon: Icon(
               //   Icons.double_arrow,
