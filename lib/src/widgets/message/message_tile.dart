@@ -46,7 +46,7 @@ class TileMessage extends Message {
     required super.usePreviewData,
     super.userAgent,
     super.videoMessageBuilder,
-    super.msgExtraBarBuild
+    super.msgExtraBarBuild,
   });
 
   @override
@@ -67,83 +67,64 @@ class TileMessage extends Message {
     //
     final borderRadius = Radius.zero;
 
-    return Container(
-      // margin: bubbleRtlAlignment == BubbleRtlAlignment.left
-      //     ? EdgeInsetsDirectional.only(
-      //         // bottom: 4,
-      //         end: isMobile ? query.padding.right : 0,
-      //         start: 0 + (isMobile ? query.padding.left : 0),
-      //       )
-      //     : EdgeInsets.only(
-      //         // bottom: 4,
-      //         left: 0 + (isMobile ? query.padding.left : 0),
-      //         right: isMobile ? query.padding.right : 0,
-      //       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.min,
-        textDirection: bubbleRtlAlignment == BubbleRtlAlignment.left
-            ? null
-            : TextDirection.ltr,
-        children: [
-          // if (!currentUserIsAuthor && showUserAvatars) _avatarBuilder(),
-          Expanded(
-            // width: double.infinity,
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      textDirection: bubbleRtlAlignment == BubbleRtlAlignment.left
+          ? null
+          : TextDirection.ltr,
+      children: [
+        // if (!currentUserIsAuthor && showUserAvatars) _avatarBuilder(),
+        Expanded(
+          // width: double.infinity,
 
-            // constraints: BoxConstraints(
-            //   minWidth: double.maxFinite,
-            //   // minWidth:
-            // ),
-            child: Container(
-              // mainAxisSize: MainAxisSize.max,
-              // crossAxisAlignment: CrossAxisAlignment.end,
-              child:
-                  // _avatarBuilder(),
-                  GestureDetector(
-                onDoubleTap: () => onMessageDoubleTap?.call(context, message),
-                onLongPress: () => onMessageLongPress?.call(context, message),
-                onTap: () => onMessageTap?.call(context, message),
-                child: onMessageVisibilityChanged != null
-                    ? VisibilityDetector(
-                        key: Key(message.id),
-                        onVisibilityChanged: (visibilityInfo) =>
-                            onMessageVisibilityChanged!(
-                          message,
-                          visibilityInfo.visibleFraction > 0.1,
-                        ),
-                        child: _bubbleBuilder(
-                          context,
-                          BorderRadius.zero,
-                          currentUserIsAuthor,
-                          enlargeEmojis,
-                        ),
-                      )
-                    : _bubbleBuilder(
-                        context,
-                        BorderRadius.zero,
-                        currentUserIsAuthor,
-                        enlargeEmojis,
-                      ),
+          // constraints: BoxConstraints(
+          //   minWidth: double.maxFinite,
+          //   // minWidth:
+          // ),
+          child: GestureDetector(
+              onDoubleTap: () => onMessageDoubleTap?.call(context, message),
+              onLongPress: () => onMessageLongPress?.call(context, message),
+              onTap: () => onMessageTap?.call(context, message),
+              child: onMessageVisibilityChanged != null
+            ? VisibilityDetector(
+                key: Key(message.id),
+                onVisibilityChanged: (visibilityInfo) =>
+                    onMessageVisibilityChanged!(
+                  message,
+                  visibilityInfo.visibleFraction > 0.1,
+                ),
+                child: _bubbleBuilder(
+                  context,
+                  BorderRadius.zero,
+                  currentUserIsAuthor,
+                  enlargeEmojis,
+                ),
+              )
+            : _bubbleBuilder(
+                context,
+                BorderRadius.zero,
+                currentUserIsAuthor,
+                enlargeEmojis,
               ),
             ),
-          ),
-          //
-          // if (currentUserIsAuthor)
-          //   Padding(
-          //     padding: InheritedChatTheme.of(context).theme.statusIconPadding,
-          //     child: showStatus
-          //         ? GestureDetector(
-          //             onLongPress: () =>
-          //                 onMessageStatusLongPress?.call(context, message),
-          //             onTap: () => onMessageStatusTap?.call(context, message),
-          //             child: customStatusBuilder != null
-          //                 ? customStatusBuilder!(message, context: context)
-          //                 : MessageStatus(status: message.status),
-          //           )
-          //         : null,
-          //   ),
-        ],
-      ),
+        ),
+        //
+        // if (currentUserIsAuthor)
+        //   Padding(
+        //     padding: InheritedChatTheme.of(context).theme.statusIconPadding,
+        //     child: showStatus
+        //         ? GestureDetector(
+        //             onLongPress: () =>
+        //                 onMessageStatusLongPress?.call(context, message),
+        //             onTap: () => onMessageStatusTap?.call(context, message),
+        //             child: customStatusBuilder != null
+        //                 ? customStatusBuilder!(message, context: context)
+        //                 : MessageStatus(status: message.status),
+        //           )
+        //         : null,
+        //   ),
+      ],
     );
   }
 
@@ -184,15 +165,6 @@ class TileMessage extends Message {
                   ),
                 );
 
-  Widget _avatarBuilder() => showAvatar
-      ? avatarBuilder?.call(message.author.id) ??
-          UserAvatar(
-            author: message.author,
-            bubbleRtlAlignment: bubbleRtlAlignment,
-            imageHeaders: imageHeaders,
-            onAvatarTap: onAvatarTap,
-          )
-      : const SizedBox(width: 40);
 
   Widget _messageBuilder() {
     switch (message.type) {

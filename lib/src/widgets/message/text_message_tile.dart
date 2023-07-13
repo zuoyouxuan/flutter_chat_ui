@@ -23,7 +23,10 @@ class TileTextMessage extends StatelessWidget {
     required this.usePreviewData,
     this.userAgent,
     this.msgExtraBarBuild,
+    this.avatarBuilder,
   });
+
+  final Widget Function(String userId)? avatarBuilder;
 
   /// See [Message.emojiEnlargementBehavior].
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
@@ -64,27 +67,17 @@ class TileTextMessage extends StatelessWidget {
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
-    // final width = MediaQuery.of(context).size.width;
-
-    // if (usePreviewData && onPreviewDataFetched != null) {
-    //   final urlRegexp = RegExp(regexLink, caseSensitive: false);
-    //   final matches = urlRegexp.allMatches(message.text);
-    //
-    //   if (matches.isNotEmpty) {
-    //     return _linkPreview(user, width, context);
-    //   }
-    // }
 
     return Container(
-      // margin: EdgeInsets.symmetric(
-      //   horizontal: theme.messageInsetsHorizontal,
-      //   vertical: theme.messageInsetsVertical,
-      // ),
-      //
       margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal, theme.messageInsetsVertical, theme.messageInsetsHorizontal, 0),
       child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
+
+  Widget _avatarBuilder() => avatarBuilder?.call(message.author.id) ??
+      UserAvatar(
+        author: message.author,
+      );
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -148,17 +141,19 @@ class TileTextMessage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                UserAvatar(
-                  author: message.author,
-                ),
-              ],
-            ),
+            _avatarBuilder(),
+            // Column(
+            //   // crossAxisAlignment: CrossAxisAlignment.center,
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   mainAxisSize: MainAxisSize.min,
+            //   children: [
+            //     _avatarBuilder()
+            //     // UserAvatar(
+            //     //   author: message.author,
+            //     // ),
+            //   ],
+            // ),
             // if (showName)
             SizedBox(
               width: 5,
