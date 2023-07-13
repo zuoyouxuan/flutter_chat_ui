@@ -60,21 +60,8 @@ class TileTextMessage extends StatelessWidget {
   final Widget Function(types.Message message, {required BuildContext context})?
       msgExtraBarBuild;
 
-  @override
-  Widget build(BuildContext context) {
-    final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(emojiEnlargementBehavior, message);
-    final theme = InheritedChatTheme.of(context).theme;
-    final user = InheritedUser.of(context).user;
-
-    return Container(
-      margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal, theme.messageInsetsVertical, theme.messageInsetsHorizontal, 0),
-      child: _textWidgetBuilder(user, context, enlargeEmojis),
-    );
-  }
-
-  Widget _avatarBuilder() => avatarBuilder?.call(message.author.id) ??
+  Widget _avatarBuilder() =>
+      avatarBuilder?.call(message.author.id) ??
       UserAvatar(
         author: message.author,
       );
@@ -102,14 +89,12 @@ class TileTextMessage extends StatelessWidget {
         : theme.receivedEmojiMessageTextStyle;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    // final isDark = true;
 
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
     final darkPreConfig = PreConfig.darkConfig.copy(
       textStyle: const TextStyle(fontSize: 14),
-      // theme : a11yDarkTheme,
       decoration: const BoxDecoration(
         color: Colors.black,
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -121,17 +106,18 @@ class TileTextMessage extends StatelessWidget {
         : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
     const codeConfig = CodeConfig(
-        style: TextStyle(
-            inherit: false,
-            backgroundColor: Colors.transparent,
-            fontWeight: FontWeight.bold,
-            color: Colors.green));
+      style: TextStyle(
+        inherit: false,
+        backgroundColor: Colors.transparent,
+        fontWeight: FontWeight.bold,
+        color: Colors.green,
+      ),
+    );
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
       preConfig,
       codeConfig,
-      // codeConfig
     ]);
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -142,25 +128,10 @@ class TileTextMessage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _avatarBuilder(),
-            // Column(
-            //   // crossAxisAlignment: CrossAxisAlignment.center,
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   mainAxisSize: MainAxisSize.min,
-            //   children: [
-            //     _avatarBuilder()
-            //     // UserAvatar(
-            //     //   author: message.author,
-            //     // ),
-            //   ],
-            // ),
-            // if (showName)
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
-
-            Expanded(
-              // flex: 1,
+            Flexible(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,93 +142,52 @@ class TileTextMessage extends StatelessWidget {
                       data: message.text,
                       shrinkWrap: true,
                       selectable: true,
+                      padding: EdgeInsets.zero,
                       config: markdownConfig,
                     ),
                   if (user.id == message.author.id)
                     if (enlargeEmojis)
                       SelectableText(message.text, style: emojiTextStyle)
                     else
-                      TextMessageText(
-                        bodyLinkTextStyle: bodyLinkTextStyle,
-                        bodyTextStyle: bodyTextStyle,
-                        boldTextStyle: boldTextStyle,
-                        codeTextStyle: codeTextStyle,
-                        options: options,
-                        text: message.text,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: TextMessageText(
+                          bodyLinkTextStyle: bodyLinkTextStyle,
+                          bodyTextStyle: bodyTextStyle,
+                          boldTextStyle: boldTextStyle,
+                          codeTextStyle: codeTextStyle,
+                          options: options,
+                          text: message.text,
+                        ),
                       ),
-                  //
-                  //
-                  // if (enlargeEmojis)
-                  //   if (options.isTextSelectable)
-                  //     SelectableText(message.text, style: emojiTextStyle)
-                  //   else
-                  //     Text(message.text, style: emojiTextStyle)
-                  //
                 ],
               ),
             ),
-
-            // Align(
-            //     alignment: Alignment.topRight,
-            //     child: IconButton(
-            //         tooltip: '点击复制',
-            //         onPressed: () async {
-            //           await Clipboard.setData(ClipboardData(text: message.text))
-            //               .then((value) => {});
-            //         },
-            //         icon: Icon(
-            //           size: 14,
-            //           Icons.copy_all_sharp,
-            //           color: bodyTextStyle.color?.withOpacity(0.5),
-            //         ))),
           ],
         ),
         Container(
           padding: EdgeInsets.zero,
-          // padding: const EdgeInsets.all(5.0),
           alignment: Alignment.bottomRight,
-          // decoration: BoxDecoration(
-          //   gradient: LinearGradient(
-          //     begin: Alignment.topCenter,
-          //     end: Alignment.bottomCenter,
-          //     colors: <Color>[
-          //       Colors.black.withAlpha(0),
-          //       Colors.black12,
-          //       Colors.black45
-          //     ],
-          //   ),
-          // ),
           child: (msgExtraBarBuild != null)
               ? msgExtraBarBuild!(message, context: context)
-              : Text(""),
+              : const Text(''),
         ),
-
-        //
-        // Row(
-        //   mainAxisSize: MainAxisSize.max,
-        //   // crossAxisAlignment: CrossAxisAlignment.end,
-        //   mainAxisAlignment: MainAxisAlignment.end,
-        //   children: msgExtraBarBuild!(message),
-        //
-        //   //
-        //   // children: [
-        //   //   IconButton(
-        //   //     color: Colors.grey.withOpacity(0.5),
-        //   //     iconSize: 14,
-        //   //     onPressed: () {},
-        //   //     icon: Icon(Icons.copy),
-        //   //   ),
-        //   //   SizedBox(
-        //   //     width: 5,
-        //   //   ),
-        //   //   Icon(
-        //   //     Icons.refresh,
-        //   //     color: Colors.grey.withOpacity(0.5),
-        //   //     size: 16,
-        //   //   ),
-        //   // ],
-        // )
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final enlargeEmojis =
+        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+            isConsistsOfEmojis(emojiEnlargementBehavior, message);
+    final theme = InheritedChatTheme.of(context).theme;
+    final user = InheritedUser.of(context).user;
+
+    return Container(
+      margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal,
+          theme.messageInsetsVertical, theme.messageInsetsHorizontal, 0),
+      child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
 }

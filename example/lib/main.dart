@@ -100,7 +100,23 @@ class _ChatPageState extends State<ChatPage> {
           showUserNames: true,
           tileLayout: true,
           user: _user,
-          avatarBuilder: (String userId) {return Icon(Icons.shuffle_on);},
+          avatarBuilder: (String userId) {
+            return userId == _user.id
+                ? CircleAvatar(
+              child: Icon(
+                Icons.rocket,
+                color: Colors.white,
+              ),
+              backgroundColor: Color.fromRGBO(25, 195, 125 , 1),
+            )
+                : CircleAvatar(
+              child: Icon(
+                Icons.question_mark,
+                color: Colors.white,
+              ),
+              backgroundColor: Colors.blue.withOpacity(0.3),
+            );
+          },
           inputOptions: InputOptions(
               sendButtonVisibilityMode: SendButtonVisibilityMode.always),
           theme: DefaultChatTheme(
