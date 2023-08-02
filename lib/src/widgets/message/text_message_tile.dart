@@ -121,16 +121,21 @@ class TileTextMessage extends StatelessWidget {
     ]);
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _avatarBuilder(),
-            const SizedBox(
-              width: 5,
-            ),
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children:[
+        _avatarBuilder(),SizedBox(width:8),Text('user.firstName' , style:bodyTextStyle)
+        ]),
+        const SizedBox(
+          height: 8,
+        ),
+        // Row(
+        //   mainAxisSize: MainAxisSize.max,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   children: [
             Flexible(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -163,8 +168,8 @@ class TileTextMessage extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-        ),
+        //   ],
+        // ),
         Container(
           padding: EdgeInsets.zero,
           alignment: Alignment.bottomRight,
