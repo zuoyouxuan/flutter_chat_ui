@@ -123,11 +123,7 @@ class TileTextMessage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children:[
-        _avatarBuilder(),SizedBox(width:8),Text('user.firstName' , style:bodyTextStyle)
-        ]),
+        _avatarBuilder(),
         const SizedBox(
           height: 8,
         ),
