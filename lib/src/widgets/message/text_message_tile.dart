@@ -160,7 +160,6 @@ class TileTextMessage extends StatelessWidget {
                   shrinkWrap: true,
                   selectable: true,
                   padding: EdgeInsets.zero,
-                  // config: markdownConfig,
                   config: markdownConfig.copy(configs: [
                     isDark
                         ? PreConfig.darkConfig.copy(wrapper: codeWrapper)

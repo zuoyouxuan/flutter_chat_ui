@@ -19,7 +19,7 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
   @override
   void initState() {
     super.initState();
-    _switchWidget = Icon(Icons.copy_rounded, key: UniqueKey());
+    _switchWidget = Icon(Icons.copy_rounded , size: 14, key: UniqueKey());
   }
 
   @override
@@ -38,12 +38,12 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                 onTap: () async {
                   if (hasCopied) return;
                   await Clipboard.setData(ClipboardData(text: widget.text));
-                  _switchWidget = Icon(Icons.check, size: 12, key: UniqueKey());
+                  _switchWidget = Icon(Icons.check, size: 14, key: UniqueKey());
                   refresh();
-                  Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 3), () {
                     hasCopied = false;
                     _switchWidget =
-                        Icon(Icons.copy_rounded, size: 12, key: UniqueKey());
+                        Icon(Icons.copy_rounded, size: 14, key: UniqueKey());
                     refresh();
                   });
                 },
