@@ -96,17 +96,6 @@ class TileTextMessage extends StatelessWidget {
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
-    final darkPreConfig = PreConfig.darkConfig.copy(
-      textStyle: const TextStyle(fontSize: 14),
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-    );
-
-    final preConfig = isDark
-        ? darkPreConfig
-        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14));
 
     const codeConfig = CodeConfig(
       style: TextStyle(
@@ -118,6 +107,21 @@ class TileTextMessage extends StatelessWidget {
     );
 
     final codeWrapper = (child, text) => CodeWrapperWidget(child: child, text: text);
+
+    final darkPreConfig = PreConfig.darkConfig.copy(
+      textStyle: const TextStyle(fontSize: 14),
+      decoration: const BoxDecoration(
+        color: Color.fromRGBO(30, 31, 34, 1),
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+      ),
+      wrapper: codeWrapper,
+    );
+
+    final preConfig = isDark
+        ? darkPreConfig
+        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14) , wrapper: codeWrapper,);
+
+
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
       preConfig,
@@ -160,11 +164,7 @@ class TileTextMessage extends StatelessWidget {
                   shrinkWrap: true,
                   selectable: true,
                   padding: EdgeInsets.zero,
-                  config: markdownConfig.copy(configs: [
-                    isDark
-                        ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
-                        : PreConfig().copy(wrapper: codeWrapper),
-                  ]),
+                  config: markdownConfig,
                 ),
               if (user.id == message.author.id)
                 if (enlargeEmojis)
