@@ -3,8 +3,11 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview, regexEmail, regexLink;
+// import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_widget/markdown_widget.dart';
 
+import '../code_wrapper.dart';
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
@@ -114,11 +117,12 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
+    final codeWrapper = (child, text) => CodeWrapperWidget(child: child, text: text);
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
       preConfig,
       codeConfig,
-    ]);
+    ] );
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,38 +136,55 @@ class TileTextMessage extends StatelessWidget {
         //   crossAxisAlignment: CrossAxisAlignment.start,
         //   mainAxisAlignment: MainAxisAlignment.start,
         //   children: [
-            Flexible(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (user.id != message.author.id)
-                    MarkdownWidget(
-                      data: message.text,
-                      shrinkWrap: true,
-                      selectable: true,
-                      padding: EdgeInsets.zero,
-                      config: markdownConfig,
+        Flexible(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // MarkdownBody(
+              //   styleSheet: ,
+              //   selectable: true,
+              //   data: message.text,
+              //   extensionSet: md.ExtensionSet(
+              //     md.ExtensionSet.gitHubFlavored.blockSyntaxes,
+              //     <md.InlineSyntax>[
+              //       md.EmojiSyntax(),
+              //       ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+              //     ],
+              //   ),
+              // ),
+              if (user.id != message.author.id)
+                MarkdownWidget(
+                  data: message.text,
+                  shrinkWrap: true,
+                  selectable: true,
+                  padding: EdgeInsets.zero,
+                  // config: markdownConfig,
+                  config: markdownConfig.copy(configs: [
+                    isDark
+                        ? PreConfig.darkConfig.copy(wrapper: codeWrapper)
+                        : PreConfig().copy(wrapper: codeWrapper),
+                  ]),
+                ),
+              if (user.id == message.author.id)
+                if (enlargeEmojis)
+                  SelectableText(message.text, style: emojiTextStyle)
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: TextMessageText(
+                      bodyLinkTextStyle: bodyLinkTextStyle,
+                      bodyTextStyle: bodyTextStyle,
+                      boldTextStyle: boldTextStyle,
+                      codeTextStyle: codeTextStyle,
+                      options: options,
+                      text: message.text,
                     ),
-                  if (user.id == message.author.id)
-                    if (enlargeEmojis)
-                      SelectableText(message.text, style: emojiTextStyle)
-                    else
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: TextMessageText(
-                          bodyLinkTextStyle: bodyLinkTextStyle,
-                          bodyTextStyle: bodyTextStyle,
-                          boldTextStyle: boldTextStyle,
-                          codeTextStyle: codeTextStyle,
-                          options: options,
-                          text: message.text,
-                        ),
-                      ),
-                ],
-              ),
-            ),
+                  ),
+            ],
+          ),
+        ),
         //   ],
         // ),
         Container(
