@@ -5,8 +5,7 @@ class CodeWrapperWidget extends StatefulWidget {
   final Widget child;
   final String text;
 
-  const CodeWrapperWidget({Key? key, required this.child, required this.text})
-      : super(key: key);
+  const CodeWrapperWidget({super.key, required this.child, required this.text});
 
   @override
   State<CodeWrapperWidget> createState() => _PreWrapperState();
@@ -39,12 +38,12 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                   if (hasCopied) return;
                   await Clipboard.setData(ClipboardData(text: widget.text));
                   _switchWidget = Icon(Icons.check,
-                      size: 14, color: Colors.green, key: UniqueKey());
+                      size: 14, color: Colors.green, key: UniqueKey(),);
                   refresh();
                   Future.delayed(const Duration(seconds: 3), () {
                     hasCopied = false;
                     _switchWidget =
-                        Icon(Icons.copy_rounded, size: 14, key: UniqueKey());
+                        Icon(Icons.copy_rounded, size: 14, key: UniqueKey(),);
                     refresh();
                   });
                 },

@@ -96,7 +96,6 @@ class TileTextMessage extends StatelessWidget {
     var markdownConfig =
         isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
-
     const codeConfig = CodeConfig(
       style: TextStyle(
         inherit: false,
@@ -106,7 +105,12 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
-    final codeWrapper = (child, text) => CodeWrapperWidget(child: child, text: text);
+    CodeWrapperWidget codeWrapper(child, text) =>
+        CodeWrapperWidget(child: child, text: text);
+
+    final exp = RegExp(r'```(.*?)\n', dotAll: true);
+    final match = exp.firstMatch(message.text);
+    final language = match?.group(1);
 
     final darkPreConfig = PreConfig.darkConfig.copy(
       textStyle: const TextStyle(fontSize: 14),
@@ -115,18 +119,22 @@ class TileTextMessage extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       wrapper: codeWrapper,
+      language: language,
     );
 
     final preConfig = isDark
         ? darkPreConfig
-        : const PreConfig().copy(textStyle: const TextStyle(fontSize: 14) , wrapper: codeWrapper,);
-
+        : const PreConfig().copy(
+            textStyle: const TextStyle(fontSize: 14),
+            wrapper: codeWrapper,
+            language: language,
+          );
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
       preConfig,
       codeConfig,
-    ] );
+    ]);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
