@@ -28,7 +28,8 @@ dependencies:
 #   flutter_markdown: ^0.6.17+2
   markdown_widget:
     git :
-        url : https://github.com/asjqkkkk/markdown_widget.git
+#         url : https://github.com/asjqkkkk/markdown_widget.git
+        url : https://github.com/xyz-appint/markdown_widget.git
 
 dev_dependencies:
   dart_code_metrics: ^5.7.5

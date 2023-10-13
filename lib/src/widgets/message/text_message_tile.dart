@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:flutter_highlighting/themes/tokyo-night-dark.dart';
+import 'package:flutter_highlighting/themes/tokyo-night-light.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
 
-import 'package:flutter_highlight/themes/atom-one-light.dart';
-import 'package:flutter_highlight/themes/atom-one-dark.dart';
-
-
+import '../../../flutter_chat_ui.dart';
 import '../code_wrapper.dart';
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
@@ -120,7 +118,7 @@ class TileTextMessage extends StatelessWidget {
         color: Color.fromRGBO(30, 31, 34, 1),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
-      theme: atomOneDarkTheme,
+      theme: tokyoNightDarkTheme,
       wrapper: codeWrapper,
       language: language,
     );
@@ -131,7 +129,7 @@ class TileTextMessage extends StatelessWidget {
             textStyle: const TextStyle(fontSize: 14),
             wrapper: codeWrapper,
             language: language,
-            theme: atomOneLightTheme,
+            theme: tokyoNightLightTheme,
           );
 
     markdownConfig = markdownConfig.copy(configs: [
