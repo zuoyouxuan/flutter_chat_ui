@@ -177,22 +177,20 @@ class TileTextMessage extends StatelessWidget {
                   config: markdownConfig,
                 ),
               if (user.id == message.author.id)
-                SelectableText(message.text, style: emojiTextStyle)
-                //
-                // if (enlargeEmojis)
-                //
-                // else
-                //   Padding(
-                //     padding: const EdgeInsets.only(left: 5),
-                //     child: TextMessageText(
-                //       bodyLinkTextStyle: bodyLinkTextStyle,
-                //       bodyTextStyle: bodyTextStyle,
-                //       boldTextStyle: boldTextStyle,
-                //       codeTextStyle: codeTextStyle,
-                //       options: options,
-                //       text: message.text,
-                //     ),
-                //   ),
+                if (enlargeEmojis)
+                  SelectableText(message.text, style: emojiTextStyle)
+                else
+                  Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: TextMessageText(
+                      bodyLinkTextStyle: bodyLinkTextStyle,
+                      bodyTextStyle: bodyTextStyle,
+                      boldTextStyle: boldTextStyle,
+                      codeTextStyle: codeTextStyle,
+                      options: options,
+                      text: message.text,
+                    ),
+                  ),
             ],
           ),
         ),
