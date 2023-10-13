@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
+import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
@@ -168,29 +168,29 @@ class TileTextMessage extends StatelessWidget {
               //     ],
               //   ),
               // ),
-              if (user.id != message.author.id)
-                MarkdownWidget(
-                  data: message.text,
-                  shrinkWrap: true,
-                  selectable: true,
-                  padding: EdgeInsets.zero,
-                  config: markdownConfig,
-                ),
-              if (user.id == message.author.id)
-                if (enlargeEmojis)
-                  SelectableText(message.text, style: emojiTextStyle)
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: TextMessageText(
-                      bodyLinkTextStyle: bodyLinkTextStyle,
-                      bodyTextStyle: bodyTextStyle,
-                      boldTextStyle: boldTextStyle,
-                      codeTextStyle: codeTextStyle,
-                      options: options,
-                      text: message.text,
-                    ),
-                  ),
+              // if (user.id != message.author.id)
+              MarkdownWidget(
+                data: message.text,
+                shrinkWrap: true,
+                selectable: true,
+                padding: EdgeInsets.zero,
+                config: markdownConfig,
+              ),
+              // if (user.id == message.author.id)
+              //   if (enlargeEmojis)
+              //     SelectableText(message.text, style: emojiTextStyle)
+              //   else
+              //     Padding(
+              //       padding: const EdgeInsets.only(left: 5),
+              //       child: TextMessageText(
+              //         bodyLinkTextStyle: bodyLinkTextStyle,
+              //         bodyTextStyle: bodyTextStyle,
+              //         boldTextStyle: boldTextStyle,
+              //         codeTextStyle: codeTextStyle,
+              //         options: options,
+              //         text: message.text,
+              //       ),
+              //     ),
             ],
           ),
         ),
