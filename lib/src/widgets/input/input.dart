@@ -51,6 +51,8 @@ class _InputState extends State<Input> {
             (el) => <PhysicalKeyboardKey>{
               PhysicalKeyboardKey.shiftLeft,
               PhysicalKeyboardKey.shiftRight,
+              PhysicalKeyboardKey.controlLeft,
+              PhysicalKeyboardKey.controlRight,
             }.contains(el),
           )) {
         if (event is KeyDownEvent) {
