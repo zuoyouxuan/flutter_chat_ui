@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
+import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
@@ -114,7 +114,7 @@ class TileTextMessage extends StatelessWidget {
     language ??= 'javascript';
 
     final darkPreConfig = PreConfig.darkConfig.copy(
-      textStyle: const TextStyle(fontSize: 14 , color: Colors.white),
+      textStyle: const TextStyle(fontSize: 14),
       decoration: const BoxDecoration(
         color: Color(0xFF1b1b1b),
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -124,18 +124,22 @@ class TileTextMessage extends StatelessWidget {
       language: language,
     );
 
-    // final preConfig = isDark
-    //     ? darkPreConfig
-    //     : const PreConfig().copy(
-    //         textStyle: const TextStyle(fontSize: 14),
-    //         wrapper: codeWrapper,
-    //         language: language,
-    //         theme: githubTheme,
-    //       );
+    final preConfig = isDark
+        ? darkPreConfig
+        : const PreConfig().copy(
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(105, 145, 214, 0.1215686275),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            textStyle: const TextStyle(fontSize: 14),
+            wrapper: codeWrapper,
+            language: language,
+            theme: githubTheme,
+          );
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
-      darkPreConfig,
+      preConfig,
       codeConfig,
     ]);
     return Column(
