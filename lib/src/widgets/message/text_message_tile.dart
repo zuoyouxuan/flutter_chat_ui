@@ -114,9 +114,9 @@ class TileTextMessage extends StatelessWidget {
     language ??= 'javascript';
 
     final darkPreConfig = PreConfig.darkConfig.copy(
-      textStyle: const TextStyle(fontSize: 14),
+      textStyle: const TextStyle(fontSize: 14 , color: Colors.white),
       decoration: const BoxDecoration(
-        color: Color.fromRGBO(30, 31, 34, 1),
+        color: Color(0xFF1b1b1b),
         borderRadius: BorderRadius.all(Radius.circular(8)),
       ),
       theme: githubDarkDimmedTheme,
