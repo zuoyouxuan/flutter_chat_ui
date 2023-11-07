@@ -124,18 +124,18 @@ class TileTextMessage extends StatelessWidget {
       language: language,
     );
 
-    final preConfig = isDark
-        ? darkPreConfig
-        : const PreConfig().copy(
-            textStyle: const TextStyle(fontSize: 14),
-            wrapper: codeWrapper,
-            language: language,
-            theme: githubTheme,
-          );
+    // final preConfig = isDark
+    //     ? darkPreConfig
+    //     : const PreConfig().copy(
+    //         textStyle: const TextStyle(fontSize: 14),
+    //         wrapper: codeWrapper,
+    //         language: language,
+    //         theme: githubTheme,
+    //       );
 
     markdownConfig = markdownConfig.copy(configs: [
       PConfig(textStyle: bodyTextStyle),
-      preConfig,
+      darkPreConfig,
       codeConfig,
     ]);
     return Column(
