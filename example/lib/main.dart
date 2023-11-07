@@ -259,6 +259,7 @@ class _ChatPageState extends State<ChatPage> {
       source: ImageSource.gallery,
     );
 
+
     if (result != null) {
       final bytes = await result.readAsBytes();
       final image = await decodeImageFromList(bytes);
