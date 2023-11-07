@@ -2,11 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 // import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 // import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -246,29 +248,34 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _handleImageSelection() async {
-    // final result = await ImagePicker().pickImage(
-    //   imageQuality: 70,
-    //   maxWidth: 1440,
-    //   source: ImageSource.gallery,
-    // );
-    //
-    // if (result != null) {
-    //   final bytes = await result.readAsBytes();
-    //   final image = await decodeImageFromList(bytes);
-    //
-    //   final message = types.ImageMessage(
-    //     author: _user,
-    //     createdAt: DateTime.now().millisecondsSinceEpoch,
-    //     height: image.height.toDouble(),
-    //     id: const Uuid().v4(),
-    //     name: result.name,
-    //     size: bytes.length,
-    //     uri: result.path,
-    //     width: image.width.toDouble(),
-    //   );
-    //
-    //   _addMessage(message);
-    // }
+    print('handleImageSelection');
+
+
+    // final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    final result = await ImagePicker().pickImage(
+      imageQuality: 70,
+      maxWidth: 1440,
+      source: ImageSource.gallery,
+    );
+
+    if (result != null) {
+      final bytes = await result.readAsBytes();
+      final image = await decodeImageFromList(bytes);
+
+      final message = types.ImageMessage(
+        author: _user,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
+        height: image.height.toDouble(),
+        id: const Uuid().v4(),
+        name: "image.name",
+        size: bytes.length,
+        uri: result.path,
+        width: image.width.toDouble(),
+      );
+
+      _addMessage(message);
+    }
   }
 
   void _handleMessageTap(BuildContext _, types.Message message) async {

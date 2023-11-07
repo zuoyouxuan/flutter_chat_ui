@@ -110,7 +110,8 @@ class TileTextMessage extends StatelessWidget {
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
     final match = exp.firstMatch(message.text);
-    final language = match?.group(1);
+    var language = match?.group(1);
+    language ??= 'javascript';
 
     final darkPreConfig = PreConfig.darkConfig.copy(
       textStyle: const TextStyle(fontSize: 14),
