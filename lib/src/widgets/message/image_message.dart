@@ -99,7 +99,6 @@ class _ImageMessageState extends State<ImageMessage> {
   @override
   Widget build(BuildContext context) {
     final user = InheritedUser.of(context).user;
-
     if (_size.aspectRatio == 0) {
       return Container(
         color: InheritedChatTheme.of(context).theme.secondaryColor,

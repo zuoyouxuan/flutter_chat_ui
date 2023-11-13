@@ -250,7 +250,6 @@ class _ChatPageState extends State<ChatPage> {
   void _handleImageSelection() async {
     print('handleImageSelection');
 
-
     // final XFile? image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
     final result = await ImagePicker().pickImage(
@@ -263,6 +262,8 @@ class _ChatPageState extends State<ChatPage> {
     if (result != null) {
       final bytes = await result.readAsBytes();
       final image = await decodeImageFromList(bytes);
+
+      print('image: ${result.path}');
 
       final message = types.ImageMessage(
         author: _user,
