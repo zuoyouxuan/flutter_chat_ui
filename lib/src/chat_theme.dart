@@ -68,6 +68,8 @@ abstract class ChatTheme {
     required this.errorColor,
     required this.errorIcon,
     required this.inputBackgroundColor,
+    required this.inputSurfaceTintColor,
+    required this.inputElevation,
     required this.inputBorderRadius,
     this.inputContainerDecoration,
     required this.inputMargin,
@@ -111,6 +113,7 @@ abstract class ChatTheme {
     required this.userAvatarNameColors,
     required this.userAvatarTextStyle,
     required this.userNameTextStyle,
+    this.highlightMessageColor,
   });
 
   /// Icon for select attachment button.
@@ -145,6 +148,11 @@ abstract class ChatTheme {
 
   /// Color of the bottom bar where text field is.
   final Color inputBackgroundColor;
+
+  /// Surface Tint Color of the bottom bar where text field is.
+  final Color inputSurfaceTintColor;
+
+  final double inputElevation;
 
   /// Top border radius of the bottom bar where text field is.
   final BorderRadius inputBorderRadius;
@@ -291,6 +299,9 @@ abstract class ChatTheme {
   /// User names text style. Color will be overwritten with [userAvatarNameColors].
   final TextStyle userNameTextStyle;
 
+  /// Color used as background of message row on highligth.
+  final Color? highlightMessageColor;
+
   final Color messageBorderColor;
 }
 
@@ -325,6 +336,8 @@ class DefaultChatTheme extends ChatTheme {
     super.errorColor = error,
     super.errorIcon,
     super.inputBackgroundColor = neutral0,
+    super.inputSurfaceTintColor = neutral0,
+    super.inputElevation = 0,
     super.inputBorderRadius = const BorderRadius.vertical(
       top: Radius.circular(20),
     ),
@@ -495,6 +508,8 @@ class DarkChatTheme extends ChatTheme {
     super.errorColor = error,
     super.errorIcon,
     super.inputBackgroundColor = secondaryDark,
+    super.inputSurfaceTintColor = secondaryDark,
+    super.inputElevation = 0,
     super.inputBorderRadius = const BorderRadius.vertical(
       top: Radius.circular(20),
     ),
@@ -631,5 +646,6 @@ class DarkChatTheme extends ChatTheme {
       fontWeight: FontWeight.w800,
       height: 1.333,
     ),
+    super.highlightMessageColor,
   });
 }
