@@ -102,7 +102,6 @@ class Chat extends StatefulWidget {
     this.useTopSafeAreaInset,
     this.videoMessageBuilder,
     this.tileLayout = false,
-    this.imageProviderBuilder,
     this.msgExtraBarBuild,
     this.slidableMessageBuilder,
   });
@@ -470,137 +469,97 @@ class ChatState extends State<Chat> {
             widget.showUserAvatars && message.author.id != widget.user.id
                 ? min(constraints.maxWidth * 0.72, 440).floor()
                 : min(constraints.maxWidth * 0.78, 440).floor();
-        final Widget msgWidget = Message(
-          audioMessageBuilder: widget.audioMessageBuilder,
-          avatarBuilder: widget.avatarBuilder,
-          bubbleBuilder: widget.bubbleBuilder,
-          bubbleRtlAlignment: widget.bubbleRtlAlignment,
-          customMessageBuilder: widget.customMessageBuilder,
-          customStatusBuilder: widget.customStatusBuilder,
-          emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
-          fileMessageBuilder: widget.fileMessageBuilder,
-          hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
-          imageHeaders: widget.imageHeaders,
-          imageMessageBuilder: widget.imageMessageBuilder,
-          imageProviderBuilder: widget.imageProviderBuilder,
-          message: message,
-          messageWidth: messageWidth,
-          nameBuilder: widget.nameBuilder,
-          onAvatarTap: widget.onAvatarTap,
-          onMessageDoubleTap: widget.onMessageDoubleTap,
-          onMessageLongPress: widget.onMessageLongPress,
-          onMessageStatusLongPress: widget.onMessageStatusLongPress,
-          onMessageStatusTap: widget.onMessageStatusTap,
-          onMessageTap: (context, tappedMessage) {
-            if (tappedMessage is types.ImageMessage &&
-                widget.disableImageGallery != true) {
-              _onImagePressed(tappedMessage);
-            }
+        final Widget msgWidget;
+        if(widget.tileLayout){
+          msgWidget = TileMessage(
+            audioMessageBuilder: widget.audioMessageBuilder,
+            avatarBuilder: widget.avatarBuilder,
+            bubbleBuilder: widget.bubbleBuilder,
+            bubbleRtlAlignment: widget.bubbleRtlAlignment,
+            customMessageBuilder: widget.customMessageBuilder,
+            customStatusBuilder: widget.customStatusBuilder,
+            emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
+            fileMessageBuilder: widget.fileMessageBuilder,
+            hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
+            imageHeaders: widget.imageHeaders,
+            imageMessageBuilder: widget.imageMessageBuilder,
+            imageProviderBuilder: widget.imageProviderBuilder,
+            message: message,
+            messageWidth: messageWidth,
+            nameBuilder: widget.nameBuilder,
+            onAvatarTap: widget.onAvatarTap,
+            onMessageDoubleTap: widget.onMessageDoubleTap,
+            onMessageLongPress: widget.onMessageLongPress,
+            onMessageStatusLongPress: widget.onMessageStatusLongPress,
+            onMessageStatusTap: widget.onMessageStatusTap,
+            onMessageTap: (context, tappedMessage) {
+              if (tappedMessage is types.ImageMessage &&
+                  widget.disableImageGallery != true) {
+                _onImagePressed(tappedMessage);
+              }
 
-        messageWidget = widget.tileLayout
-            ? TileMessage(
-                audioMessageBuilder: widget.audioMessageBuilder,
-                avatarBuilder: widget.avatarBuilder,
-                bubbleBuilder: widget.bubbleBuilder,
-                bubbleRtlAlignment: widget.bubbleRtlAlignment,
-                customMessageBuilder: widget.customMessageBuilder,
-                customStatusBuilder: widget.customStatusBuilder,
-                emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
-                fileMessageBuilder: widget.fileMessageBuilder,
-                hideBackgroundOnEmojiMessages:
-                    widget.hideBackgroundOnEmojiMessages,
-                imageHeaders: widget.imageHeaders,
-                imageMessageBuilder: widget.imageMessageBuilder,
-                message: message,
-                messageWidth: messageWidth,
-                nameBuilder: widget.nameBuilder,
-                onAvatarTap: widget.onAvatarTap,
-                onMessageDoubleTap: widget.onMessageDoubleTap,
-                onMessageLongPress: widget.onMessageLongPress,
-                onMessageStatusLongPress: widget.onMessageStatusLongPress,
-                onMessageStatusTap: widget.onMessageStatusTap,
-                onMessageTap: (context, tappedMessage) {
-                  if (tappedMessage is types.ImageMessage &&
-                      widget.disableImageGallery != true) {
-                    _onImagePressed(tappedMessage);
-                  }
+              widget.onMessageTap?.call(context, tappedMessage);
+            },
+            onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
+            onPreviewDataFetched: _onPreviewDataFetched,
+            roundBorder: map['nextMessageInGroup'] == true,
+            showAvatar: map['nextMessageInGroup'] == false,
+            showName: map['showName'] == true,
+            showStatus: map['showStatus'] == true,
+            showUserAvatars: widget.showUserAvatars,
+            textMessageBuilder: widget.textMessageBuilder,
+            textMessageOptions: widget.textMessageOptions,
+            usePreviewData: widget.usePreviewData,
+            userAgent: widget.userAgent,
+            videoMessageBuilder: widget.videoMessageBuilder,
+          );
+        } else {
+          msgWidget = Message(
+            audioMessageBuilder: widget.audioMessageBuilder,
+            avatarBuilder: widget.avatarBuilder,
+            bubbleBuilder: widget.bubbleBuilder,
+            bubbleRtlAlignment: widget.bubbleRtlAlignment,
+            customMessageBuilder: widget.customMessageBuilder,
+            customStatusBuilder: widget.customStatusBuilder,
+            emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
+            fileMessageBuilder: widget.fileMessageBuilder,
+            hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
+            imageHeaders: widget.imageHeaders,
+            imageMessageBuilder: widget.imageMessageBuilder,
+            imageProviderBuilder: widget.imageProviderBuilder,
+            message: message,
+            messageWidth: messageWidth,
+            nameBuilder: widget.nameBuilder,
+            onAvatarTap: widget.onAvatarTap,
+            onMessageDoubleTap: widget.onMessageDoubleTap,
+            onMessageLongPress: widget.onMessageLongPress,
+            onMessageStatusLongPress: widget.onMessageStatusLongPress,
+            onMessageStatusTap: widget.onMessageStatusTap,
+            onMessageTap: (context, tappedMessage) {
+              if (tappedMessage is types.ImageMessage &&
+                  widget.disableImageGallery != true) {
+                _onImagePressed(tappedMessage);
+              }
 
-                  widget.onMessageTap?.call(context, tappedMessage);
-                },
-                onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-                onPreviewDataFetched: _onPreviewDataFetched,
-                roundBorder: map['nextMessageInGroup'] == true,
-                showAvatar: map['nextMessageInGroup'] == false,
-                showName: map['showName'] == true,
-                showStatus: map['showStatus'] == true,
-                showUserAvatars: widget.showUserAvatars,
-                textMessageBuilder: widget.textMessageBuilder,
-                textMessageOptions: widget.textMessageOptions,
-                usePreviewData: widget.usePreviewData,
-                userAgent: widget.userAgent,
-                videoMessageBuilder: widget.videoMessageBuilder,
-                msgExtraBarBuild: widget.msgExtraBarBuild)
-            : Message(
-                audioMessageBuilder: widget.audioMessageBuilder,
-                avatarBuilder: widget.avatarBuilder,
-                bubbleBuilder: widget.bubbleBuilder,
-                bubbleRtlAlignment: widget.bubbleRtlAlignment,
-                customMessageBuilder: widget.customMessageBuilder,
-                customStatusBuilder: widget.customStatusBuilder,
-                emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
-                fileMessageBuilder: widget.fileMessageBuilder,
-                hideBackgroundOnEmojiMessages:
-                    widget.hideBackgroundOnEmojiMessages,
-                imageHeaders: widget.imageHeaders,
-                imageMessageBuilder: widget.imageMessageBuilder,
-                imageProviderBuilder: widget.imageProviderBuilder,
-                message: message,
-                messageWidth: messageWidth,
-                nameBuilder: widget.nameBuilder,
-                onAvatarTap: widget.onAvatarTap,
-                onMessageDoubleTap: widget.onMessageDoubleTap,
-                onMessageLongPress: widget.onMessageLongPress,
-                onMessageStatusLongPress: widget.onMessageStatusLongPress,
-                onMessageStatusTap: widget.onMessageStatusTap,
-                onMessageTap: (context, tappedMessage) {
-                  if (tappedMessage is types.ImageMessage &&
-                      widget.disableImageGallery != true) {
-                    _onImagePressed(tappedMessage);
-                  }
-
-            widget.onMessageTap?.call(context, tappedMessage);
-          },
-          onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-          onPreviewDataFetched: _onPreviewDataFetched,
-          roundBorder: map['nextMessageInGroup'] == true,
-          showAvatar: map['nextMessageInGroup'] == false,
-          showName: map['showName'] == true,
-          showStatus: map['showStatus'] == true,
-          showUserAvatars: widget.showUserAvatars,
-          textMessageBuilder: widget.textMessageBuilder,
-          textMessageOptions: widget.textMessageOptions,
-          usePreviewData: widget.usePreviewData,
-          userAgent: widget.userAgent,
-          videoMessageBuilder: widget.videoMessageBuilder,
-        );
+              widget.onMessageTap?.call(context, tappedMessage);
+            },
+            onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
+            onPreviewDataFetched: _onPreviewDataFetched,
+            roundBorder: map['nextMessageInGroup'] == true,
+            showAvatar: map['nextMessageInGroup'] == false,
+            showName: map['showName'] == true,
+            showStatus: map['showStatus'] == true,
+            showUserAvatars: widget.showUserAvatars,
+            textMessageBuilder: widget.textMessageBuilder,
+            textMessageOptions: widget.textMessageOptions,
+            usePreviewData: widget.usePreviewData,
+            userAgent: widget.userAgent,
+            videoMessageBuilder: widget.videoMessageBuilder,
+          );
+        }
         messageWidget = widget.slidableMessageBuilder == null
             ? msgWidget
             : widget.slidableMessageBuilder!(message, msgWidget);
-                  widget.onMessageTap?.call(context, tappedMessage);
-                },
-                onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-                onPreviewDataFetched: _onPreviewDataFetched,
-                roundBorder: map['nextMessageInGroup'] == true,
-                showAvatar: map['nextMessageInGroup'] == false,
-                showName: map['showName'] == true,
-                showStatus: map['showStatus'] == true,
-                showUserAvatars: widget.showUserAvatars,
-                textMessageBuilder: widget.textMessageBuilder,
-                textMessageOptions: widget.textMessageOptions,
-                usePreviewData: widget.usePreviewData,
-                userAgent: widget.userAgent,
-                videoMessageBuilder: widget.videoMessageBuilder,
-              );
       }
 
       return AutoScrollTag(

@@ -25,6 +25,7 @@ class TileMessage extends Message {
     required super.hideBackgroundOnEmojiMessages,
     super.imageHeaders,
     super.imageMessageBuilder,
+    super.imageProviderBuilder,
     required super.message,
     required super.messageWidth,
     super.nameBuilder,
@@ -48,85 +49,6 @@ class TileMessage extends Message {
     super.videoMessageBuilder,
     super.msgExtraBarBuild,
   });
-
-  @override
-  Widget build(BuildContext context) {
-    final query = MediaQuery.of(context);
-    final user = InheritedUser.of(context).user;
-    final currentUserIsAuthor = user.id == message.author.id;
-    final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            message is types.TextMessage &&
-            isConsistsOfEmojis(
-              emojiEnlargementBehavior,
-              message as types.TextMessage,
-            );
-    final messageBorderRadius =
-        InheritedChatTheme.of(context).theme.messageBorderRadius;
-    // final borderRadius = BorderRadius.zero;
-    //
-    final borderRadius = Radius.zero;
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
-      textDirection: bubbleRtlAlignment == BubbleRtlAlignment.left
-          ? null
-          : TextDirection.ltr,
-      children: [
-        // if (!currentUserIsAuthor && showUserAvatars) _avatarBuilder(),
-        Expanded(
-          // width: double.infinity,
-
-          // constraints: BoxConstraints(
-          //   minWidth: double.maxFinite,
-          //   // minWidth:
-          // ),
-          child: GestureDetector(
-            onDoubleTap: () => onMessageDoubleTap?.call(context, message),
-            onLongPress: () => onMessageLongPress?.call(context, message),
-            onTap: () => onMessageTap?.call(context, message),
-            child: onMessageVisibilityChanged != null
-                ? VisibilityDetector(
-                    key: Key(message.id),
-                    onVisibilityChanged: (visibilityInfo) =>
-                        onMessageVisibilityChanged!(
-                      message,
-                      visibilityInfo.visibleFraction > 0.1,
-                    ),
-                    child: _bubbleBuilder(
-                      context,
-                      BorderRadius.zero,
-                      currentUserIsAuthor,
-                      enlargeEmojis,
-                    ),
-                  )
-                : _bubbleBuilder(
-                    context,
-                    BorderRadius.zero,
-                    currentUserIsAuthor,
-                    enlargeEmojis,
-                  ),
-          ),
-        ),
-        //
-        // if (currentUserIsAuthor)
-        //   Padding(
-        //     padding: InheritedChatTheme.of(context).theme.statusIconPadding,
-        //     child: showStatus
-        //         ? GestureDetector(
-        //             onLongPress: () =>
-        //                 onMessageStatusLongPress?.call(context, message),
-        //             onTap: () => onMessageStatusTap?.call(context, message),
-        //             child: customStatusBuilder != null
-        //                 ? customStatusBuilder!(message, context: context)
-        //                 : MessageStatus(status: message.status),
-        //           )
-        //         : null,
-        //   ),
-      ],
-    );
-  }
 
   Widget _bubbleBuilder(
     BuildContext context,
@@ -188,6 +110,7 @@ class TileMessage extends Message {
             ? imageMessageBuilder!(imageMessage, messageWidth: messageWidth)
             : ImageMessage(
                 imageHeaders: imageHeaders,
+                imageProviderBuilder: imageProviderBuilder,
                 message: imageMessage,
                 messageWidth: messageWidth,
               );
@@ -220,5 +143,60 @@ class TileMessage extends Message {
       default:
         return const SizedBox();
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final query = MediaQuery.of(context);
+    final user = InheritedUser.of(context).user;
+    final currentUserIsAuthor = user.id == message.author.id;
+    final enlargeEmojis =
+        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+            message is types.TextMessage &&
+            isConsistsOfEmojis(
+              emojiEnlargementBehavior,
+              message as types.TextMessage,
+            );
+    final messageBorderRadius =
+        InheritedChatTheme.of(context).theme.messageBorderRadius;
+    final borderRadius = Radius.zero;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisSize: MainAxisSize.min,
+      textDirection: bubbleRtlAlignment == BubbleRtlAlignment.left
+          ? null
+          : TextDirection.ltr,
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onDoubleTap: () => onMessageDoubleTap?.call(context, message),
+            onLongPress: () => onMessageLongPress?.call(context, message),
+            onTap: () => onMessageTap?.call(context, message),
+            child: onMessageVisibilityChanged != null
+                ? VisibilityDetector(
+                    key: Key(message.id),
+                    onVisibilityChanged: (visibilityInfo) =>
+                        onMessageVisibilityChanged!(
+                      message,
+                      visibilityInfo.visibleFraction > 0.1,
+                    ),
+                    child: _bubbleBuilder(
+                      context,
+                      BorderRadius.zero,
+                      currentUserIsAuthor,
+                      enlargeEmojis,
+                    ),
+                  )
+                : _bubbleBuilder(
+                    context,
+                    BorderRadius.zero,
+                    currentUserIsAuthor,
+                    enlargeEmojis,
+                  ),
+          ),
+        ),
+      ],
+    );
   }
 }

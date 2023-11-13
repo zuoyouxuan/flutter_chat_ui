@@ -29,7 +29,7 @@ class TileTextMessage extends StatelessWidget {
     this.avatarBuilder,
   });
 
-  final Widget Function(String userId)? avatarBuilder;
+  final Widget Function(types.User author)? avatarBuilder;
 
   /// See [Message.emojiEnlargementBehavior].
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
@@ -64,7 +64,7 @@ class TileTextMessage extends StatelessWidget {
       msgExtraBarBuild;
 
   Widget _avatarBuilder() =>
-      avatarBuilder?.call(message.author.id) ??
+      avatarBuilder?.call(message.author) ??
       UserAvatar(
         author: message.author,
       );
