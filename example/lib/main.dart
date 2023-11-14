@@ -117,6 +117,8 @@ class _ChatPageState extends State<ChatPage> {
           //       color: Colors.white,
           //     ),
           //   ),
+          imageGalleryOptions: ImageGalleryOptions(),
+
           inputOptions: const InputOptions(
               sendButtonVisibilityMode: SendButtonVisibilityMode.always,minLines: 3,),
           theme: DefaultChatTheme(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:flutter_chat_ui/src/widgets/message/text_image_message.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../flutter_chat_ui.dart';
@@ -108,11 +109,12 @@ class TileMessage extends Message {
         final imageMessage = message as types.ImageMessage;
         return imageMessageBuilder != null
             ? imageMessageBuilder!(imageMessage, messageWidth: messageWidth)
-            : ImageMessage(
+            : TextImageMessage(
                 imageHeaders: imageHeaders,
                 imageProviderBuilder: imageProviderBuilder,
                 message: imageMessage,
                 messageWidth: messageWidth,
+                avatarBuilder: super.avatarBuilder,
               );
       case types.MessageType.text:
         final textMessage = message as types.TextMessage;

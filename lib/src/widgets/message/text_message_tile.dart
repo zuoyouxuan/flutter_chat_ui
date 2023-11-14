@@ -150,29 +150,12 @@ class TileTextMessage extends StatelessWidget {
         const SizedBox(
           height: 8,
         ),
-        // Row(
-        //   mainAxisSize: MainAxisSize.max,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   mainAxisAlignment: MainAxisAlignment.start,
-        //   children: [
         Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // MarkdownBody(
-              //   styleSheet: ,
-              //   selectable: true,
-              //   data: message.text,
-              //   extensionSet: md.ExtensionSet(
-              //     md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-              //     <md.InlineSyntax>[
-              //       md.EmojiSyntax(),
-              //       ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-              //     ],
-              //   ),
-              // ),
               if (user.id != message.author.id)
                 MarkdownWidget(
                   data: message.text,
