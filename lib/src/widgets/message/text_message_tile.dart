@@ -276,37 +276,40 @@ class TileTextMessage extends StatelessWidget {
                               ),
                       );
                     },
-                    child: (message.previewData!.image!.url
-                            .contains('data:image/png;base64,'))
-                        ? Image.memory(
-                            base64Decode(message.previewData!.image!.url
-                                .replaceAll('data:image/png;base64,', '')),
-                            fit: BoxFit.cover,
-                            height:
-                                message.previewData!.image!.height.toDouble(),
-                          )
-                        : CachedNetworkImage(
-                            height:
-                                message.previewData!.image!.height.toDouble(),
-                            fit: BoxFit.cover,
-                            imageUrl: message.previewData!.image!.url,
-                            repeat: ImageRepeat.repeatY,
-                            placeholder: (context, url) => const SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: Center(
-                                child: CircularProgressIndicator(),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: (message.previewData!.image!.url
+                              .contains('data:image/png;base64,'))
+                          ? Image.memory(
+                              base64Decode(message.previewData!.image!.url
+                                  .replaceAll('data:image/png;base64,', '')),
+                              fit: BoxFit.cover,
+                              height:
+                                  message.previewData!.image!.height.toDouble(),
+                            )
+                          : CachedNetworkImage(
+                              height:
+                                  message.previewData!.image!.height.toDouble(),
+                              fit: BoxFit.cover,
+                              imageUrl: message.previewData!.image!.url,
+                              repeat: ImageRepeat.repeatY,
+                              placeholder: (context, url) => const SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  const SizedBox(
+                                width: 40,
+                                height: 40,
+                                child: Center(
+                                  child: Icon(Icons.error),
+                                ),
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
-                                const SizedBox(
-                              width: 40,
-                              height: 40,
-                              child: Center(
-                                child: Icon(Icons.error),
-                              ),
-                            ),
-                          ),
+                    ),
                   ),
                 ),
               // SizedBox(width:320 , height:320 , child: _linkPreview(user, 320, context)),
