@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -267,21 +269,30 @@ class TileTextMessage extends StatelessWidget {
                         ),
                       );
                     },
-                    child: CachedNetworkImage(
-                      height: message.previewData!.image!.height.toDouble(),
-                      fit: BoxFit.cover,
-                      imageUrl: message.previewData!.image!.url,
-                      repeat: ImageRepeat.repeatY,
-                      placeholder: (context, url) => const SizedBox(
-                        width: 40,
-                        height: 40,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
-                    ),
+                    child: (message.previewData!.image!.url
+                            .contains('data:image/png;base64'))
+                        ? Image.memory(
+                            base64Decode(message.previewData!.image!.url),
+                            fit: BoxFit.cover,
+                            height:
+                                message.previewData!.image!.height.toDouble(),
+                          )
+                        : CachedNetworkImage(
+                            height:
+                                message.previewData!.image!.height.toDouble(),
+                            fit: BoxFit.cover,
+                            imageUrl: message.previewData!.image!.url,
+                            repeat: ImageRepeat.repeatY,
+                            placeholder: (context, url) => const SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
                   ),
                 ),
               // SizedBox(width:320 , height:320 , child: _linkPreview(user, 320, context)),
