@@ -252,7 +252,7 @@ class Message extends StatelessWidget {
                 message: imageMessage,
                 messageWidth: messageWidth,
               );
-      case types.MessageType.text:
+      case types.MessageType.text :
         final textMessage = message as types.TextMessage;
         return textMessageBuilder != null
             ? textMessageBuilder!(

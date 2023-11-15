@@ -397,6 +397,10 @@ class _ChatPageState extends State<ChatPage> {
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
+      previewData: const types.PreviewData(
+        image: types.PreviewDataImage(
+            width: 120, height: 120, url: 'https://d1.awsstatic.com/codewhisper/icon_cw_serviceicon.65af1ed185a8674249a5aa38894f469e974714d3.png'),
+      ),
     );
 
     _addMessage(textMessage);

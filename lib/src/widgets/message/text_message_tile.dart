@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:photo_view_v3/photo_view.dart';
 
 import '../../../flutter_chat_ui.dart';
 import '../code_wrapper.dart';
@@ -68,6 +70,62 @@ class TileTextMessage extends StatelessWidget {
       UserAvatar(
         author: message.author,
       );
+
+  Widget _linkPreview(
+    types.User user,
+    double width,
+    BuildContext context,
+  ) {
+    final linkDescriptionTextStyle = user.id == message.author.id
+        ? InheritedChatTheme.of(context)
+            .theme
+            .sentMessageLinkDescriptionTextStyle
+        : InheritedChatTheme.of(context)
+            .theme
+            .receivedMessageLinkDescriptionTextStyle;
+    final linkTitleTextStyle = user.id == message.author.id
+        ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
+        : InheritedChatTheme.of(context)
+            .theme
+            .receivedMessageLinkTitleTextStyle;
+
+    return LinkPreview(
+      enableAnimation: true,
+      metadataTextStyle: linkDescriptionTextStyle,
+      metadataTitleStyle: linkTitleTextStyle,
+      onLinkPressed: options.onLinkPressed,
+      onPreviewDataFetched: _onPreviewDataFetched,
+      openOnPreviewImageTap: options.openOnPreviewImageTap,
+      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
+      padding: EdgeInsets.symmetric(
+        horizontal:
+            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
+        vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
+      ),
+      previewData: message.previewData,
+      text: message.text,
+      textWidget: _textWidgetBuilder(user, context, false),
+      userAgent: userAgent,
+      width: width,
+    );
+  }
+
+  void _onPreviewDataFetched(types.PreviewData previewData) {
+    if (message.previewData == null) {
+      onPreviewDataFetched?.call(message, previewData);
+    }
+  }
+
+  void openDialog(BuildContext context , ImageProvider imageProvider) => showDialog(
+    context: context,
+    builder: (BuildContext context) => Dialog(
+        child: PhotoView(
+          tightMode: true,
+          imageProvider: imageProvider,
+          heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+        ),
+      ),
+  );
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -194,6 +252,30 @@ class TileTextMessage extends StatelessWidget {
                       text: message.text,
                     ),
                   ),
+
+              if (message.previewData != null &&
+                  message.previewData?.image != null)
+                Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: InkWell(
+                    onTap: () {
+                      openDialog(context, CachedNetworkImageProvider(message.previewData!.image!.url));
+                    },
+                    child: CachedNetworkImage(
+                      height: message.previewData!.image!.height.toDouble(),
+                      fit: BoxFit.cover,
+                      imageUrl: message.previewData!.image!.url,
+                      placeholder: (context, url) => const SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  ),
+                ),
+              // SizedBox(width:320 , height:320 , child: _linkPreview(user, 320, context)),
             ],
           ),
         ),
@@ -212,8 +294,12 @@ class TileTextMessage extends StatelessWidget {
     final user = InheritedUser.of(context).user;
 
     return Container(
-      margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal,
-          theme.messageInsetsVertical-10, theme.messageInsetsHorizontal, theme.messageInsetsVertical,),
+      margin: EdgeInsets.fromLTRB(
+        theme.messageInsetsHorizontal,
+        theme.messageInsetsVertical - 10,
+        theme.messageInsetsHorizontal,
+        theme.messageInsetsVertical,
+      ),
       child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
