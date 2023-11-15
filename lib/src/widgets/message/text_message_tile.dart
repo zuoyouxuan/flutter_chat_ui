@@ -194,9 +194,6 @@ class TileTextMessage extends StatelessWidget {
                       text: message.text,
                     ),
                   ),
-              const SizedBox(
-                height: 10,
-              ),
             ],
           ),
         ),
@@ -216,7 +213,7 @@ class TileTextMessage extends StatelessWidget {
 
     return Container(
       margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal,
-          theme.messageInsetsVertical, theme.messageInsetsHorizontal, 0),
+          theme.messageInsetsVertical-10, theme.messageInsetsHorizontal, theme.messageInsetsVertical,),
       child: _textWidgetBuilder(user, context, enlargeEmojis),
     );
   }
