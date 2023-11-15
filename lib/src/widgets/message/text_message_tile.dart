@@ -142,6 +142,7 @@ class TileTextMessage extends StatelessWidget {
       preConfig,
       codeConfig,
     ]);
+    print(msgExtraBarBuild);
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,7 +190,7 @@ class TileTextMessage extends StatelessWidget {
           alignment: Alignment.bottomRight,
           child: (msgExtraBarBuild != null)
               ? msgExtraBarBuild!(message, context: context)
-              : const Text(''),
+              : null,
         ),
       ],
     );

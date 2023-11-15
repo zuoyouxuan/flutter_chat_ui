@@ -4,7 +4,8 @@ import 'dart:io';
 // import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show Clipboard, ClipboardData, rootBundle;
+import 'package:flutter/services.dart'
+    show Clipboard, ClipboardData, rootBundle;
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:http/http.dart' as http;
@@ -71,7 +72,8 @@ class _ChatPageState extends State<ChatPage> {
             color: Colors.grey.withOpacity(0.5),
             iconSize: 14,
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: message.toJson()['text']))
+              await Clipboard.setData(
+                      ClipboardData(text: message.toJson()['text']))
                   .then((value) => {});
             },
             icon: Icon(Icons.copy),
@@ -81,8 +83,9 @@ class _ChatPageState extends State<ChatPage> {
             color: Colors.grey.withOpacity(0.5),
             iconSize: 16,
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: message.toJson()['text']))
-                            .then((value) => {});
+              await Clipboard.setData(
+                      ClipboardData(text: message.toJson()['text']))
+                  .then((value) => {});
             },
             icon: Icon(Icons.refresh),
           ),
@@ -94,7 +97,7 @@ class _ChatPageState extends State<ChatPage> {
         body: Chat(
           msgExtraBarBuild: _msgExtraBarBuild,
           messages: _messages,
-          // onAttachmentPressed: _handleAttachmentPressed,
+          onAttachmentPressed: _handleAttachmentPressed,
           onMessageTap: _handleMessageTap,
           onPreviewDataFetched: _handlePreviewDataFetched,
           onSendPressed: _handleSendPressed,
@@ -120,7 +123,9 @@ class _ChatPageState extends State<ChatPage> {
           imageGalleryOptions: ImageGalleryOptions(),
 
           inputOptions: const InputOptions(
-              sendButtonVisibilityMode: SendButtonVisibilityMode.always,minLines: 3,),
+            sendButtonVisibilityMode: SendButtonVisibilityMode.always,
+            minLines: 3,
+          ),
           theme: DefaultChatTheme(
               messageBorderColor: is_darkMode
                   ? const Color.fromRGBO(32, 33, 35, .5)
@@ -259,7 +264,6 @@ class _ChatPageState extends State<ChatPage> {
       maxWidth: 1440,
       source: ImageSource.gallery,
     );
-
 
     if (result != null) {
       final bytes = await result.readAsBytes();

@@ -512,6 +512,7 @@ class ChatState extends State<Chat> {
             usePreviewData: widget.usePreviewData,
             userAgent: widget.userAgent,
             videoMessageBuilder: widget.videoMessageBuilder,
+            msgExtraBarBuild: widget.msgExtraBarBuild,
           );
         } else {
           msgWidget = Message(

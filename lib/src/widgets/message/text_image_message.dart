@@ -197,6 +197,24 @@ class _ImageMessageState extends State<TextImageMessage> {
           maxHeight: widget.messageWidth.toDouble(),
           minWidth: 170,
         ),
+        // child: Stack(
+        //   children: [
+        //     Positioned(
+        //       left: 0,
+        //       top: 0,
+        //       child: _avatarBuilder(),
+        //     ),
+        //     Padding(
+        //       padding: const EdgeInsets.all(35),
+        //       child: Image(
+        //         fit: BoxFit.cover,
+        //         image: _image!,
+        //         width: 120,
+        //       ),
+        //     ),
+        //   ],
+        // ),
+        //
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
