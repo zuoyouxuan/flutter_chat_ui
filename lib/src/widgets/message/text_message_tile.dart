@@ -291,7 +291,13 @@ class TileTextMessage extends StatelessWidget {
                               ),
                             ),
                             errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
+                                const SizedBox(
+                              width: 40,
+                              height: 40,
+                              child: Center(
+                                child: Icon(Icons.error),
+                              ),
+                            ),
                           ),
                   ),
                 ),
