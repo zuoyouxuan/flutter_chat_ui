@@ -273,9 +273,11 @@ class TileTextMessage extends StatelessWidget {
                       imageUrl: message.previewData!.image!.url,
                       repeat: ImageRepeat.repeatY,
                       placeholder: (context, url) => const SizedBox(
-                        width: 50,
-                        height: 50,
-                        child: CircularProgressIndicator(),
+                        width: 40,
+                        height: 40,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       ),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.error),
