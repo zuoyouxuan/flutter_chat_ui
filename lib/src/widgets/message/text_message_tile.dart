@@ -270,9 +270,9 @@ class TileTextMessage extends StatelessWidget {
                       );
                     },
                     child: (message.previewData!.image!.url
-                            .contains('data:image/png;base64'))
+                            .contains('data:image/png;base64,'))
                         ? Image.memory(
-                            base64Decode(message.previewData!.image!.url),
+                            base64Decode(message.previewData!.image!.url.replaceAll('data:image/png;base64,','')),
                             fit: BoxFit.cover,
                             height:
                                 message.previewData!.image!.height.toDouble(),
