@@ -116,16 +116,17 @@ class TileTextMessage extends StatelessWidget {
     }
   }
 
-  void openDialog(BuildContext context , ImageProvider imageProvider) => showDialog(
-    context: context,
-    builder: (BuildContext context) => Dialog(
-        child: PhotoView(
-          tightMode: true,
-          imageProvider: imageProvider,
-          heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+  void openDialog(BuildContext context, ImageProvider imageProvider) =>
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+          child: PhotoView(
+            tightMode: true,
+            imageProvider: imageProvider,
+            heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+          ),
         ),
-      ),
-  );
+      );
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -256,15 +257,21 @@ class TileTextMessage extends StatelessWidget {
               if (message.previewData != null &&
                   message.previewData?.image != null)
                 Padding(
-                  padding: const EdgeInsets.all(15),
+                  padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
                   child: InkWell(
                     onTap: () {
-                      openDialog(context, CachedNetworkImageProvider(message.previewData!.image!.url));
+                      openDialog(
+                        context,
+                        CachedNetworkImageProvider(
+                          message.previewData!.image!.url,
+                        ),
+                      );
                     },
                     child: CachedNetworkImage(
                       height: message.previewData!.image!.height.toDouble(),
                       fit: BoxFit.cover,
                       imageUrl: message.previewData!.image!.url,
+                      repeat: ImageRepeat.repeatY,
                       placeholder: (context, url) => const SizedBox(
                         width: 50,
                         height: 50,

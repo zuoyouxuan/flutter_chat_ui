@@ -403,6 +403,8 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
 
+    print('textMessage: ${textMessage.toJson()}' );
+
     _addMessage(textMessage);
   }
 
