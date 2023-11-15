@@ -60,6 +60,52 @@ class _ChatPageState extends State<ChatPage> {
 
   bool is_darkMode = true;
 
+  bool _isHovering = false;
+  _setHoveringValue(bool val) => setState(() => _isHovering = val);
+  //
+  // Widget _msgExtraBarBuild(types.Message message, {required BuildContext context}) => Row(
+  //   mainAxisSize: MainAxisSize.max,
+  //   mainAxisAlignment: MainAxisAlignment.end,
+  //   children: [
+  //     _buildHoverIconButton(
+  //       icon: Icons.copy,
+  //       tooltip: 'Copy Message',
+  //       message: message,
+  //       context: context,
+  //     ),
+  //     _buildHoverIconButton(
+  //       icon: Icons.refresh,
+  //       tooltip: 'Refresh Message',
+  //       message: message,
+  //       context: context,
+  //     ),
+  //   ],
+  // );
+  //
+  // Widget _buildHoverIconButton({
+  //   required IconData icon,
+  //   required String tooltip,
+  //   required types.Message message,
+  //   required BuildContext context,
+  // }) => MouseRegion(
+  //     onEnter: (event) => _setHoveringValue(true),
+  //     onExit: (event) => _setHoveringValue(false),
+  //     child: AnimatedOpacity(
+  //       duration: const Duration(milliseconds: 200),
+  //       opacity: _isHovering ? 1 : 0.3,
+  //       child: IconButton(
+  //         tooltip: tooltip,
+  //         color: Colors.grey,
+  //         iconSize: 14,
+  //         onPressed: () async {
+  //           await Clipboard.setData(ClipboardData(text: message.toJson()['text']));
+  //         },
+  //         icon: Icon(icon),
+  //       ),
+  //     ),
+  //   );
+
+
   Widget _msgExtraBarBuild(types.Message message,
           {required BuildContext context}) =>
       Row(

@@ -146,10 +146,23 @@ class TileTextMessage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _avatarBuilder(),
+        Row(
+          children: [
+          _avatarBuilder(),
+          const Spacer(),
+          Container(
+            padding: EdgeInsets.zero,
+            alignment: Alignment.bottomRight,
+            child: (msgExtraBarBuild != null)
+                ? msgExtraBarBuild!(message, context: context)
+                : null,
+          ),
+        ],),
+
         const SizedBox(
           height: 8,
         ),
+
         Flexible(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -184,13 +197,7 @@ class TileTextMessage extends StatelessWidget {
         ),
         //   ],
         // ),
-        Container(
-          padding: EdgeInsets.zero,
-          alignment: Alignment.bottomRight,
-          child: (msgExtraBarBuild != null)
-              ? msgExtraBarBuild!(message, context: context)
-              : null,
-        ),
+
       ],
     );
   }
