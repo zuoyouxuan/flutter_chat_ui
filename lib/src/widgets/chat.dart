@@ -17,7 +17,6 @@ import '../models/preview_image.dart';
 import '../models/unread_header_data.dart';
 import '../util.dart';
 import 'chat_list.dart';
-import 'chat_list_item.dart';
 import 'image_gallery.dart';
 import 'input/input.dart';
 import 'message/message.dart';
@@ -683,13 +682,20 @@ class ChatState extends State<Chat> {
                                         widget.bubbleRtlAlignment!,
                                     isLastPage: widget.isLastPage,
                                     itemBuilder: (Object item, int? index) =>
-                                        ChatListItem(
-                                      item: _messageBuilder(
-                                        item,
-                                        constraints,
-                                        index,
-                                      ),
+                                        _messageBuilder(
+                                      item,
+                                      constraints,
+                                      index,
                                     ),
+
+                                    // itemBuilder: (Object item, int? index) =>
+                                    //     ChatListItem(
+                                    //   item: _messageBuilder(
+                                    //     item,
+                                    //     constraints,
+                                    //     index,
+                                    //   ),
+                                    // ),
                                     items: _chatMessages,
                                     keyboardDismissBehavior:
                                         widget.keyboardDismissBehavior,
