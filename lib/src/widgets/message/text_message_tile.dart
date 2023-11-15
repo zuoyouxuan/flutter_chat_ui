@@ -147,6 +147,7 @@ class TileTextMessage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
           _avatarBuilder(),
           const Spacer(),
@@ -192,6 +193,7 @@ class TileTextMessage extends StatelessWidget {
                       text: message.text,
                     ),
                   ),
+              const SizedBox(height: 10,),
             ],
           ),
         ),
