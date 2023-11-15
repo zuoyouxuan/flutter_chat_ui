@@ -264,15 +264,23 @@ class TileTextMessage extends StatelessWidget {
                     onTap: () {
                       openDialog(
                         context,
-                        CachedNetworkImageProvider(
-                          message.previewData!.image!.url,
-                        ),
+                        (message.previewData!.image!.url
+                                .contains('data:image/png;base64,'))
+                            ? Image.memory(
+                                base64Decode(message.previewData!.image!.url
+                                    .replaceAll('data:image/png;base64,', '')),
+                                fit: BoxFit.cover,
+                              ).image
+                            : CachedNetworkImageProvider(
+                                message.previewData!.image!.url,
+                              ),
                       );
                     },
                     child: (message.previewData!.image!.url
                             .contains('data:image/png;base64,'))
                         ? Image.memory(
-                            base64Decode(message.previewData!.image!.url.replaceAll('data:image/png;base64,','')),
+                            base64Decode(message.previewData!.image!.url
+                                .replaceAll('data:image/png;base64,', '')),
                             fit: BoxFit.cover,
                             height:
                                 message.previewData!.image!.height.toDouble(),
