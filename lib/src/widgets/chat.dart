@@ -17,6 +17,7 @@ import '../models/preview_image.dart';
 import '../models/unread_header_data.dart';
 import '../util.dart';
 import 'chat_list.dart';
+import 'chat_list_item.dart';
 import 'image_gallery.dart';
 import 'input/input.dart';
 import 'message/message.dart';
@@ -470,7 +471,7 @@ class ChatState extends State<Chat> {
                 ? min(constraints.maxWidth * 0.72, 440).floor()
                 : min(constraints.maxWidth * 0.78, 440).floor();
         final Widget msgWidget;
-        if(widget.tileLayout){
+        if (widget.tileLayout) {
           msgWidget = TileMessage(
             audioMessageBuilder: widget.audioMessageBuilder,
             avatarBuilder: widget.avatarBuilder,
@@ -682,10 +683,12 @@ class ChatState extends State<Chat> {
                                         widget.bubbleRtlAlignment!,
                                     isLastPage: widget.isLastPage,
                                     itemBuilder: (Object item, int? index) =>
-                                        _messageBuilder(
-                                      item,
-                                      constraints,
-                                      index,
+                                        ChatListItem(
+                                      item: _messageBuilder(
+                                        item,
+                                        constraints,
+                                        index,
+                                      ),
                                     ),
                                     items: _chatMessages,
                                     keyboardDismissBehavior:
