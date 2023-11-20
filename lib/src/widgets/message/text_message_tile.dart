@@ -171,6 +171,17 @@ class TileTextMessage extends StatelessWidget {
         CodeWrapperWidget(child: child, text: text);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
+    RegExp imageRegEx = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,');
+    String? base64Image;
+    bool isBase64Image = false;
+    if (message.previewData != null &&
+        message.previewData?.image != null &&
+        message.previewData?.image?.url != null) {
+      base64Image = message.previewData!.image!.url;
+      base64Image = base64Image.replaceAll(imageRegEx, '');
+      isBase64Image = imageRegEx.hasMatch(message.previewData!.image!.url);
+    }
+
     final match = exp.firstMatch(message.text);
     var language = match?.group(1);
     language ??= 'javascript';
@@ -259,7 +270,8 @@ class TileTextMessage extends StatelessWidget {
                   ),
 
               if (message.previewData != null &&
-                  message.previewData?.image != null)
+                  message.previewData?.image != null &&
+                  message.previewData?.image?.url != null)
                 Padding(
                   key: ValueKey('${message.id}_image'),
                   padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
@@ -267,17 +279,13 @@ class TileTextMessage extends StatelessWidget {
                     onTap: () {
                       openDialog(
                         context,
-                        (message.previewData!.image!.url
-                                .contains('data:image/png;base64,'))
+                        (isBase64Image && base64Image != null)
                             ? Image(
-                               fit: BoxFit.cover,
+                                fit: BoxFit.cover,
                                 image: CacheMemoryImageProvider(
                                   '${message.id}_image_preview',
                                   base64Decode(
-                                    message.previewData!.image!.url.replaceAll(
-                                      'data:image/png;base64,',
-                                      '',
-                                    ),
+                                    base64Image,
                                   ),
                                 ),
                               ).image
@@ -288,27 +296,18 @@ class TileTextMessage extends StatelessWidget {
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: (message.previewData!.image!.url
-                              .contains('data:image/png;base64,'))
+                      child: (isBase64Image && base64Image != null)
                           ? Image(
                               fit: BoxFit.cover,
-                              height: message.previewData!.image!.height.toDouble(),
+                              height:
+                                  message.previewData!.image!.height.toDouble(),
                               image: CacheMemoryImageProvider(
                                 '${message.id}_image_preview',
                                 base64Decode(
-                                  message.previewData!.image!.url.replaceAll(
-                                    'data:image/png;base64,',
-                                    '',
-                                  ),
+                                  base64Image,
                                 ),
                               ),
                             )
-                          // Image.memory(
-                          //       ,
-                          //       fit: BoxFit.cover,
-                          //       height:
-                          //           message.previewData!.image!.height.toDouble(),
-                          //     )
                           : CachedNetworkImage(
                               height:
                                   message.previewData!.image!.height.toDouble(),
@@ -353,6 +352,7 @@ class TileTextMessage extends StatelessWidget {
     final user = InheritedUser.of(context).user;
 
     return Container(
+      key: ValueKey('${message.id}_text_message_container'),
       margin: EdgeInsets.fromLTRB(
         theme.messageInsetsHorizontal,
         theme.messageInsetsVertical - 10,
