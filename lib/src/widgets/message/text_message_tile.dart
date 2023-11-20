@@ -16,7 +16,7 @@ import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
 /// A class that represents text message widget with optional link preview.
-class TileTextMessage extends StatefulWidget {
+class TileTextMessage extends StatelessWidget {
   /// Creates a text message widget from a [types.TextMessage] class.
   const TileTextMessage({
     super.key,
@@ -67,15 +67,10 @@ class TileTextMessage extends StatefulWidget {
   final Widget Function(types.Message message, {required BuildContext context})?
       msgExtraBarBuild;
 
-  @override
-  State<TileTextMessage> createState() => _TileTextMessageState();
-}
-
-class _TileTextMessageState extends State<TileTextMessage> {
   Widget _avatarBuilder() =>
-      widget.avatarBuilder?.call(widget.message.author) ??
+      avatarBuilder?.call(message.author) ??
       UserAvatar(
-        author: widget.message.author,
+        author: message.author,
       );
 
   Widget _linkPreview(
@@ -83,14 +78,14 @@ class _TileTextMessageState extends State<TileTextMessage> {
     double width,
     BuildContext context,
   ) {
-    final linkDescriptionTextStyle = user.id == widget.message.author.id
+    final linkDescriptionTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context)
             .theme
             .sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context)
             .theme
             .receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == widget.message.author.id
+    final linkTitleTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context)
             .theme
@@ -100,26 +95,26 @@ class _TileTextMessageState extends State<TileTextMessage> {
       enableAnimation: true,
       metadataTextStyle: linkDescriptionTextStyle,
       metadataTitleStyle: linkTitleTextStyle,
-      onLinkPressed: widget.options.onLinkPressed,
+      onLinkPressed: options.onLinkPressed,
       onPreviewDataFetched: _onPreviewDataFetched,
-      openOnPreviewImageTap: widget.options.openOnPreviewImageTap,
-      openOnPreviewTitleTap: widget.options.openOnPreviewTitleTap,
+      openOnPreviewImageTap: options.openOnPreviewImageTap,
+      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
         horizontal:
             InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
-      previewData: widget.message.previewData,
-      text: widget.message.text,
+      previewData: message.previewData,
+      text: message.text,
       textWidget: _textWidgetBuilder(user, context, false),
-      userAgent: widget.userAgent,
+      userAgent: userAgent,
       width: width,
     );
   }
 
   void _onPreviewDataFetched(types.PreviewData previewData) {
-    if (widget.message.previewData == null) {
-      widget.onPreviewDataFetched?.call(widget.message, previewData);
+    if (message.previewData == null) {
+      onPreviewDataFetched?.call(message, previewData);
     }
   }
 
@@ -141,19 +136,19 @@ class _TileTextMessageState extends State<TileTextMessage> {
     bool enlargeEmojis,
   ) {
     final theme = InheritedChatTheme.of(context).theme;
-    final bodyLinkTextStyle = user.id == widget.message.author.id
+    final bodyLinkTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle = user.id == widget.message.author.id
+    final bodyTextStyle = user.id == message.author.id
         ? theme.sentMessageBodyTextStyle
         : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle = user.id == widget.message.author.id
+    final boldTextStyle = user.id == message.author.id
         ? theme.sentMessageBodyBoldTextStyle
         : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle = user.id == widget.message.author.id
+    final codeTextStyle = user.id == message.author.id
         ? theme.sentMessageBodyCodeTextStyle
         : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle = user.id == widget.message.author.id
+    final emojiTextStyle = user.id == message.author.id
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
 
@@ -175,7 +170,7 @@ class _TileTextMessageState extends State<TileTextMessage> {
         CodeWrapperWidget(child: child, text: text);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
-    final match = exp.firstMatch(widget.message.text);
+    final match = exp.firstMatch(message.text);
     var language = match?.group(1);
     language ??= 'javascript';
 
@@ -220,8 +215,8 @@ class _TileTextMessageState extends State<TileTextMessage> {
             Container(
               padding: EdgeInsets.zero,
               alignment: Alignment.bottomRight,
-              child: (widget.msgExtraBarBuild != null)
-                  ? widget.msgExtraBarBuild!(widget.message, context: context)
+              child: (msgExtraBarBuild != null)
+                  ? msgExtraBarBuild!(message, context: context)
                   : null,
             ),
           ],
@@ -237,17 +232,18 @@ class _TileTextMessageState extends State<TileTextMessage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (user.id != widget.message.author.id)
+              if (user.id != message.author.id)
                 MarkdownWidget(
-                  data: widget.message.text,
+                  key: ValueKey('${message.id}_md'),
+                  data: message.text,
                   shrinkWrap: true,
                   selectable: true,
                   padding: EdgeInsets.zero,
                   config: markdownConfig,
                 ),
-              if (user.id == widget.message.author.id)
+              if (user.id == message.author.id)
                 if (enlargeEmojis)
-                  SelectableText(widget.message.text, style: emojiTextStyle)
+                  SelectableText(message.text, style: emojiTextStyle)
                 else
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
@@ -256,47 +252,48 @@ class _TileTextMessageState extends State<TileTextMessage> {
                       bodyTextStyle: bodyTextStyle,
                       boldTextStyle: boldTextStyle,
                       codeTextStyle: codeTextStyle,
-                      options: widget.options,
-                      text: widget.message.text,
+                      options: options,
+                      text: message.text,
                     ),
                   ),
 
-              if (widget.message.previewData != null &&
-                  widget.message.previewData?.image != null)
+              if (message.previewData != null &&
+                  message.previewData?.image != null)
                 Padding(
+                  key: ValueKey('${message.id}_image'),
                   padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
                   child: InkWell(
                     onTap: () {
                       openDialog(
                         context,
-                        (widget.message.previewData!.image!.url
+                        (message.previewData!.image!.url
                                 .contains('data:image/png;base64,'))
                             ? Image.memory(
-                                base64Decode(widget.message.previewData!.image!.url
+                                base64Decode(message.previewData!.image!.url
                                     .replaceAll('data:image/png;base64,', '')),
                                 fit: BoxFit.cover,
                               ).image
                             : CachedNetworkImageProvider(
-                                widget.message.previewData!.image!.url,
+                                message.previewData!.image!.url,
                               ),
                       );
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: (widget.message.previewData!.image!.url
+                      child: (message.previewData!.image!.url
                               .contains('data:image/png;base64,'))
                           ? Image.memory(
-                              base64Decode(widget.message.previewData!.image!.url
+                              base64Decode(message.previewData!.image!.url
                                   .replaceAll('data:image/png;base64,', '')),
                               fit: BoxFit.cover,
                               height:
-                                  widget.message.previewData!.image!.height.toDouble(),
+                                  message.previewData!.image!.height.toDouble(),
                             )
                           : CachedNetworkImage(
                               height:
-                                  widget.message.previewData!.image!.height.toDouble(),
+                                  message.previewData!.image!.height.toDouble(),
                               fit: BoxFit.cover,
-                              imageUrl: widget.message.previewData!.image!.url,
+                              imageUrl: message.previewData!.image!.url,
                               repeat: ImageRepeat.repeatY,
                               placeholder: (context, url) => const SizedBox(
                                 width: 40,
@@ -330,8 +327,8 @@ class _TileTextMessageState extends State<TileTextMessage> {
   @override
   Widget build(BuildContext context) {
     final enlargeEmojis =
-        widget.emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(widget.emojiEnlargementBehavior, widget.message);
+        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+            isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
 
