@@ -11,6 +11,7 @@ import 'package:markdown_widget/markdown_widget.dart';
 import 'package:photo_view_v3/photo_view.dart';
 
 import '../../../flutter_chat_ui.dart';
+import '../cache_memory_image_provider.dart';
 import '../code_wrapper.dart';
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
@@ -268,10 +269,16 @@ class TileTextMessage extends StatelessWidget {
                         context,
                         (message.previewData!.image!.url
                                 .contains('data:image/png;base64,'))
-                            ? Image.memory(
-                                base64Decode(message.previewData!.image!.url
-                                    .replaceAll('data:image/png;base64,', '')),
-                                fit: BoxFit.cover,
+                            ? Image(
+                                image: CacheMemoryImageProvider(
+                                  '${message.id}_image_preview',
+                                  base64Decode(
+                                    message.previewData!.image!.url.replaceAll(
+                                      'data:image/png;base64,',
+                                      '',
+                                    ),
+                                  ),
+                                ),
                               ).image
                             : CachedNetworkImageProvider(
                                 message.previewData!.image!.url,
@@ -282,13 +289,23 @@ class TileTextMessage extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10.0),
                       child: (message.previewData!.image!.url
                               .contains('data:image/png;base64,'))
-                          ? Image.memory(
-                              base64Decode(message.previewData!.image!.url
-                                  .replaceAll('data:image/png;base64,', '')),
-                              fit: BoxFit.cover,
-                              height:
-                                  message.previewData!.image!.height.toDouble(),
+                          ? Image(
+                              image: CacheMemoryImageProvider(
+                                '${message.id}_image_preview',
+                                base64Decode(
+                                  message.previewData!.image!.url.replaceAll(
+                                    'data:image/png;base64,',
+                                    '',
+                                  ),
+                                ),
+                              ),
                             )
+                          // Image.memory(
+                          //       ,
+                          //       fit: BoxFit.cover,
+                          //       height:
+                          //           message.previewData!.image!.height.toDouble(),
+                          //     )
                           : CachedNetworkImage(
                               height:
                                   message.previewData!.image!.height.toDouble(),
