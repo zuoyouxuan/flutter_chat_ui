@@ -16,7 +16,7 @@ import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
 /// A class that represents text message widget with optional link preview.
-class TileTextMessage extends StatelessWidget {
+class TileTextMessage extends StatefulWidget {
   /// Creates a text message widget from a [types.TextMessage] class.
   const TileTextMessage({
     super.key,
@@ -67,10 +67,15 @@ class TileTextMessage extends StatelessWidget {
   final Widget Function(types.Message message, {required BuildContext context})?
       msgExtraBarBuild;
 
+  @override
+  State<TileTextMessage> createState() => _TileTextMessageState();
+}
+
+class _TileTextMessageState extends State<TileTextMessage> {
   Widget _avatarBuilder() =>
-      avatarBuilder?.call(message.author) ??
+      widget.avatarBuilder?.call(widget.message.author) ??
       UserAvatar(
-        author: message.author,
+        author: widget.message.author,
       );
 
   Widget _linkPreview(
@@ -78,14 +83,14 @@ class TileTextMessage extends StatelessWidget {
     double width,
     BuildContext context,
   ) {
-    final linkDescriptionTextStyle = user.id == message.author.id
+    final linkDescriptionTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context)
             .theme
             .sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context)
             .theme
             .receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == message.author.id
+    final linkTitleTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context)
             .theme
@@ -95,26 +100,26 @@ class TileTextMessage extends StatelessWidget {
       enableAnimation: true,
       metadataTextStyle: linkDescriptionTextStyle,
       metadataTitleStyle: linkTitleTextStyle,
-      onLinkPressed: options.onLinkPressed,
+      onLinkPressed: widget.options.onLinkPressed,
       onPreviewDataFetched: _onPreviewDataFetched,
-      openOnPreviewImageTap: options.openOnPreviewImageTap,
-      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
+      openOnPreviewImageTap: widget.options.openOnPreviewImageTap,
+      openOnPreviewTitleTap: widget.options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
         horizontal:
             InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
-      previewData: message.previewData,
-      text: message.text,
+      previewData: widget.message.previewData,
+      text: widget.message.text,
       textWidget: _textWidgetBuilder(user, context, false),
-      userAgent: userAgent,
+      userAgent: widget.userAgent,
       width: width,
     );
   }
 
   void _onPreviewDataFetched(types.PreviewData previewData) {
-    if (message.previewData == null) {
-      onPreviewDataFetched?.call(message, previewData);
+    if (widget.message.previewData == null) {
+      widget.onPreviewDataFetched?.call(widget.message, previewData);
     }
   }
 
@@ -136,19 +141,19 @@ class TileTextMessage extends StatelessWidget {
     bool enlargeEmojis,
   ) {
     final theme = InheritedChatTheme.of(context).theme;
-    final bodyLinkTextStyle = user.id == message.author.id
+    final bodyLinkTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle = user.id == message.author.id
+    final bodyTextStyle = user.id == widget.message.author.id
         ? theme.sentMessageBodyTextStyle
         : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle = user.id == message.author.id
+    final boldTextStyle = user.id == widget.message.author.id
         ? theme.sentMessageBodyBoldTextStyle
         : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle = user.id == message.author.id
+    final codeTextStyle = user.id == widget.message.author.id
         ? theme.sentMessageBodyCodeTextStyle
         : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle = user.id == message.author.id
+    final emojiTextStyle = user.id == widget.message.author.id
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
 
@@ -170,7 +175,7 @@ class TileTextMessage extends StatelessWidget {
         CodeWrapperWidget(child: child, text: text);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
-    final match = exp.firstMatch(message.text);
+    final match = exp.firstMatch(widget.message.text);
     var language = match?.group(1);
     language ??= 'javascript';
 
@@ -215,8 +220,8 @@ class TileTextMessage extends StatelessWidget {
             Container(
               padding: EdgeInsets.zero,
               alignment: Alignment.bottomRight,
-              child: (msgExtraBarBuild != null)
-                  ? msgExtraBarBuild!(message, context: context)
+              child: (widget.msgExtraBarBuild != null)
+                  ? widget.msgExtraBarBuild!(widget.message, context: context)
                   : null,
             ),
           ],
@@ -232,17 +237,17 @@ class TileTextMessage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (user.id != message.author.id)
+              if (user.id != widget.message.author.id)
                 MarkdownWidget(
-                  data: message.text,
+                  data: widget.message.text,
                   shrinkWrap: true,
                   selectable: true,
                   padding: EdgeInsets.zero,
                   config: markdownConfig,
                 ),
-              if (user.id == message.author.id)
+              if (user.id == widget.message.author.id)
                 if (enlargeEmojis)
-                  SelectableText(message.text, style: emojiTextStyle)
+                  SelectableText(widget.message.text, style: emojiTextStyle)
                 else
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
@@ -251,47 +256,47 @@ class TileTextMessage extends StatelessWidget {
                       bodyTextStyle: bodyTextStyle,
                       boldTextStyle: boldTextStyle,
                       codeTextStyle: codeTextStyle,
-                      options: options,
-                      text: message.text,
+                      options: widget.options,
+                      text: widget.message.text,
                     ),
                   ),
 
-              if (message.previewData != null &&
-                  message.previewData?.image != null)
+              if (widget.message.previewData != null &&
+                  widget.message.previewData?.image != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
                   child: InkWell(
                     onTap: () {
                       openDialog(
                         context,
-                        (message.previewData!.image!.url
+                        (widget.message.previewData!.image!.url
                                 .contains('data:image/png;base64,'))
                             ? Image.memory(
-                                base64Decode(message.previewData!.image!.url
+                                base64Decode(widget.message.previewData!.image!.url
                                     .replaceAll('data:image/png;base64,', '')),
                                 fit: BoxFit.cover,
                               ).image
                             : CachedNetworkImageProvider(
-                                message.previewData!.image!.url,
+                                widget.message.previewData!.image!.url,
                               ),
                       );
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: (message.previewData!.image!.url
+                      child: (widget.message.previewData!.image!.url
                               .contains('data:image/png;base64,'))
                           ? Image.memory(
-                              base64Decode(message.previewData!.image!.url
+                              base64Decode(widget.message.previewData!.image!.url
                                   .replaceAll('data:image/png;base64,', '')),
                               fit: BoxFit.cover,
                               height:
-                                  message.previewData!.image!.height.toDouble(),
+                                  widget.message.previewData!.image!.height.toDouble(),
                             )
                           : CachedNetworkImage(
                               height:
-                                  message.previewData!.image!.height.toDouble(),
+                                  widget.message.previewData!.image!.height.toDouble(),
                               fit: BoxFit.cover,
-                              imageUrl: message.previewData!.image!.url,
+                              imageUrl: widget.message.previewData!.image!.url,
                               repeat: ImageRepeat.repeatY,
                               placeholder: (context, url) => const SizedBox(
                                 width: 40,
@@ -325,8 +330,8 @@ class TileTextMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(emojiEnlargementBehavior, message);
+        widget.emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+            isConsistsOfEmojis(widget.emojiEnlargementBehavior, widget.message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
 
