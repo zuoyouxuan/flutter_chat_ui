@@ -270,6 +270,7 @@ class TileTextMessage extends StatelessWidget {
                         (message.previewData!.image!.url
                                 .contains('data:image/png;base64,'))
                             ? Image(
+                               fit: BoxFit.cover,
                                 image: CacheMemoryImageProvider(
                                   '${message.id}_image_preview',
                                   base64Decode(
@@ -290,6 +291,8 @@ class TileTextMessage extends StatelessWidget {
                       child: (message.previewData!.image!.url
                               .contains('data:image/png;base64,'))
                           ? Image(
+                              fit: BoxFit.cover,
+                              height: message.previewData!.image!.height.toDouble(),
                               image: CacheMemoryImageProvider(
                                 '${message.id}_image_preview',
                                 base64Decode(
