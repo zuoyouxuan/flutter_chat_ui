@@ -42,15 +42,14 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                       padding: const EdgeInsets.all(2),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(
-                          width: 0.5,
-                          color: isDark ? Colors.white : Colors.black,
-                        ),
+                        border: Border.all(width: 0, color: Colors.transparent),
                       ),
                       child: Text(widget.language),
                     ),
                   ),
-                const SizedBox(width: 5,),
+                const SizedBox(
+                  width: 5,
+                ),
                 InkWell(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
@@ -59,12 +58,13 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                   onTap: () async {
                     if (hasCopied) return;
                     await Clipboard.setData(ClipboardData(text: widget.text));
-                    _switchWidget = Icon(Icons.check , size: 12, key: UniqueKey());
+                    _switchWidget =
+                        Icon(Icons.check, size: 12, color: Colors.green, key: UniqueKey());
                     refresh();
                     Future.delayed(const Duration(seconds: 2), () {
                       hasCopied = false;
                       _switchWidget =
-                          Icon(Icons.copy_rounded , size: 12, key: UniqueKey());
+                          Icon(Icons.copy_rounded, color: Colors.grey, size: 12, key: UniqueKey());
                       refresh();
                     });
                   },
