@@ -10,7 +10,6 @@ import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:photo_view_v3/photo_view.dart';
-import 'package:siri_wave/siri_wave.dart';
 
 import '../../../flutter_chat_ui.dart';
 import '../cache_memory_image_provider.dart';
@@ -247,7 +246,7 @@ class TileTextMessage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (user.id != message.author.id)
-                if(message.status != types.Status.sending)
+                // if(message.status != types.Status.sending)
                   MarkdownWidget(
                     key: ValueKey('${message.id}_md'),
                     data: message.text,
@@ -256,8 +255,8 @@ class TileTextMessage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     config: markdownConfig,
                   ),
-                if(user.id != message.author.id && message.status == types.Status.sending)
-                  Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
+                // if(user.id != message.author.id && message.status == types.Status.sending)
+                //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
 
               if (user.id == message.author.id)
                 if (enlargeEmojis)
