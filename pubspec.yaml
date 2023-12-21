@@ -1,5 +1,5 @@
 name: flutter_chat_ui
-description: >
+description:
   Actively maintained, community-driven chat UI implementation with an
   optional Firebase BaaS.
 version: 1.6.10
@@ -11,7 +11,7 @@ environment:
   flutter: '>=3.0.0'
 
 dependencies:
-  diffutil_dart: ^3.0.0
+  diffutil_dart: ^4.0.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
@@ -35,7 +35,7 @@ dependencies:
 
 dev_dependencies:
   dart_code_metrics: ^5.7.5
-  flutter_lints: ^2.0.2
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
 

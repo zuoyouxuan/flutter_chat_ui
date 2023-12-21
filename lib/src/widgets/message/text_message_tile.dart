@@ -167,8 +167,8 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
-    CodeWrapperWidget codeWrapper(child, text) =>
-        CodeWrapperWidget(child: child, text: text);
+    CodeWrapperWidget codeWrapper(child, code , language) =>
+        CodeWrapperWidget(child, code, language);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
     RegExp imageRegEx = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,');
@@ -268,7 +268,6 @@ class TileTextMessage extends StatelessWidget {
                       text: message.text,
                     ),
                   ),
-
               if (message.previewData != null &&
                   message.previewData?.image != null &&
                   message.previewData?.image?.url != null)
@@ -333,7 +332,7 @@ class TileTextMessage extends StatelessWidget {
                     ),
                   ),
                 ),
-              // SizedBox(width:320 , height:320 , child: _linkPreview(user, 320, context)),
+              IconButton(onPressed: () {}, icon: Icon(Icons.play_arrow)),
             ],
           ),
         ),
@@ -350,7 +349,6 @@ class TileTextMessage extends StatelessWidget {
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
-
     return Container(
       key: ValueKey('${message.id}_text_message_container'),
       margin: EdgeInsets.fromLTRB(

@@ -641,6 +641,8 @@ class ChatState extends State<Chat> {
     }
   }
 
+
+
   @override
   void dispose() {
     _galleryPageController?.dispose();
@@ -687,15 +689,6 @@ class ChatState extends State<Chat> {
                                       constraints,
                                       index,
                                     ),
-
-                                    // itemBuilder: (Object item, int? index) =>
-                                    //     ChatListItem(
-                                    //   item: _messageBuilder(
-                                    //     item,
-                                    //     constraints,
-                                    //     index,
-                                    //   ),
-                                    // ),
                                     items: _chatMessages,
                                     keyboardDismissBehavior:
                                         widget.keyboardDismissBehavior,
