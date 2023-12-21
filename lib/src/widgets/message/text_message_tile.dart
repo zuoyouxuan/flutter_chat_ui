@@ -167,7 +167,7 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
-    CodeWrapperWidget codeWrapper(child, code , language) =>
+    CodeWrapperWidget codeWrapper(child, code, language) =>
         CodeWrapperWidget(child, code, language);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
@@ -332,7 +332,6 @@ class TileTextMessage extends StatelessWidget {
                     ),
                   ),
                 ),
-              IconButton(onPressed: () {}, icon: Icon(Icons.play_arrow)),
             ],
           ),
         ),
