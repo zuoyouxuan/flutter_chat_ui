@@ -36,7 +36,7 @@
     },
     "createdAt": 1655624460000,
     "id": "634b2f0b-2486-4bfe-b36d-1c7d6313c7b3",
-    "status": "seen",
+    "status": "sending",
     "text": "等额本金还款法是将贷款本金平均分摊到每一期，稍后偿还的本金，其利息也就少一些，使还款总额逐期递减。\n\n等额本金的每期还款金额的计算公式为：\n\n每期还款金额 = [贷款本金 ÷ 还款月数] + [剩余贷款本金 x 月利率]\n\n下面为您展示在 `LoanCalculator` 类中添加 `calculateEqualPrincipalLoan` 方法的代码：\n\n```typescript\nclass LoanCalculator {\n    /* ... 省略其他代码 ... */\n\n    // 计算等额本金贷款\n    public calculateEqualPrincipalLoan(): LoanResult {\n        const monthlyInterestRate = this.interestRate / 12; // 月利率\n        const monthlyPrincipal = this.principal / this.term; // 每月偿还的本金\n        const monthlyDetails: LoanDetail[] = [];\n        let remainingPrincipal = this.principal; // 剩余本金\n\n    }\n}\n```\n这个 `calculateEqualPrincipalLoan` 方法计算了等额本金贷款的每期还款本金、利息以及总额；并且构造了一个包含所有期数的明细。何时调用这个方法，就可以得到等额本金贷款的还款详情。\n",
     "type": "text"
   }

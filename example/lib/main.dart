@@ -1,22 +1,15 @@
 import 'dart:convert';
-import 'dart:io';
 
-// import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'
-    show Clipboard, ClipboardData, rootBundle;
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:http/http.dart' as http;
-
-// import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/date_symbol_data_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
-  initializeDateFormatting().then((_) => runApp(const MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -347,16 +340,6 @@ class _ChatPageState extends State<ChatPage> {
             _messages[index] = updatedMessage;
           });
 
-          final client = http.Client();
-          final request = await client.get(Uri.parse(message.uri));
-          final bytes = request.bodyBytes;
-          final documentsDir = (await getApplicationDocumentsDirectory()).path;
-          localPath = '$documentsDir/${message.name}';
-
-          if (!File(localPath).existsSync()) {
-            final file = File(localPath);
-            await file.writeAsBytes(bytes);
-          }
         } finally {
           final index =
               _messages.indexWhere((element) => element.id == message.id);
@@ -395,10 +378,11 @@ class _ChatPageState extends State<ChatPage> {
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: const Uuid().v4(),
       text: message.text,
-      previewData: const types.PreviewData(
-        image: types.PreviewDataImage(
-            width: 120, height: 120, url: 'https://d1.awsstatic.com/codewhisper/icon_cw_serviceicon.65af1ed185a8674249a5aa38894f469e974714d3.png'),
-      ),
+      status: types.Status.sending,
+      // previewData: const types.PreviewData(
+      //   image: types.PreviewDataImage(
+      //       width: 120, height: 120, url: 'https://d1.awsstatic.com/codewhisper/icon_cw_serviceicon.65af1ed185a8674249a5aa38894f469e974714d3.png'),
+      // ),
     );
 
     print('textMessage: ${textMessage.toJson()}' );

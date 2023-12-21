@@ -26,6 +26,7 @@ dependencies:
   visibility_detector: ^0.4.0+2
   cached_network_image: ^3.3.0
   photo_view_v3: ^0.14.0
+  siri_wave: ^2.0.0+1
 
 #   flutter_markdown: ^0.6.17+2
   markdown_widget:
