@@ -44,7 +44,7 @@ class _PreWrapperState extends State<CodeWrapperWidget> {
                         borderRadius: BorderRadius.circular(4),
                         border: Border.all(width: 0, color: Colors.transparent),
                       ),
-                      child: Text(widget.language),
+                      child: Text(widget.language , style: const TextStyle(color:Colors.grey),),
                     ),
                   ),
                 const SizedBox(
