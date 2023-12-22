@@ -151,7 +151,12 @@ class TextMessage extends StatelessWidget {
           ),
 
         if(msgExtraBarBuild != null)
-          msgExtraBarBuild!(message, context: context),
+          Container(
+            padding: EdgeInsets.zero,
+            alignment: Alignment.bottomRight,
+            child: msgExtraBarBuild!(message, context: context),
+          ),
+
       ],
     );
   }

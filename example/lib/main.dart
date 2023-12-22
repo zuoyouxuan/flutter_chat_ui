@@ -140,7 +140,7 @@ class _ChatPageState extends State<ChatPage> {
           onSendPressed: _handleSendPressed,
           showUserAvatars: true,
           showUserNames: true,
-          tileLayout: true,
+          tileLayout: false,
           user: _user,
           // avatarBuilder: (String userId) => userId == _user.id
           //       ? const CircleAvatar(
