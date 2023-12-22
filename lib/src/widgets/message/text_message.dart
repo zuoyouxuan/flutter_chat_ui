@@ -150,7 +150,7 @@ class TextMessage extends StatelessWidget {
             text: message.text,
           ),
 
-        if(msgExtraBarBuild != null)
+        if(msgExtraBarBuild != null && user.id != message.author.id)
           Container(
             padding: EdgeInsets.zero,
             alignment: Alignment.bottomRight,
