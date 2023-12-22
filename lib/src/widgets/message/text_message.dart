@@ -27,6 +27,7 @@ class TextMessage extends StatelessWidget {
     required this.showName,
     required this.usePreviewData,
     this.userAgent,
+    this.msgExtraBarBuild,
   });
 
   /// See [Message.emojiEnlargementBehavior].
@@ -57,6 +58,10 @@ class TextMessage extends StatelessWidget {
 
   /// User agent to fetch preview data with.
   final String? userAgent;
+
+
+  final Widget Function(types.Message message, {required BuildContext context})?
+  msgExtraBarBuild;
 
   Widget _linkPreview(
     types.User user,
@@ -144,6 +149,14 @@ class TextMessage extends StatelessWidget {
             options: options,
             text: message.text,
           ),
+
+        Container(
+          padding: EdgeInsets.zero,
+          alignment: Alignment.bottomRight,
+          child: (msgExtraBarBuild != null)
+              ? msgExtraBarBuild!(message, context: context)
+              : null,
+        ),
       ],
     );
   }
