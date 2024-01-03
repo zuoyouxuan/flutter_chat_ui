@@ -197,7 +197,7 @@ class _InputState extends State<Input> {
                       keyboardType: widget.options.keyboardType,
                       textInputAction: isMobile
                           ? TextInputAction.send
-                          : TextInputAction.none,
+                          : TextInputAction.newline,
                       onSubmitted: (_) => _handleSendPressed(),
                       maxLines: 15,
                       minLines: widget.options.minLines,
