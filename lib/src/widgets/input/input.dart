@@ -142,7 +142,7 @@ class _InputState extends State<Input> {
             0,
           ),
         );
-
+    // bool isMobile = query.size.width < 650;
     return Focus(
       autofocus: !widget.options.autofocus,
       child: Padding(
@@ -195,7 +195,9 @@ class _InputState extends State<Input> {
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: widget.options.keyboardType,
-                      textInputAction: TextInputAction.send,
+                      textInputAction: isMobile
+                          ? TextInputAction.send
+                          : TextInputAction.none,
                       onSubmitted: (_) => _handleSendPressed(),
                       maxLines: 15,
                       minLines: widget.options.minLines,
