@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:photo_view/photo_view.dart' show PhotoViewComputedScale;
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../chat_l10n.dart';
 import '../chat_theme.dart';
 import '../conditional/conditional.dart';
 import '../models/preview_image.dart';
-import 'chat_list.dart';
 import 'image_gallery.dart';
 import 'input/input.dart';
-import 'message/message.dart';
 import 'state/inherited_chat_theme.dart';
 import 'state/inherited_l10n.dart';
 import 'state/inherited_user.dart';
-import 'unread_header.dart';
 
 /// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
 final Map<String, int> chatMessageAutoScrollIndexById = {};
@@ -37,16 +33,8 @@ class Chat extends StatefulWidget {
     this.l10n = const ChatL10nEn(),
     this.onAttachmentPressed,
     required this.onSendPressed,
-    this.scrollController,
-    this.scrollPhysics,
-    this.scrollToUnreadOptions = const ScrollToUnreadOptions(),
-    this.showUserAvatars = false,
-    this.showUserNames = false,
-    this.systemMessageBuilder,
     this.theme = const DefaultChatTheme(),
     required this.user,
-    this.tileLayout = false,
-    this.msgExtraBarBuild,
     required this.chatListBuilder,
   });
 
@@ -86,27 +74,6 @@ class Chat extends StatefulWidget {
   /// See [Input.onSendPressed].
   final void Function(types.PartialText) onSendPressed;
 
-  /// See [ChatList.scrollController].
-  /// If provided, you cannot use the scroll to message functionality.
-  final AutoScrollController? scrollController;
-
-  /// See [ChatList.scrollPhysics].
-  final ScrollPhysics? scrollPhysics;
-
-  /// Controls if and how the chat should scroll to the newest unread message.
-  final ScrollToUnreadOptions scrollToUnreadOptions;
-
-  /// See [Message.showUserAvatars].
-  final bool showUserAvatars;
-  final bool tileLayout;
-
-  /// Show user names for received messages. Useful for a group chat. Will be
-  /// shown only on text messages.
-  final bool showUserNames;
-
-  /// Builds a system message outside of any bubble.
-  final Widget Function(types.SystemMessage)? systemMessageBuilder;
-
   final Widget chatListBuilder;
 
   /// Chat theme. Extend [ChatTheme] class to create your own theme or use
@@ -116,9 +83,6 @@ class Chat extends StatefulWidget {
 
   /// See [InheritedUser.user].
   final types.User user;
-
-  final Widget Function(types.Message message, {required BuildContext context})?
-      msgExtraBarBuild;
 
   @override
   State<Chat> createState() => ChatState();
