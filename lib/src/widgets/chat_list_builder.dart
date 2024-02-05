@@ -308,6 +308,41 @@ class _ChatListBuilderState extends State<ChatListBuilder> {
 
   late final AutoScrollController _scrollController;
 
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = widget.scrollController ?? AutoScrollController();
+    didUpdateWidget(widget);
+  }
+
+  @override
+  void didUpdateWidget(covariant ChatListBuilder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.messages.isNotEmpty) {
+      final result = calculateChatMessages(
+        widget.messages,
+        widget.user,
+        customDateHeaderText: widget.customDateHeaderText,
+        dateFormat: widget.dateFormat,
+        dateHeaderThreshold: widget.dateHeaderThreshold,
+        dateIsUtc: widget.dateIsUtc,
+        dateLocale: widget.dateLocale,
+        groupMessagesThreshold: widget.groupMessagesThreshold,
+        lastReadMessageId: widget.scrollToUnreadOptions.lastReadMessageId,
+        showUserNames: widget.showUserNames,
+        timeFormat: widget.timeFormat,
+        tileLayout: widget.tileLayout,
+      );
+
+      _chatMessages = result[0] as List<Object>;
+      _gallery = result[1] as List<PreviewImage>;
+
+      _refreshAutoScrollMapping();
+      _maybeScrollToFirstUnread();
+    }
+  }
+
   /// Scroll to the unread header.
   void scrollToUnreadHeader() {
     final unreadHeaderIndex = chatMessageAutoScrollIndexById[_unreadHeaderId];
@@ -561,43 +596,6 @@ class _ChatListBuilderState extends State<ChatListBuilder> {
     types.PreviewData previewData,
   ) {
     widget.onPreviewDataFetched?.call(message, previewData);
-  }
-
-  @override
-  Future<void> initState() async {
-    super.initState();
-
-    _scrollController = widget.scrollController ?? AutoScrollController();
-
-    didUpdateWidget(widget);
-  }
-
-  @override
-  void didUpdateWidget(covariant ChatListBuilder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.messages.isNotEmpty) {
-      final result = calculateChatMessages(
-        widget.messages,
-        widget.user,
-        customDateHeaderText: widget.customDateHeaderText,
-        dateFormat: widget.dateFormat,
-        dateHeaderThreshold: widget.dateHeaderThreshold,
-        dateIsUtc: widget.dateIsUtc,
-        dateLocale: widget.dateLocale,
-        groupMessagesThreshold: widget.groupMessagesThreshold,
-        lastReadMessageId: widget.scrollToUnreadOptions.lastReadMessageId,
-        showUserNames: widget.showUserNames,
-        timeFormat: widget.timeFormat,
-        tileLayout: widget.tileLayout,
-      );
-
-      _chatMessages = result[0] as List<Object>;
-      _gallery = result[1] as List<PreviewImage>;
-
-      _refreshAutoScrollMapping();
-      _maybeScrollToFirstUnread();
-    }
   }
 
   @override
