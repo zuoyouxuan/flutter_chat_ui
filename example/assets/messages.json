@@ -12,32 +12,5 @@
     "status": "seen",
     "text": "3. Run the following command to switch to the Windows platform:",
     "type": "text"
-  },
-
-  {
-    "author": {
-      "firstName": "John",
-      "id": "4c2307ba-3d40-442f-b1ff-b271f63904ca",
-      "lastName": "Doe",
-      "imageUrl" : "https://extyy.oss-cn-shenzhen.aliyuncs.com/assets/ChatGPT_logo.png"
-    },
-    "createdAt": 1655624460000,
-    "id": "634b2f0b-2486-4bfe-b36d-1c7d6313c7b3",
-    "status": "seen",
-    "text": "Flutter是跨平台的移动应用程序开发框架，可以在Mac、Windows和Linux上进行开发。但是，如果你想要打包Flutter Windows应用程序，你需要在Windows上进行打包。以下是在Mac电脑上打包Flutter Windows应用程序的步骤：\n\n1. 在Mac电脑上安装VirtualBox和Windows虚拟机。\n\n2. 在Windows虚拟机中安装Flutter和相关依赖项。\n\n3. 在Windows虚拟机中使用Flutter命令行工具创建Flutter Windows应用程序。\n\n4. 在Windows虚拟机中使用Flutter命令行工具打包Flutter Windows应用程序。\n\n5. 将打包好的Flutter Windows应用程序从Windows虚拟机中复制到Mac电脑上。\n\n6. 在Mac电脑上使用Wine软件运行打包好的Flutter Windows应用程序。",
-    "type": "text"
-  },
-  {
-    "author": {
-      "firstName": "John",
-      "id": "4c2307ba-3d40-442f-b1ff-b271f63904ca",
-      "lastName": "Doe",
-      "imageUrl" : "https://extyy.oss-cn-shenzhen.aliyuncs.com/assets/ChatGPT_logo.png"
-    },
-    "createdAt": 1655624460000,
-    "id": "634b2f0b-2486-4bfe-b36d-1c7d6313c7b3",
-    "status": "sending",
-    "text": "等额本金还款法是将贷款本金平均分摊到每一期，稍后偿还的本金，其利息也就少一些，使还款总额逐期递减。\n\n等额本金的每期还款金额的计算公式为：\n\n每期还款金额 = [贷款本金 ÷ 还款月数] + [剩余贷款本金 x 月利率]\n\n下面为您展示在 `LoanCalculator` 类中添加 `calculateEqualPrincipalLoan` 方法的代码：\n\n```typescript\nclass LoanCalculator {\n    /* ... 省略其他代码 ... */\n\n    // 计算等额本金贷款\n    public calculateEqualPrincipalLoan(): LoanResult {\n        const monthlyInterestRate = this.interestRate / 12; // 月利率\n        const monthlyPrincipal = this.principal / this.term; // 每月偿还的本金\n        const monthlyDetails: LoanDetail[] = [];\n        let remainingPrincipal = this.principal; // 剩余本金\n\n    }\n}\n```\n这个 `calculateEqualPrincipalLoan` 方法计算了等额本金贷款的每期还款本金、利息以及总额；并且构造了一个包含所有期数的明细。何时调用这个方法，就可以得到等额本金贷款的还款详情。\n",
-    "type": "text"
   }
 ]

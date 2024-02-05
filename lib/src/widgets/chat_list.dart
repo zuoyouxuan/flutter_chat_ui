@@ -70,6 +70,9 @@ class ChatList extends StatefulWidget {
   final bool useTopSafeAreaInset;
   final bool tileLayout;
 
+  // Append temp message to last message.
+  // final types.Message? appendLastMessage;
+
   @override
   State<ChatList> createState() => _ChatListState();
 }
@@ -216,8 +219,39 @@ class _ChatListState extends State<ChatList>
     super.dispose();
   }
 
+  ChatList copyWith({
+    bool? isLastPage,
+    List<Object>? items,
+    ScrollViewKeyboardDismissBehavior? keyboardDismissBehavior,
+    double? onEndReachedThreshold,
+    ScrollController? scrollController,
+    ScrollPhysics? scrollPhysics,
+    TypingIndicatorOptions? typingIndicatorOptions,
+    bool? useTopSafeAreaInset,
+    bool? tileLayout,
+  }) =>
+      ChatList(
+        bottomWidget: widget.bottomWidget,
+        bubbleRtlAlignment: widget.bubbleRtlAlignment,
+        isLastPage: isLastPage ?? widget.isLastPage,
+        itemBuilder: widget.itemBuilder,
+        items: items ?? widget.items,
+        keyboardDismissBehavior:
+            keyboardDismissBehavior ?? widget.keyboardDismissBehavior,
+        onEndReached: widget.onEndReached,
+        onEndReachedThreshold:
+            onEndReachedThreshold ?? widget.onEndReachedThreshold,
+        scrollController: scrollController ?? widget.scrollController,
+        scrollPhysics: scrollPhysics ?? widget.scrollPhysics,
+        typingIndicatorOptions:
+            typingIndicatorOptions ?? widget.typingIndicatorOptions,
+        useTopSafeAreaInset: useTopSafeAreaInset ?? widget.useTopSafeAreaInset,
+        tileLayout: tileLayout ?? widget.tileLayout,
+      );
+
   @override
-  Widget build(BuildContext context) => NotificationListener<ScrollNotification>(
+  Widget build(BuildContext context) =>
+      NotificationListener<ScrollNotification>(
         onNotification: (notification) {
           if (notification.metrics.pixels > 10.0 && !_indicatorOnScrollStatus) {
             setState(() {

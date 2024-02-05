@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:intl/date_symbol_data_file.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 void main() {
@@ -52,7 +50,9 @@ class _ChatPageState extends State<ChatPage> {
   bool is_darkMode = true;
 
   bool _isHovering = false;
+
   _setHoveringValue(bool val) => setState(() => _isHovering = val);
+
   //
   // Widget _msgExtraBarBuild(types.Message message, {required BuildContext context}) => Row(
   //   mainAxisSize: MainAxisSize.max,
@@ -96,7 +96,6 @@ class _ChatPageState extends State<ChatPage> {
   //     ),
   //   );
 
-
   Widget _msgExtraBarBuild(types.Message message,
           {required BuildContext context}) =>
       Row(
@@ -133,14 +132,18 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) => Scaffold(
         body: Chat(
           msgExtraBarBuild: _msgExtraBarBuild,
-          messages: _messages,
-          onAttachmentPressed: _handleAttachmentPressed,
-          onMessageTap: _handleMessageTap,
-          onPreviewDataFetched: _handlePreviewDataFetched,
+
           onSendPressed: _handleSendPressed,
           showUserAvatars: true,
           showUserNames: true,
-          tileLayout: false,
+          tileLayout: true,
+          chatListBuilder: ChatListBuilder(
+            messages: _messages,
+            onAttachmentPressed: _handleAttachmentPressed,
+            onMessageTap: _handleMessageTap,
+            onPreviewDataFetched: _handlePreviewDataFetched,
+            user: _user,
+          ),
           user: _user,
           // avatarBuilder: (String userId) => userId == _user.id
           //       ? const CircleAvatar(
@@ -339,7 +342,6 @@ class _ChatPageState extends State<ChatPage> {
           setState(() {
             _messages[index] = updatedMessage;
           });
-
         } finally {
           final index =
               _messages.indexWhere((element) => element.id == message.id);
@@ -385,7 +387,7 @@ class _ChatPageState extends State<ChatPage> {
       // ),
     );
 
-    print('textMessage: ${textMessage.toJson()}' );
+    print('textMessage: ${textMessage.toJson()}');
 
     _addMessage(textMessage);
   }

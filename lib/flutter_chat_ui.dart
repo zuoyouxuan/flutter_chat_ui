@@ -12,6 +12,7 @@ export 'src/models/typing_indicator_mode.dart';
 export 'src/util.dart' show formatBytes, isConsistsOfEmojis;
 export 'src/widgets/chat.dart';
 export 'src/widgets/chat_list.dart';
+export 'src/widgets/chat_list_builder.dart';
 export 'src/widgets/image_gallery.dart';
 export 'src/widgets/input/attachment_button.dart';
 export 'src/widgets/input/input.dart';
