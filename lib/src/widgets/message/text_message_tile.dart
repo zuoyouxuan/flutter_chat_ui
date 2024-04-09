@@ -153,9 +153,11 @@ class TileTextMessage extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Image Preview'),
             ),
-            body: PhotoView(
-              tightMode: true,
-              imageProvider: imageProvider,
+            body: Center(
+              child: PhotoView(
+                tightMode: true,
+                imageProvider: imageProvider,
+              ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
@@ -167,16 +169,6 @@ class TileTextMessage extends StatelessWidget {
                 if (outputFile == null) {
                   writeImageStreamToFile(imageProvider, outputFile!);
                 }
-                //
-                // FilePicker.platform
-                //     .saveFile(
-                //       dialogTitle: 'Please select an output file:',
-                //       fileName: '${generateDateStringWithRandomChars()}.png',
-                //     )
-                //     .then((outputFile) => {
-                //           if (outputFile != null)
-                //             {writeImageStreamToFile(imageProvider, outputFile)},
-                //         });
               },
               child: const Tooltip(
                 message: 'Save Image',
@@ -206,7 +198,9 @@ class TileTextMessage extends StatelessWidget {
           );
 
           if (bytes != null) {
-            File(fileName).writeAsBytes(bytes).then((value) => {});
+            File(fileName)
+                .writeAsBytes(bytes)
+                .then((value) => {print('image saved:${fileName}')});
           }
           if (!completer.isCompleted) {
             if (listener != null) {
