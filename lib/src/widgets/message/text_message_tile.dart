@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
@@ -197,6 +197,9 @@ class TileTextMessage extends StatelessWidget {
       );
 
   void writeImageStreamToFile(ImageProvider imageProvider, String fileName) {
+    if (kDebugMode) {
+      print(fileName);
+    }
     final completer = Completer<String>();
     final imageStream = imageProvider.resolve(ImageConfiguration.empty);
     ImageStreamListener? listener;
