@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -155,7 +156,6 @@ class TileTextMessage extends StatelessWidget {
             body: PhotoView(
               tightMode: true,
               imageProvider: imageProvider,
-              heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
@@ -178,7 +178,12 @@ class TileTextMessage extends StatelessWidget {
                 //             {writeImageStreamToFile(imageProvider, outputFile)},
                 //         });
               },
-              child: Icon(Icons.add),
+              child: const Tooltip(
+                message: 'Save Image',
+                child: Icon(
+                  Icons.save_alt,
+                ),
+              ),
             ),
           ),
         ),
