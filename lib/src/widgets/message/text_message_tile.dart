@@ -1,7 +1,11 @@
-
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
@@ -120,17 +124,96 @@ class TileTextMessage extends StatelessWidget {
     }
   }
 
+  String generateDateStringWithRandomChars() {
+    // 获取当前日期并格式化
+    String formattedDate =
+        DateTime.now().toString().substring(0, 10); // yyyy-MM-dd
+
+    // 定义一个字符串，其中包含所有可能用于生成随机字符的字符
+    const String chars =
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+    // 创建一个随机数发生器
+    Random random = Random();
+
+    // 生成一个包含5个随机字符的字符串
+    String randomChars =
+        List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
+
+    // 将格式化的日期和随机字符拼接成一个字符串
+    return 'Helix-AI-$formattedDate-$randomChars';
+  }
+
   void openDialog(BuildContext context, ImageProvider imageProvider) =>
       showDialog(
         context: context,
         builder: (BuildContext context) => Dialog(
-          child: PhotoView(
-            tightMode: true,
-            imageProvider: imageProvider,
-            heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+          child: Scaffold(
+            appBar: AppBar(
+              title: const Text('Image Preview'),
+            ),
+            body: PhotoView(
+              tightMode: true,
+              imageProvider: imageProvider,
+              heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                String? outputFile = await FilePicker.platform.saveFile(
+                  dialogTitle: 'Please select an output file:',
+                  fileName: '${generateDateStringWithRandomChars()}.png',
+                );
+
+                if (outputFile == null) {
+                  writeImageStreamToFile(imageProvider, outputFile!);
+                }
+                //
+                // FilePicker.platform
+                //     .saveFile(
+                //       dialogTitle: 'Please select an output file:',
+                //       fileName: '${generateDateStringWithRandomChars()}.png',
+                //     )
+                //     .then((outputFile) => {
+                //           if (outputFile != null)
+                //             {writeImageStreamToFile(imageProvider, outputFile)},
+                //         });
+              },
+              child: Icon(Icons.add),
+            ),
           ),
         ),
       );
+
+  void writeImageStreamToFile(ImageProvider imageProvider, String fileName) {
+    final completer = Completer<String>();
+    final imageStream = imageProvider.resolve(ImageConfiguration.empty);
+    ImageStreamListener? listener;
+    listener = ImageStreamListener(
+      (imageInfo, synchronousCall) {
+        imageInfo.image
+            .toByteData(
+          format: ImageByteFormat.png,
+        )
+            .then((byteData) {
+          final Uint8List? bytes = byteData?.buffer.asUint8List(
+            byteData.offsetInBytes,
+            byteData.lengthInBytes,
+          );
+
+          if (bytes != null) {
+            File(fileName).writeAsBytes(bytes).then((value) => {});
+          }
+          if (!completer.isCompleted) {
+            if (listener != null) {
+              imageStream.removeListener(listener);
+            }
+            completer.complete(fileName);
+          }
+        });
+      },
+    );
+    imageStream.addListener(listener);
+  }
 
   Widget _textWidgetBuilder(
     types.User user,
@@ -247,16 +330,16 @@ class TileTextMessage extends StatelessWidget {
             children: [
               if (user.id != message.author.id)
                 // if(message.status != types.Status.sending)
-                  MarkdownWidget(
-                    key: ValueKey('${message.id}_md'),
-                    data: message.text,
-                    shrinkWrap: true,
-                    selectable: true,
-                    padding: EdgeInsets.zero,
-                    config: markdownConfig,
-                  ),
-                // if(user.id != message.author.id && message.status == types.Status.sending)
-                //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
+                MarkdownWidget(
+                  key: ValueKey('${message.id}_md'),
+                  data: message.text,
+                  shrinkWrap: true,
+                  selectable: true,
+                  padding: EdgeInsets.zero,
+                  config: markdownConfig,
+                ),
+              // if(user.id != message.author.id && message.status == types.Status.sending)
+              //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
 
               if (user.id == message.author.id)
                 if (enlargeEmojis)
