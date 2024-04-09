@@ -142,7 +142,7 @@ class TileTextMessage extends StatelessWidget {
         List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
 
     // 将格式化的日期和随机字符拼接成一个字符串
-    return 'Helix-AI-$formattedDate-$randomChars';
+    return '$formattedDate-$randomChars-HelixAI';
   }
 
   void openDialog(BuildContext context, ImageProvider imageProvider) =>
@@ -153,22 +153,37 @@ class TileTextMessage extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Image Preview'),
             ),
-            body: Center(
-              child: PhotoView(
-                tightMode: true,
-                imageProvider: imageProvider,
+            body: GestureDetector(
+              onTapDown: (_) {
+                Navigator.pop(context);
+              },
+              child: Center(
+                child: PhotoView(
+                  tightMode: true,
+                  imageProvider: imageProvider,
+                ),
               ),
             ),
             floatingActionButton: FloatingActionButton(
-              onPressed: () async {
-                String? outputFile = await FilePicker.platform.saveFile(
-                  dialogTitle: 'Please select an output file:',
-                  fileName: '${generateDateStringWithRandomChars()}.png',
-                );
-
-                if (outputFile == null) {
-                  writeImageStreamToFile(imageProvider, outputFile!);
-                }
+              onPressed: () {
+                FilePicker.platform
+                    .saveFile(
+                      dialogTitle: 'Please select an output file:',
+                      fileName: '${generateDateStringWithRandomChars()}.png',
+                    )
+                    .then((outputFile) => {
+                          if (outputFile != null)
+                            {writeImageStreamToFile(imageProvider, outputFile)},
+                        });
+                //
+                // String? outputFile = await FilePicker.platform.saveFile(
+                //   dialogTitle: 'Please select an output file:',
+                //   fileName: '${generateDateStringWithRandomChars()}.png',
+                // );
+                //
+                // if (outputFile == null) {
+                //   writeImageStreamToFile(imageProvider, outputFile!);
+                // }
               },
               child: const Tooltip(
                 message: 'Save Image',
