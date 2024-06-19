@@ -362,7 +362,9 @@ class TileTextMessage extends StatelessWidget {
 
               if (user.id == message.author.id)
                 if (enlargeEmojis)
-                  SelectableText(message.text, style: emojiTextStyle)
+                  SelectionArea(
+                    child: SelectableText(message.text, style: emojiTextStyle),
+                  )
                 else
                   Padding(
                     padding: const EdgeInsets.only(left: 5),
