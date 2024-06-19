@@ -347,13 +347,15 @@ class TileTextMessage extends StatelessWidget {
             children: [
               if (user.id != message.author.id)
                 // if(message.status != types.Status.sending)
-                MarkdownWidget(
-                  key: ValueKey('${message.id}_md'),
-                  data: message.text,
-                  shrinkWrap: true,
-                  selectable: true,
-                  padding: EdgeInsets.zero,
-                  config: markdownConfig,
+                SelectionArea(
+                  child: MarkdownWidget(
+                    key: ValueKey('${message.id}_md'),
+                    data: message.text,
+                    shrinkWrap: true,
+                    selectable: true,
+                    padding: EdgeInsets.zero,
+                    config: markdownConfig,
+                  ),
                 ),
               // if(user.id != message.author.id && message.status == types.Status.sending)
               //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
