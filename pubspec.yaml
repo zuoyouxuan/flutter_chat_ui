@@ -27,6 +27,7 @@ dependencies:
   cached_network_image: ^3.3.1
   photo_view_v3: ^0.14.0
   file_picker: ^8.0.0+1
+#   flutter_markdown: ^0.7.2+1
 #   siri_wave: ^2.0.0+1
 
 #   flutter_markdown: ^0.6.17+2
