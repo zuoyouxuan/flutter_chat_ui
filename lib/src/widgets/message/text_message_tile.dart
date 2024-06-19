@@ -13,7 +13,6 @@ import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
 import 'package:flutter_highlighting/themes/github.dart';
 import 'package:flutter_link_previewer/flutter_link_previewer.dart'
     show LinkPreview;
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:photo_view_v3/photo_view.dart';
 
@@ -348,20 +347,14 @@ class TileTextMessage extends StatelessWidget {
             children: [
               if (user.id != message.author.id)
                 // if(message.status != types.Status.sending)
-                Markdown(
+                MarkdownWidget(
+                  key: ValueKey('${message.id}_md'),
                   data: message.text,
-                  selectable: true,
                   shrinkWrap: true,
+                  selectable: true,
+                  padding: EdgeInsets.zero,
+                  config: markdownConfig,
                 ),
-
-              // MarkdownWidget(
-              //   key: ValueKey('${message.id}_md'),
-              //   data: message.text,
-              //   shrinkWrap: true,
-              //   selectable: true,
-              //   padding: EdgeInsets.zero,
-              //   config: markdownConfig,
-              // ),
               // if(user.id != message.author.id && message.status == types.Status.sending)
               //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
 
