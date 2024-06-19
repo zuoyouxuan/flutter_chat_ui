@@ -348,7 +348,11 @@ class TileTextMessage extends StatelessWidget {
             children: [
               if (user.id != message.author.id)
                 // if(message.status != types.Status.sending)
-                Markdown(data: message.text),
+                Markdown(
+                  data: message.text,
+                  selectable: true,
+                  shrinkWrap: true,
+                ),
 
               // MarkdownWidget(
               //   key: ValueKey('${message.id}_md'),
