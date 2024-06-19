@@ -11,8 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_highlighting/themes/github-dark-dimmed.dart';
 import 'package:flutter_highlighting/themes/github.dart';
-import 'package:flutter_link_previewer/flutter_link_previewer.dart'
-    show LinkPreview;
+import 'package:flutter_link_previewer/flutter_link_previewer.dart' show LinkPreview;
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:photo_view_v3/photo_view.dart';
 
@@ -56,8 +55,7 @@ class TileTextMessage extends StatelessWidget {
   final Widget Function(types.User)? nameBuilder;
 
   /// See [LinkPreview.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
-      onPreviewDataFetched;
+  final void Function(types.TextMessage, types.PreviewData)? onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
@@ -71,8 +69,7 @@ class TileTextMessage extends StatelessWidget {
   /// User agent to fetch preview data with.
   final String? userAgent;
 
-  final Widget Function(types.Message message, {required BuildContext context})?
-      msgExtraBarBuild;
+  final Widget Function(types.Message message, {required BuildContext context})? msgExtraBarBuild;
 
   Widget _avatarBuilder() =>
       avatarBuilder?.call(message.author) ??
@@ -86,17 +83,11 @@ class TileTextMessage extends StatelessWidget {
     BuildContext context,
   ) {
     final linkDescriptionTextStyle = user.id == message.author.id
-        ? InheritedChatTheme.of(context)
-            .theme
-            .sentMessageLinkDescriptionTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkDescriptionTextStyle;
+        ? InheritedChatTheme.of(context).theme.sentMessageLinkDescriptionTextStyle
+        : InheritedChatTheme.of(context).theme.receivedMessageLinkDescriptionTextStyle;
     final linkTitleTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkTitleTextStyle;
+        : InheritedChatTheme.of(context).theme.receivedMessageLinkTitleTextStyle;
 
     return LinkPreview(
       enableAnimation: true,
@@ -107,8 +98,7 @@ class TileTextMessage extends StatelessWidget {
       openOnPreviewImageTap: options.openOnPreviewImageTap,
       openOnPreviewTitleTap: options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
-        horizontal:
-            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
+        horizontal: InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
       previewData: message.previewData,
@@ -127,26 +117,22 @@ class TileTextMessage extends StatelessWidget {
 
   String generateDateStringWithRandomChars() {
     // 获取当前日期并格式化
-    String formattedDate =
-        DateTime.now().toString().substring(0, 10); // yyyy-MM-dd
+    String formattedDate = DateTime.now().toString().substring(0, 10); // yyyy-MM-dd
 
     // 定义一个字符串，其中包含所有可能用于生成随机字符的字符
-    const String chars =
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
     // 创建一个随机数发生器
     Random random = Random();
 
     // 生成一个包含5个随机字符的字符串
-    String randomChars =
-        List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
+    String randomChars = List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
 
     // 将格式化的日期和随机字符拼接成一个字符串
     return '$formattedDate-$randomChars-HelixAI';
   }
 
-  void openDialog(BuildContext context, ImageProvider imageProvider) =>
-      showDialog(
+  void openDialog(BuildContext context, ImageProvider imageProvider) => showDialog(
         context: context,
         builder: (BuildContext context) => Dialog(
           child: Scaffold(
@@ -172,8 +158,7 @@ class TileTextMessage extends StatelessWidget {
                       fileName: '${generateDateStringWithRandomChars()}.png',
                     )
                     .then((outputFile) => {
-                          if (outputFile != null)
-                            {writeImageStreamToFile(imageProvider, outputFile)},
+                          if (outputFile != null) {writeImageStreamToFile(imageProvider, outputFile)},
                         });
                 //
                 // String? outputFile = await FilePicker.platform.saveFile(
@@ -216,9 +201,7 @@ class TileTextMessage extends StatelessWidget {
           );
 
           if (bytes != null) {
-            File(fileName)
-                .writeAsBytes(bytes)
-                .then((value) => {print('image saved:${fileName}')});
+            File(fileName).writeAsBytes(bytes).then((value) => {print('image saved:${fileName}')});
           }
           if (!completer.isCompleted) {
             if (listener != null) {
@@ -241,23 +224,18 @@ class TileTextMessage extends StatelessWidget {
     final bodyLinkTextStyle = user.id == message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyTextStyle
-        : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyBoldTextStyle
-        : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle = user.id == message.author.id
-        ? theme.sentMessageBodyCodeTextStyle
-        : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle = user.id == message.author.id
-        ? theme.sentEmojiMessageTextStyle
-        : theme.receivedEmojiMessageTextStyle;
+    final bodyTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
+    final boldTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
+    final codeTextStyle =
+        user.id == message.author.id ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
+    final emojiTextStyle =
+        user.id == message.author.id ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    var markdownConfig =
-        isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    var markdownConfig = isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
 
     const codeConfig = CodeConfig(
       style: TextStyle(
@@ -268,16 +246,13 @@ class TileTextMessage extends StatelessWidget {
       ),
     );
 
-    CodeWrapperWidget codeWrapper(child, code, language) =>
-        CodeWrapperWidget(child, code, language);
+    CodeWrapperWidget codeWrapper(child, code, language) => CodeWrapperWidget(child, code, language);
 
     final exp = RegExp(r'```(.*?)\n', dotAll: true);
     RegExp imageRegEx = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,');
     String? base64Image;
     bool isBase64Image = false;
-    if (message.previewData != null &&
-        message.previewData?.image != null &&
-        message.previewData?.image?.url != null) {
+    if (message.previewData != null && message.previewData?.image != null && message.previewData?.image?.url != null) {
       base64Image = message.previewData!.image!.url;
       base64Image = base64Image.replaceAll(imageRegEx, '');
       isBase64Image = imageRegEx.hasMatch(message.previewData!.image!.url);
@@ -329,17 +304,10 @@ class TileTextMessage extends StatelessWidget {
               Container(
                 padding: EdgeInsets.zero,
                 alignment: Alignment.bottomRight,
-                child: (msgExtraBarBuild != null)
-                    ? msgExtraBarBuild!(message, context: context)
-                    : null,
+                child: (msgExtraBarBuild != null) ? msgExtraBarBuild!(message, context: context) : null,
               ),
             ],
           ),
-      
-          // const SizedBox(
-          //   height: 5,
-          // ),
-      
           Flexible(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -349,19 +317,19 @@ class TileTextMessage extends StatelessWidget {
                 if (user.id != message.author.id)
                   // if(message.status != types.Status.sending)
                   MarkdownWidget(
-                      key: ValueKey('${message.id}_md'),
-                      data: message.text,
-                      shrinkWrap: true,
-                      selectable: true,
-                      padding: EdgeInsets.zero,
-                      config: markdownConfig,
-                    ),
+                    key: ValueKey('${message.id}_md'),
+                    data: message.text,
+                    shrinkWrap: true,
+                    selectable: true,
+                    padding: EdgeInsets.zero,
+                    config: markdownConfig,
+                  ),
                 // if(user.id != message.author.id && message.status == types.Status.sending)
                 //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
-      
+
                 if (user.id == message.author.id)
                   if (enlargeEmojis)
-                      SelectableText(message.text, style: emojiTextStyle)
+                    SelectableText(message.text, style: emojiTextStyle)
                   else
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
@@ -404,8 +372,7 @@ class TileTextMessage extends StatelessWidget {
                         child: (isBase64Image && base64Image != null)
                             ? Image(
                                 fit: BoxFit.cover,
-                                height:
-                                    message.previewData!.image!.height.toDouble(),
+                                height: message.previewData!.image!.height.toDouble(),
                                 image: CacheMemoryImageProvider(
                                   '${message.id}_image_preview',
                                   base64Decode(
@@ -414,8 +381,7 @@ class TileTextMessage extends StatelessWidget {
                                 ),
                               )
                             : CachedNetworkImage(
-                                height:
-                                    message.previewData!.image!.height.toDouble(),
+                                height: message.previewData!.image!.height.toDouble(),
                                 fit: BoxFit.cover,
                                 imageUrl: message.previewData!.image!.url,
                                 repeat: ImageRepeat.repeatY,
@@ -426,8 +392,7 @@ class TileTextMessage extends StatelessWidget {
                                     child: CircularProgressIndicator(),
                                   ),
                                 ),
-                                errorWidget: (context, url, error) =>
-                                    const SizedBox(
+                                errorWidget: (context, url, error) => const SizedBox(
                                   width: 40,
                                   height: 40,
                                   child: Center(
@@ -450,16 +415,15 @@ class TileTextMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enlargeEmojis =
-        emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            isConsistsOfEmojis(emojiEnlargementBehavior, message);
+    final enlargeEmojis = emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+        isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
     return Container(
       key: ValueKey('${message.id}_text_message_container'),
       margin: EdgeInsets.fromLTRB(
         theme.messageInsetsHorizontal,
-        theme.messageInsetsVertical - 10,
+        0,
         theme.messageInsetsHorizontal,
         theme.messageInsetsVertical,
       ),
