@@ -316,137 +316,135 @@ class TileTextMessage extends StatelessWidget {
       preConfig,
       codeConfig,
     ]);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _avatarBuilder(),
-            const Spacer(),
-            Container(
-              padding: EdgeInsets.zero,
-              alignment: Alignment.bottomRight,
-              child: (msgExtraBarBuild != null)
-                  ? msgExtraBarBuild!(message, context: context)
-                  : null,
-            ),
-          ],
-        ),
-
-        const SizedBox(
-          height: 8,
-        ),
-
-        Flexible(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+    return SelectionArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (user.id != message.author.id)
-                // if(message.status != types.Status.sending)
-                SelectionArea(
-                  child: MarkdownWidget(
-                    key: ValueKey('${message.id}_md'),
-                    data: message.text,
-                    shrinkWrap: true,
-                    selectable: true,
-                    padding: EdgeInsets.zero,
-                    config: markdownConfig,
-                  ),
-                ),
-              // if(user.id != message.author.id && message.status == types.Status.sending)
-              //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
-
-              if (user.id == message.author.id)
-                if (enlargeEmojis)
-                  SelectionArea(
-                    child: SelectableText(message.text, style: emojiTextStyle),
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: TextMessageText(
-                      bodyLinkTextStyle: bodyLinkTextStyle,
-                      bodyTextStyle: bodyTextStyle,
-                      boldTextStyle: boldTextStyle,
-                      codeTextStyle: codeTextStyle,
-                      options: options,
-                      text: message.text,
+              _avatarBuilder(),
+              const Spacer(),
+              Container(
+                padding: EdgeInsets.zero,
+                alignment: Alignment.bottomRight,
+                child: (msgExtraBarBuild != null)
+                    ? msgExtraBarBuild!(message, context: context)
+                    : null,
+              ),
+            ],
+          ),
+      
+          const SizedBox(
+            height: 5,
+          ),
+      
+          Flexible(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (user.id != message.author.id)
+                  // if(message.status != types.Status.sending)
+                  MarkdownWidget(
+                      key: ValueKey('${message.id}_md'),
+                      data: message.text,
+                      shrinkWrap: true,
+                      selectable: true,
+                      padding: EdgeInsets.zero,
+                      config: markdownConfig,
                     ),
-                  ),
-              if (message.previewData != null &&
-                  message.previewData?.image != null &&
-                  message.previewData?.image?.url != null)
-                Padding(
-                  key: ValueKey('${message.id}_image'),
-                  padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
-                  child: InkWell(
-                    onTap: () {
-                      openDialog(
-                        context,
-                        (isBase64Image && base64Image != null)
+                // if(user.id != message.author.id && message.status == types.Status.sending)
+                //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
+      
+                if (user.id == message.author.id)
+                  if (enlargeEmojis)
+                      SelectableText(message.text, style: emojiTextStyle)
+                  else
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: TextMessageText(
+                        bodyLinkTextStyle: bodyLinkTextStyle,
+                        bodyTextStyle: bodyTextStyle,
+                        boldTextStyle: boldTextStyle,
+                        codeTextStyle: codeTextStyle,
+                        options: options,
+                        text: message.text,
+                      ),
+                    ),
+                if (message.previewData != null &&
+                    message.previewData?.image != null &&
+                    message.previewData?.image?.url != null)
+                  Padding(
+                    key: ValueKey('${message.id}_image'),
+                    padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
+                    child: InkWell(
+                      onTap: () {
+                        openDialog(
+                          context,
+                          (isBase64Image && base64Image != null)
+                              ? Image(
+                                  fit: BoxFit.cover,
+                                  image: CacheMemoryImageProvider(
+                                    '${message.id}_image_preview',
+                                    base64Decode(
+                                      base64Image,
+                                    ),
+                                  ),
+                                ).image
+                              : CachedNetworkImageProvider(
+                                  message.previewData!.image!.url,
+                                ),
+                        );
+                      },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: (isBase64Image && base64Image != null)
                             ? Image(
                                 fit: BoxFit.cover,
+                                height:
+                                    message.previewData!.image!.height.toDouble(),
                                 image: CacheMemoryImageProvider(
                                   '${message.id}_image_preview',
                                   base64Decode(
                                     base64Image,
                                   ),
                                 ),
-                              ).image
-                            : CachedNetworkImageProvider(
-                                message.previewData!.image!.url,
-                              ),
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
-                      child: (isBase64Image && base64Image != null)
-                          ? Image(
-                              fit: BoxFit.cover,
-                              height:
-                                  message.previewData!.image!.height.toDouble(),
-                              image: CacheMemoryImageProvider(
-                                '${message.id}_image_preview',
-                                base64Decode(
-                                  base64Image,
+                              )
+                            : CachedNetworkImage(
+                                height:
+                                    message.previewData!.image!.height.toDouble(),
+                                fit: BoxFit.cover,
+                                imageUrl: message.previewData!.image!.url,
+                                repeat: ImageRepeat.repeatY,
+                                placeholder: (context, url) => const SizedBox(
+                                  width: 40,
+                                  height: 40,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const SizedBox(
+                                  width: 40,
+                                  height: 40,
+                                  child: Center(
+                                    child: Icon(Icons.error),
+                                  ),
                                 ),
                               ),
-                            )
-                          : CachedNetworkImage(
-                              height:
-                                  message.previewData!.image!.height.toDouble(),
-                              fit: BoxFit.cover,
-                              imageUrl: message.previewData!.image!.url,
-                              repeat: ImageRepeat.repeatY,
-                              placeholder: (context, url) => const SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ),
-                              errorWidget: (context, url, error) =>
-                                  const SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: Center(
-                                  child: Icon(Icons.error),
-                                ),
-                              ),
-                            ),
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
-        ),
-        //   ],
-        // ),
-      ],
+          //   ],
+          // ),
+        ],
+      ),
     );
   }
 

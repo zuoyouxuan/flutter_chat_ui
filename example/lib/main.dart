@@ -131,13 +131,19 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Chat(
+          
           onSendPressed: _handleSendPressed,
           chatListBuilder: ChatListBuilder(
             messages: _messages,
+            tileLayout:true,
             onAttachmentPressed: _handleAttachmentPressed,
             onMessageTap: _handleMessageTap,
             onPreviewDataFetched: _handlePreviewDataFetched,
             user: _user,
+            msgExtraBarBuild: (message, {required context}) => _msgExtraBarBuild(
+              message,
+              context: context,
+            ),
           ),
           user: _user,
           // avatarBuilder: (String userId) => userId == _user.id
@@ -156,6 +162,7 @@ class _ChatPageState extends State<ChatPage> {
           //     ),
           //   ),
           imageGalleryOptions: ImageGalleryOptions(),
+          
 
           inputOptions: const InputOptions(
             sendButtonVisibilityMode: SendButtonVisibilityMode.always,
@@ -226,7 +233,7 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
-  void _handleAttachmentPressed() {
+  Future<void> _handleAttachmentPressed() async {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) => SafeArea(

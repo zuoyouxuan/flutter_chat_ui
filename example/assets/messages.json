@@ -10,7 +10,45 @@
     "createdAt": 1655624463000,
     "id": "113bb2e8-f74e-42cd-aa30-4085a0f52c58",
     "status": "seen",
-    "text": "3. Run the following command to switch to the Windows platform:",
+    "text": "使用 spec 来表示 箱规 是适当的，尤其是在技术文档或内部交流中。 spec 是 specification 的缩写，常用于描述产品或包装的详细要求和标准。这样会使描述更加简洁。如果你想用 spec 来表示箱规，可以这么说：- Box spec - Box specifications 例如：- The box spec includes dimensions, weight, and material. - Please refer to the box spec for packaging requirements. 这些表达方式适用于描述包装箱的具体标准和要求，无论是尺寸、重量，还是其他特性。这样用词简洁明了，在相关领域内通常是可以很好理解的。",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Matthew",
+      "id": "82091008-a484-4a89-ae75-a22bf8d6f3ac",
+      "lastName": "White",
+      "imageUrl" : "https://extyy.oss-cn-shenzhen.aliyuncs.com/assets/ChatGPT_logo.png"
+    },
+    "createdAt": 1655624463000,
+    "id": "113bb2e8-f74e-42cd-aa30-4085a0f52c58",
+    "status": "seen",
+    "text": "In Flutter, you can use the `flutter_markdown` package to display Markdown content. By default, `flutter_markdown` will use a `SingleChildScrollView` to handle scrolling if your Markdown content overflows. This typically includes a scrollbar. To disable the scrollbar, you can wrap your `Markdown` widget in a `SingleChildScrollView` with custom scroll behavior that hides the scrollbar. Below is an example of how you can achieve this: 1. First, ensure you have the `flutter_markdown` package added to your `pubspec.yaml`: ```yaml dependencies: flutter: sdk: flutter flutter_markdown: ^0.6.4 ``` ### Explanation: - **NoThumbScrollBehavior**: This custom scroll behavior inherits from `ScrollBehavior` and overrides the `buildViewportChrome` method to return the child without adding the scrollbar thumb. - **ScrollConfiguration**: The `ScrollConfiguration` widget applies this custom scroll behavior to any scrollable widget within its subtree. - **MyMarkdownPage**: The `Markdown` widget is wrapped inside a `SingleChildScrollView` that uses the custom `NoThumbScrollBehavior`. By doing this, your Markdown content will be scrollable, but the scrollbar thumb will not be visible.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "Janice",
+      "id": "e52552f4-835d-4dbe-ba77-b076e659774d",
+      "imageUrl": "https://i.pravatar.cc/300?u=e52552f4-835d-4dbe-ba77-b076e659774d",
+      "lastName": "King"
+    },
+    "createdAt": 1655624461000,
+    "id": "afc2269a-374b-4382-8864-b3b60d1e8cd7",
+    "status": "seen",
+    "text": "In Flutter, you can use the `flutter_markdown` package to display Markdown content. By default, `flutter_markdown` will use a `SingleChildScrollView` to handle scrolling if your Markdown content overflows. This typically includes a scrollbar. To disable the scrollbar, you can wrap your `Markdown` widget in a `SingleChildScrollView` with custom scroll behavior that hides the scrollbar. Below is an example of how you can achieve this: 1. First, ensure you have the `flutter_markdown` package added to your `pubspec.yaml`: ```yaml dependencies: flutter: sdk: flutter flutter_markdown: ^0.6.4 ``` ### Explanation: - **NoThumbScrollBehavior**: This custom scroll behavior inherits from `ScrollBehavior` and overrides the `buildViewportChrome` method to return the child without adding the scrollbar thumb. - **ScrollConfiguration**: The `ScrollConfiguration` widget applies this custom scroll behavior to any scrollable widget within its subtree. - **MyMarkdownPage**: The `Markdown` widget is wrapped inside a `SingleChildScrollView` that uses the custom `NoThumbScrollBehavior`. By doing this, your Markdown content will be scrollable, but the scrollbar thumb will not be visible.",
+    "type": "text"
+  },
+  {
+    "author": {
+      "firstName": "John",
+      "id": "4c2307ba-3d40-442f-b1ff-b271f63904ca",
+      "lastName": "Doe"
+    },
+    "createdAt": 1655624460000,
+    "id": "634b2f0b-2486-4bfe-b36d-1c7d6313c7b3",
+    "status": "seen",
+    "text": "In Flutter, you can use the `flutter_markdown` package to display Markdown content. By default, `flutter_markdown` will use a `SingleChildScrollView` to handle scrolling if your Markdown content overflows. This typically includes a scrollbar. To disable the scrollbar, you can wrap your `Markdown` widget in a `SingleChildScrollView` with custom scroll behavior that hides the scrollbar. Below is an example of how you can achieve this: 1. First, ensure you have the `flutter_markdown` package added to your `pubspec.yaml`: ```yaml dependencies: flutter: sdk: flutter flutter_markdown: ^0.6.4 ``` ### Explanation: - **NoThumbScrollBehavior**: This custom scroll behavior inherits from `ScrollBehavior` and overrides the `buildViewportChrome` method to return the child without adding the scrollbar thumb. - **ScrollConfiguration**: The `ScrollConfiguration` widget applies this custom scroll behavior to any scrollable widget within its subtree. - **MyMarkdownPage**: The `Markdown` widget is wrapped inside a `SingleChildScrollView` that uses the custom `NoThumbScrollBehavior`. By doing this, your Markdown content will be scrollable, but the scrollbar thumb will not be visible.",
     "type": "text"
   }
 ]
