@@ -291,8 +291,7 @@ class TileTextMessage extends StatelessWidget {
       preConfig,
       codeConfig,
     ]);
-    return SelectionArea(
-      child: Column(
+    return Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -333,13 +332,15 @@ class TileTextMessage extends StatelessWidget {
                   else
                     Padding(
                       padding: const EdgeInsets.only(left: 5),
-                      child: TextMessageText(
-                        bodyLinkTextStyle: bodyLinkTextStyle,
-                        bodyTextStyle: bodyTextStyle,
-                        boldTextStyle: boldTextStyle,
-                        codeTextStyle: codeTextStyle,
-                        options: options,
-                        text: message.text,
+                      child: SelectionArea(
+                        child: TextMessageText(
+                          bodyLinkTextStyle: bodyLinkTextStyle,
+                          bodyTextStyle: bodyTextStyle,
+                          boldTextStyle: boldTextStyle,
+                          codeTextStyle: codeTextStyle,
+                          options: options,
+                          text: message.text,
+                        ),
                       ),
                     ),
                 if (message.previewData != null &&
@@ -409,7 +410,6 @@ class TileTextMessage extends StatelessWidget {
           //   ],
           // ),
         ],
-      ),
     );
   }
 
