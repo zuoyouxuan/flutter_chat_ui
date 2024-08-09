@@ -21,9 +21,7 @@ import '../code_wrapper.dart';
 import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
-/// A class that represents text message widget with optional link preview.
 class TileTextMessage extends StatefulWidget {
-  /// Creates a text message widget from a [types.TextMessage] class.
   const TileTextMessage({
     super.key,
     required this.emojiEnlargementBehavior,
@@ -40,35 +38,15 @@ class TileTextMessage extends StatefulWidget {
   });
 
   final Widget Function(types.User author)? avatarBuilder;
-
-  /// See [Message.emojiEnlargementBehavior].
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
-
-  /// See [Message.hideBackgroundOnEmojiMessages].
   final bool hideBackgroundOnEmojiMessages;
-
-  /// [types.TextMessage].
   final types.TextMessage message;
-
-  /// This is to allow custom user name builder
-  /// By using this we can fetch newest user info based on id
   final Widget Function(types.User)? nameBuilder;
-
-  /// See [LinkPreview.onPreviewDataFetched].
   final void Function(types.TextMessage, types.PreviewData)? onPreviewDataFetched;
-
-  /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
-
-  /// Show user name for the received message. Useful for a group chat.
   final bool showName;
-
-  /// Enables link (URL) preview.
   final bool usePreviewData;
-
-  /// User agent to fetch preview data with.
   final String? userAgent;
-
   final Widget Function(types.Message message, {required BuildContext context})? msgExtraBarBuild;
 
   @override
@@ -78,35 +56,23 @@ class TileTextMessage extends StatefulWidget {
 class _TileTextMessageState extends State<TileTextMessage> {
   bool _isHovering = false;
 
-  Widget _avatarBuilder() =>
-      widget.avatarBuilder?.call(widget.message.author) ??
-      UserAvatar(
-        author: widget.message.author,
-      );
+  Widget _avatarBuilder() => widget.avatarBuilder?.call(widget.message.author) ?? UserAvatar(author: widget.message.author);
 
-  Widget _linkPreview(
-    types.User user,
-    double width,
-    BuildContext context,
-  ) {
-    final linkDescriptionTextStyle = user.id == widget.message.author.id
-        ? InheritedChatTheme.of(context).theme.sentMessageLinkDescriptionTextStyle
-        : InheritedChatTheme.of(context).theme.receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == widget.message.author.id
-        ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
-        : InheritedChatTheme.of(context).theme.receivedMessageLinkTitleTextStyle;
-
+  Widget _linkPreview(types.User user, double width, BuildContext context) {
+    final theme = InheritedChatTheme.of(context).theme;
+    final isUserAuthor = user.id == widget.message.author.id;
+    
     return LinkPreview(
       enableAnimation: true,
-      metadataTextStyle: linkDescriptionTextStyle,
-      metadataTitleStyle: linkTitleTextStyle,
+      metadataTextStyle: isUserAuthor ? theme.sentMessageLinkDescriptionTextStyle : theme.receivedMessageLinkDescriptionTextStyle,
+      metadataTitleStyle: isUserAuthor ? theme.sentMessageLinkTitleTextStyle : theme.receivedMessageLinkTitleTextStyle,
       onLinkPressed: widget.options.onLinkPressed,
       onPreviewDataFetched: _onPreviewDataFetched,
       openOnPreviewImageTap: widget.options.openOnPreviewImageTap,
       openOnPreviewTitleTap: widget.options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
-        horizontal: InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
-        vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
+        horizontal: theme.messageInsetsHorizontal,
+        vertical: theme.messageInsetsVertical,
       ),
       previewData: widget.message.previewData,
       text: widget.message.text,
@@ -122,302 +88,197 @@ class _TileTextMessageState extends State<TileTextMessage> {
     }
   }
 
-  String generateDateStringWithRandomChars() {
-    // 获取当前日期并格式化
-    String formattedDate = DateTime.now().toString().substring(0, 10); // yyyy-MM-dd
-
-    // 定义一个字符串，其中包含所有可能用于生成随机字符的字符
-    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    // 创建一个随机数发生器
-    Random random = Random();
-
-    // 生成一个包含5个随机字符的字符串
-    String randomChars = List.generate(5, (index) => chars[random.nextInt(chars.length)]).join();
-
-    // 将格式化的日期和随机字符拼接成一个字符串
+  String _generateDateStringWithRandomChars() {
+    final now = DateTime.now();
+    final formattedDate = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    final random = Random();
+    final randomChars = List.generate(5, (_) => chars[random.nextInt(chars.length)]).join();
     return '$formattedDate-$randomChars-HelixAI';
   }
 
-  void openDialog(BuildContext context, ImageProvider imageProvider) => showDialog(
-        context: context,
-        builder: (BuildContext context) => Dialog(
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Image Preview'),
-            ),
-            body: GestureDetector(
-              onTapDown: (_) {
-                Navigator.pop(context);
-              },
-              child: Center(
-                child: PhotoView(
-                  tightMode: true,
-                  imageProvider: imageProvider,
-                ),
-              ),
-            ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                FilePicker.platform
-                    .saveFile(
-                      dialogTitle: 'Please select an output file:',
-                      fileName: '${generateDateStringWithRandomChars()}.png',
-                    )
-                    .then((outputFile) => {
-                          if (outputFile != null) {writeImageStreamToFile(imageProvider, outputFile)},
-                        });
-                //
-                // String? outputFile = await FilePicker.platform.saveFile(
-                //   dialogTitle: 'Please select an output file:',
-                //   fileName: '${generateDateStringWithRandomChars()}.png',
-                // );
-                //
-                // if (outputFile == null) {
-                //   writeImageStreamToFile(imageProvider, outputFile!);
-                // }
-              },
-              child: const Tooltip(
-                message: 'Save Image',
-                child: Icon(
-                  Icons.save_alt,
-                ),
-              ),
-            ),
+  void _openDialog(BuildContext context, ImageProvider imageProvider) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => Dialog(
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Image Preview')),
+          body: GestureDetector(
+            onTapDown: (_) => Navigator.pop(context),
+            child: Center(child: PhotoView(tightMode: true, imageProvider: imageProvider)),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => _saveImage(imageProvider),
+            child: const Tooltip(message: 'Save Image', child: Icon(Icons.save_alt)),
           ),
         ),
-      );
-
-  void writeImageStreamToFile(ImageProvider imageProvider, String fileName) {
-    if (kDebugMode) {
-      print(fileName);
-    }
-    final completer = Completer<String>();
-    final imageStream = imageProvider.resolve(ImageConfiguration.empty);
-    ImageStreamListener? listener;
-    listener = ImageStreamListener(
-      (imageInfo, synchronousCall) {
-        imageInfo.image
-            .toByteData(
-          format: ImageByteFormat.png,
-        )
-            .then((byteData) {
-          final Uint8List? bytes = byteData?.buffer.asUint8List(
-            byteData.offsetInBytes,
-            byteData.lengthInBytes,
-          );
-
-          if (bytes != null) {
-            File(fileName).writeAsBytes(bytes).then((value) => {print('image saved:${fileName}')});
-          }
-          if (!completer.isCompleted) {
-            if (listener != null) {
-              imageStream.removeListener(listener);
-            }
-            completer.complete(fileName);
-          }
-        });
-      },
+      ),
     );
-    imageStream.addListener(listener);
   }
 
-  Widget _textWidgetBuilder(
-    types.User user,
-    BuildContext context,
-    bool enlargeEmojis,
-  ) {
-    final theme = InheritedChatTheme.of(context).theme;
-    final bodyLinkTextStyle = user.id == widget.message.author.id
-        ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
-        : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle =
-        user.id == widget.message.author.id ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle =
-        user.id == widget.message.author.id ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle =
-        user.id == widget.message.author.id ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle =
-        user.id == widget.message.author.id ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
+  Future<void> _saveImage(ImageProvider imageProvider) async {
+    final outputFile = await FilePicker.platform.saveFile(
+      dialogTitle: 'Please select an output file:',
+      fileName: '${_generateDateStringWithRandomChars()}.png',
+    );
+    if (outputFile != null) {
+      await _writeImageStreamToFile(imageProvider, outputFile);
+    }
+  }
 
+  Future<void> _writeImageStreamToFile(ImageProvider imageProvider, String fileName) async {
+    final completer = Completer<String>();
+    final imageStream = imageProvider.resolve(ImageConfiguration.empty);
+    late final ImageStreamListener listener;
+    
+    listener = ImageStreamListener((imageInfo, _) async {
+      final byteData = await imageInfo.image.toByteData(format: ImageByteFormat.png);
+      final bytes = byteData?.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes);
+      
+      if (bytes != null) {
+        await File(fileName).writeAsBytes(bytes);
+        if (kDebugMode) print('Image saved: $fileName');
+      }
+      
+      if (!completer.isCompleted) {
+        imageStream.removeListener(listener);
+        completer.complete(fileName);
+      }
+    });
+    
+    imageStream.addListener(listener);
+    await completer.future;
+  }
+
+  Widget _textWidgetBuilder(types.User user, BuildContext context, bool enlargeEmojis) {
+    final theme = InheritedChatTheme.of(context).theme;
+    final isUserAuthor = user.id == widget.message.author.id;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    var markdownConfig = isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig;
+    final bodyTextStyle = isUserAuthor ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
+    final bodyLinkTextStyle = isUserAuthor ? theme.sentMessageBodyLinkTextStyle : theme.receivedMessageBodyLinkTextStyle;
+    final boldTextStyle = isUserAuthor ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
+    final codeTextStyle = isUserAuthor ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
+    final emojiTextStyle = isUserAuthor ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
 
-    const codeConfig = CodeConfig(
-      style: TextStyle(
-        inherit: false,
-        backgroundColor: Colors.transparent,
-        fontWeight: FontWeight.bold,
-        color: Colors.green,
-      ),
+    final markdownConfig = (isDark ? MarkdownConfig.darkConfig : MarkdownConfig.defaultConfig).copy(
+      configs: [
+        PConfig(textStyle: bodyTextStyle),
+        _getPreConfig(isDark),
+        const CodeConfig(
+          style: TextStyle(
+            inherit: false,
+            backgroundColor: Colors.transparent,
+            fontWeight: FontWeight.bold,
+            color: Colors.green,
+          ),
+        ),
+      ],
     );
 
-    CodeWrapperWidget codeWrapper(child, code, language) => CodeWrapperWidget(child, code, language);
-
-    final exp = RegExp(r'```(.*?)\n', dotAll: true);
-    RegExp imageRegEx = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,');
-    String? base64Image;
-    bool isBase64Image = false;
-    if (widget.message.previewData != null && widget.message.previewData?.image != null && widget.message.previewData?.image?.url != null) {
-      base64Image = widget.message.previewData!.image!.url;
-      base64Image = base64Image.replaceAll(imageRegEx, '');
-      isBase64Image = imageRegEx.hasMatch(widget.message.previewData!.image!.url);
-    }
-
-    final match = exp.firstMatch(widget.message.text);
-    var language = match?.group(1);
-    language ??= 'javascript';
-
-    final darkPreConfig = PreConfig.darkConfig.copy(
-      textStyle: const TextStyle(fontSize: 14),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1b1b1b),
-        borderRadius: BorderRadius.all(Radius.circular(8)),
-      ),
-      theme: githubDarkDimmedTheme,
-      wrapper: codeWrapper,
-      language: language,
-    );
-
-    final preConfig = isDark
-        ? darkPreConfig
-        : const PreConfig().copy(
-            decoration: const BoxDecoration(
-              color: Color.fromRGBO(105, 145, 214, 0.1215686275),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            textStyle: const TextStyle(fontSize: 14),
-            wrapper: codeWrapper,
-            language: language,
-            theme: githubTheme,
-          );
-
-    markdownConfig = markdownConfig.copy(configs: [
-      PConfig(textStyle: bodyTextStyle),
-      preConfig,
-      codeConfig,
-    ]);
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _avatarBuilder(),
-              
-              Flexible(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (user.id != widget.message.author.id)
-                      MarkdownWidget(
-                        key: ValueKey('${widget.message.id}_md'),
-                        data: widget.message.text,
-                        shrinkWrap: true,
-                        selectable: true,
-                        padding: EdgeInsets.zero,
-                        config: markdownConfig,
-                      ),
-
-                    if (user.id == widget.message.author.id)
-                      if (enlargeEmojis)
-                        SelectableText(widget.message.text, style: emojiTextStyle)
-                      else
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: SelectionArea(
-                            child: TextMessageText(
-                              bodyLinkTextStyle: bodyLinkTextStyle,
-                              bodyTextStyle: bodyTextStyle,
-                              boldTextStyle: boldTextStyle,
-                              codeTextStyle: codeTextStyle,
-                              options: widget.options,
-                              text: widget.message.text,
-                            ),
-                          ),
-                        ),
-                    if (widget.message.previewData != null &&
-                        widget.message.previewData?.image != null &&
-                        widget.message.previewData?.image?.url != null)
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _avatarBuilder(),
+            Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (!isUserAuthor)
+                    MarkdownWidget(
+                      key: ValueKey('${widget.message.id}_md'),
+                      data: widget.message.text,
+                      shrinkWrap: true,
+                      selectable: true,
+                      padding: EdgeInsets.zero,
+                      config: markdownConfig,
+                    ),
+                  if (isUserAuthor)
+                    if (enlargeEmojis)
+                      SelectableText(widget.message.text, style: emojiTextStyle)
+                    else
                       Padding(
-                        key: ValueKey('${widget.message.id}_image'),
-                        padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
-                        child: InkWell(
-                          onTap: () {
-                            openDialog(
-                              context,
-                              (isBase64Image && base64Image != null)
-                                  ? Image(
-                                      fit: BoxFit.cover,
-                                      image: CacheMemoryImageProvider(
-                                        '${widget.message.id}_image_preview',
-                                        base64Decode(
-                                          base64Image,
-                                        ),
-                                      ),
-                                    ).image
-                                  : CachedNetworkImageProvider(
-                                      widget.message.previewData!.image!.url,
-                                    ),
-                            );
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: (isBase64Image && base64Image != null)
-                                ? Image(
-                                    fit: BoxFit.cover,
-                                    height: widget.message.previewData!.image!.height.toDouble(),
-                                    image: CacheMemoryImageProvider(
-                                      '${widget.message.id}_image_preview',
-                                      base64Decode(
-                                        base64Image,
-                                      ),
-                                    ),
-                                  )
-                                : CachedNetworkImage(
-                                    height: widget.message.previewData!.image!.height.toDouble(),
-                                    fit: BoxFit.cover,
-                                    imageUrl: widget.message.previewData!.image!.url,
-                                    repeat: ImageRepeat.repeatY,
-                                    placeholder: (context, url) => const SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                    errorWidget: (context, url, error) => const SizedBox(
-                                      width: 40,
-                                      height: 40,
-                                      child: Center(
-                                        child: Icon(Icons.error),
-                                      ),
-                                    ),
-                                  ),
+                        padding: const EdgeInsets.only(left: 5),
+                        child: SelectionArea(
+                          child: TextMessageText(
+                            bodyLinkTextStyle: bodyLinkTextStyle,
+                            bodyTextStyle: bodyTextStyle,
+                            boldTextStyle: boldTextStyle,
+                            codeTextStyle: codeTextStyle,
+                            options: widget.options,
+                            text: widget.message.text,
                           ),
                         ),
                       ),
-                  ],
-                ),
+                  if (widget.message.previewData?.image?.url != null)
+                    _buildImagePreview(context),
+                ],
               ),
-            ],
-          ),
-
-          AnimatedOpacity(
-            duration: const Duration(milliseconds: 200),
-            opacity: _isHovering ? 1.0 : 0.0,
-            child: Container(
-              padding: EdgeInsets.zero,
-              alignment: Alignment.bottomRight,
-              child: (widget.msgExtraBarBuild != null) ? widget.msgExtraBarBuild!(widget.message, context: context) : null,
             ),
+          ],
+        ),
+        _buildExtraBar(),
+      ],
+    );
+  }
+
+  Widget _buildImagePreview(BuildContext context) {
+    final previewData = widget.message.previewData!;
+    final imageUrl = previewData.image!.url;
+    final isBase64Image = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,').hasMatch(imageUrl);
+    final imageProvider = isBase64Image
+        ? CacheMemoryImageProvider('${widget.message.id}_image_preview', base64Decode(imageUrl.split(',').last))
+        : CachedNetworkImageProvider(imageUrl) as ImageProvider;
+
+    return Padding(
+      key: ValueKey('${widget.message.id}_image'),
+      padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
+      child: InkWell(
+        onTap: () => _openDialog(context, imageProvider),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Image(
+            fit: BoxFit.cover,
+            height: previewData.image!.height.toDouble(),
+            image: imageProvider,
           ),
-        ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExtraBar() {
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      opacity: _isHovering ? 1.0 : 0.0,
+      child: Container(
+        padding: EdgeInsets.zero,
+        alignment: Alignment.bottomRight,
+        child: widget.msgExtraBarBuild?.call(widget.message, context: context),
+      ),
+    );
+  }
+
+  PreConfig _getPreConfig(bool isDark) {
+    final language = RegExp(r'```(.*?)\n', dotAll: true).firstMatch(widget.message.text)?.group(1) ?? 'javascript';
+    final baseConfig = isDark ? PreConfig.darkConfig : const PreConfig();
+    
+    return baseConfig.copy(
+      textStyle: const TextStyle(fontSize: 14),
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1b1b1b) : const Color.fromRGBO(105, 145, 214, 0.1215686275),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+      ),
+      theme: isDark ? githubDarkDimmedTheme : githubTheme,
+      wrapper: (child, code, language) => CodeWrapperWidget(child, code, language),
+      language: language,
     );
   }
 
@@ -427,18 +288,15 @@ class _TileTextMessageState extends State<TileTextMessage> {
         isConsistsOfEmojis(widget.emojiEnlargementBehavior, widget.message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
+    
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovering = true),
       onExit: (_) => setState(() => _isHovering = false),
       child: Container(
-      key: ValueKey('${widget.message.id}_text_message_container'),
-      margin: EdgeInsets.fromLTRB(
-        theme.messageInsetsHorizontal,
-        theme.messageInsetsVertical,
-        theme.messageInsetsHorizontal,
-        theme.messageInsetsVertical,
+        key: ValueKey('${widget.message.id}_text_message_container'),
+        margin: EdgeInsets.all(theme.messageInsetsVertical),
+        child: _textWidgetBuilder(user, context, enlargeEmojis),
       ),
-      child: _textWidgetBuilder(user, context, enlargeEmojis),
-    ),);
+    );
   }
 }
