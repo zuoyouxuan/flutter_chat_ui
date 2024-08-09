@@ -434,7 +434,7 @@ class _TileTextMessageState extends State<TileTextMessage> {
       key: ValueKey('${widget.message.id}_text_message_container'),
       margin: EdgeInsets.fromLTRB(
         theme.messageInsetsHorizontal,
-        0,
+        theme.messageInsetsVertical,
         theme.messageInsetsHorizontal,
         theme.messageInsetsVertical,
       ),
