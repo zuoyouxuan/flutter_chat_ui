@@ -204,9 +204,7 @@ class _TileTextMessageState extends State<TileTextMessage> {
                     if (enlargeEmojis)
                       SelectableText(widget.message.text, style: emojiTextStyle)
                     else
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: SelectionArea(
+                      SelectionArea(
                           child: TextMessageText(
                             bodyLinkTextStyle: bodyLinkTextStyle,
                             bodyTextStyle: bodyTextStyle,
@@ -215,7 +213,6 @@ class _TileTextMessageState extends State<TileTextMessage> {
                             options: widget.options,
                             text: widget.message.text,
                           ),
-                        ),
                       ),
                   if (widget.message.previewData?.image?.url != null)
                     _buildImagePreview(context),
