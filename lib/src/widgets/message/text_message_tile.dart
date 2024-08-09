@@ -22,7 +22,7 @@ import '../state/inherited_chat_theme.dart';
 import '../state/inherited_user.dart';
 
 /// A class that represents text message widget with optional link preview.
-class TileTextMessage extends StatelessWidget {
+class TileTextMessage extends StatefulWidget {
   /// Creates a text message widget from a [types.TextMessage] class.
   const TileTextMessage({
     super.key,
@@ -71,10 +71,17 @@ class TileTextMessage extends StatelessWidget {
 
   final Widget Function(types.Message message, {required BuildContext context})? msgExtraBarBuild;
 
+  @override
+  State<TileTextMessage> createState() => _TileTextMessageState();
+}
+
+class _TileTextMessageState extends State<TileTextMessage> {
+  bool _isHovering = false;
+
   Widget _avatarBuilder() =>
-      avatarBuilder?.call(message.author) ??
+      widget.avatarBuilder?.call(widget.message.author) ??
       UserAvatar(
-        author: message.author,
+        author: widget.message.author,
       );
 
   Widget _linkPreview(
@@ -82,10 +89,10 @@ class TileTextMessage extends StatelessWidget {
     double width,
     BuildContext context,
   ) {
-    final linkDescriptionTextStyle = user.id == message.author.id
+    final linkDescriptionTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == message.author.id
+    final linkTitleTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageLinkTitleTextStyle;
 
@@ -93,25 +100,25 @@ class TileTextMessage extends StatelessWidget {
       enableAnimation: true,
       metadataTextStyle: linkDescriptionTextStyle,
       metadataTitleStyle: linkTitleTextStyle,
-      onLinkPressed: options.onLinkPressed,
+      onLinkPressed: widget.options.onLinkPressed,
       onPreviewDataFetched: _onPreviewDataFetched,
-      openOnPreviewImageTap: options.openOnPreviewImageTap,
-      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
+      openOnPreviewImageTap: widget.options.openOnPreviewImageTap,
+      openOnPreviewTitleTap: widget.options.openOnPreviewTitleTap,
       padding: EdgeInsets.symmetric(
         horizontal: InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
-      previewData: message.previewData,
-      text: message.text,
+      previewData: widget.message.previewData,
+      text: widget.message.text,
       textWidget: _textWidgetBuilder(user, context, false),
-      userAgent: userAgent,
+      userAgent: widget.userAgent,
       width: width,
     );
   }
 
   void _onPreviewDataFetched(types.PreviewData previewData) {
-    if (message.previewData == null) {
-      onPreviewDataFetched?.call(message, previewData);
+    if (widget.message.previewData == null) {
+      widget.onPreviewDataFetched?.call(widget.message, previewData);
     }
   }
 
@@ -221,17 +228,17 @@ class TileTextMessage extends StatelessWidget {
     bool enlargeEmojis,
   ) {
     final theme = InheritedChatTheme.of(context).theme;
-    final bodyLinkTextStyle = user.id == message.author.id
+    final bodyLinkTextStyle = user.id == widget.message.author.id
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
     final bodyTextStyle =
-        user.id == message.author.id ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
+        user.id == widget.message.author.id ? theme.sentMessageBodyTextStyle : theme.receivedMessageBodyTextStyle;
     final boldTextStyle =
-        user.id == message.author.id ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
+        user.id == widget.message.author.id ? theme.sentMessageBodyBoldTextStyle : theme.receivedMessageBodyBoldTextStyle;
     final codeTextStyle =
-        user.id == message.author.id ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
+        user.id == widget.message.author.id ? theme.sentMessageBodyCodeTextStyle : theme.receivedMessageBodyCodeTextStyle;
     final emojiTextStyle =
-        user.id == message.author.id ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
+        user.id == widget.message.author.id ? theme.sentEmojiMessageTextStyle : theme.receivedEmojiMessageTextStyle;
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -252,13 +259,13 @@ class TileTextMessage extends StatelessWidget {
     RegExp imageRegEx = RegExp(r'data:image/(png|jpeg|jpg|gif);base64,');
     String? base64Image;
     bool isBase64Image = false;
-    if (message.previewData != null && message.previewData?.image != null && message.previewData?.image?.url != null) {
-      base64Image = message.previewData!.image!.url;
+    if (widget.message.previewData != null && widget.message.previewData?.image != null && widget.message.previewData?.image?.url != null) {
+      base64Image = widget.message.previewData!.image!.url;
       base64Image = base64Image.replaceAll(imageRegEx, '');
-      isBase64Image = imageRegEx.hasMatch(message.previewData!.image!.url);
+      isBase64Image = imageRegEx.hasMatch(widget.message.previewData!.image!.url);
     }
 
-    final match = exp.firstMatch(message.text);
+    final match = exp.firstMatch(widget.message.text);
     var language = match?.group(1);
     language ??= 'javascript';
 
@@ -296,131 +303,135 @@ class TileTextMessage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _avatarBuilder(),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.zero,
-                alignment: Alignment.bottomRight,
-                child: (msgExtraBarBuild != null) ? msgExtraBarBuild!(message, context: context) : null,
+              
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (user.id != widget.message.author.id)
+                      MarkdownWidget(
+                        key: ValueKey('${widget.message.id}_md'),
+                        data: widget.message.text,
+                        shrinkWrap: true,
+                        selectable: true,
+                        padding: EdgeInsets.zero,
+                        config: markdownConfig,
+                      ),
+
+                    if (user.id == widget.message.author.id)
+                      if (enlargeEmojis)
+                        SelectableText(widget.message.text, style: emojiTextStyle)
+                      else
+                        Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: SelectionArea(
+                            child: TextMessageText(
+                              bodyLinkTextStyle: bodyLinkTextStyle,
+                              bodyTextStyle: bodyTextStyle,
+                              boldTextStyle: boldTextStyle,
+                              codeTextStyle: codeTextStyle,
+                              options: widget.options,
+                              text: widget.message.text,
+                            ),
+                          ),
+                        ),
+                    if (widget.message.previewData != null &&
+                        widget.message.previewData?.image != null &&
+                        widget.message.previewData?.image?.url != null)
+                      Padding(
+                        key: ValueKey('${widget.message.id}_image'),
+                        padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
+                        child: InkWell(
+                          onTap: () {
+                            openDialog(
+                              context,
+                              (isBase64Image && base64Image != null)
+                                  ? Image(
+                                      fit: BoxFit.cover,
+                                      image: CacheMemoryImageProvider(
+                                        '${widget.message.id}_image_preview',
+                                        base64Decode(
+                                          base64Image,
+                                        ),
+                                      ),
+                                    ).image
+                                  : CachedNetworkImageProvider(
+                                      widget.message.previewData!.image!.url,
+                                    ),
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10.0),
+                            child: (isBase64Image && base64Image != null)
+                                ? Image(
+                                    fit: BoxFit.cover,
+                                    height: widget.message.previewData!.image!.height.toDouble(),
+                                    image: CacheMemoryImageProvider(
+                                      '${widget.message.id}_image_preview',
+                                      base64Decode(
+                                        base64Image,
+                                      ),
+                                    ),
+                                  )
+                                : CachedNetworkImage(
+                                    height: widget.message.previewData!.image!.height.toDouble(),
+                                    fit: BoxFit.cover,
+                                    imageUrl: widget.message.previewData!.image!.url,
+                                    repeat: ImageRepeat.repeatY,
+                                    placeholder: (context, url) => const SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Center(
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                    errorWidget: (context, url, error) => const SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: Center(
+                                        child: Icon(Icons.error),
+                                      ),
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (user.id != message.author.id)
-                  // if(message.status != types.Status.sending)
-                  MarkdownWidget(
-                    key: ValueKey('${message.id}_md'),
-                    data: message.text,
-                    shrinkWrap: true,
-                    selectable: true,
-                    padding: EdgeInsets.zero,
-                    config: markdownConfig,
-                  ),
-                // if(user.id != message.author.id && message.status == types.Status.sending)
-                //   Center(child: SiriWaveform.ios9(options: const IOS9SiriWaveformOptions(height: 60),),),
 
-                if (user.id == message.author.id)
-                  if (enlargeEmojis)
-                    SelectableText(message.text, style: emojiTextStyle)
-                  else
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: SelectionArea(
-                        child: TextMessageText(
-                          bodyLinkTextStyle: bodyLinkTextStyle,
-                          bodyTextStyle: bodyTextStyle,
-                          boldTextStyle: boldTextStyle,
-                          codeTextStyle: codeTextStyle,
-                          options: options,
-                          text: message.text,
-                        ),
-                      ),
-                    ),
-                if (message.previewData != null &&
-                    message.previewData?.image != null &&
-                    message.previewData?.image?.url != null)
-                  Padding(
-                    key: ValueKey('${message.id}_image'),
-                    padding: const EdgeInsets.only(top: 15, bottom: 15, left: 4),
-                    child: InkWell(
-                      onTap: () {
-                        openDialog(
-                          context,
-                          (isBase64Image && base64Image != null)
-                              ? Image(
-                                  fit: BoxFit.cover,
-                                  image: CacheMemoryImageProvider(
-                                    '${message.id}_image_preview',
-                                    base64Decode(
-                                      base64Image,
-                                    ),
-                                  ),
-                                ).image
-                              : CachedNetworkImageProvider(
-                                  message.previewData!.image!.url,
-                                ),
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10.0),
-                        child: (isBase64Image && base64Image != null)
-                            ? Image(
-                                fit: BoxFit.cover,
-                                height: message.previewData!.image!.height.toDouble(),
-                                image: CacheMemoryImageProvider(
-                                  '${message.id}_image_preview',
-                                  base64Decode(
-                                    base64Image,
-                                  ),
-                                ),
-                              )
-                            : CachedNetworkImage(
-                                height: message.previewData!.image!.height.toDouble(),
-                                fit: BoxFit.cover,
-                                imageUrl: message.previewData!.image!.url,
-                                repeat: ImageRepeat.repeatY,
-                                placeholder: (context, url) => const SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => const SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: Center(
-                                    child: Icon(Icons.error),
-                                  ),
-                                ),
-                              ),
-                      ),
-                    ),
-                  ),
-              ],
+          AnimatedOpacity(
+            duration: const Duration(milliseconds: 200),
+            opacity: _isHovering ? 1.0 : 0.0,
+            child: Container(
+              padding: EdgeInsets.zero,
+              alignment: Alignment.bottomRight,
+              child: (widget.msgExtraBarBuild != null) ? widget.msgExtraBarBuild!(widget.message, context: context) : null,
             ),
           ),
-          //   ],
-          // ),
         ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final enlargeEmojis = emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-        isConsistsOfEmojis(emojiEnlargementBehavior, message);
+    final enlargeEmojis = widget.emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
+        isConsistsOfEmojis(widget.emojiEnlargementBehavior, widget.message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
-    return Container(
-      key: ValueKey('${message.id}_text_message_container'),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() => _isHovering = false),
+      child: Container(
+      key: ValueKey('${widget.message.id}_text_message_container'),
       margin: EdgeInsets.fromLTRB(
         theme.messageInsetsHorizontal,
         0,
@@ -428,6 +439,6 @@ class TileTextMessage extends StatelessWidget {
         theme.messageInsetsVertical,
       ),
       child: _textWidgetBuilder(user, context, enlargeEmojis),
-    );
+    ),);
   }
 }
