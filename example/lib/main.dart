@@ -213,7 +213,7 @@ class _ChatPageState extends State<ChatPage> {
                               ? const Color(0xFF1D1E2C)
                               : Color(0xFFE4E2E6)))),
               messageBorderRadius: 10,
-              messageInsetsHorizontal: 20,
+              messageInsetsHorizontal: 120,
               messageInsetsVertical: 12,
               attachmentButtonIcon: Icon(Icons.tips_and_updates_outlined),
               inputPadding: const EdgeInsets.fromLTRB(18, 20, 20, 20),

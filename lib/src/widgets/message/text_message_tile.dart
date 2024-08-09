@@ -291,7 +291,7 @@ class _TileTextMessageState extends State<TileTextMessage> {
       onExit: (_) => setState(() => _isHovering = false),
       child: Container(
         key: ValueKey('${widget.message.id}_text_message_container'),
-        margin: EdgeInsets.all(theme.messageInsetsVertical),
+        margin: EdgeInsets.fromLTRB(theme.messageInsetsHorizontal, theme.messageInsetsVertical * 1.2, theme.messageInsetsHorizontal * 1.4, theme.messageInsetsVertical),
         child: _textWidgetBuilder(user, context, enlargeEmojis),
       ),
     );
