@@ -54,7 +54,8 @@ class TileTextMessage extends StatefulWidget {
 }
 
 class _TileTextMessageState extends State<TileTextMessage> {
-  bool _isHovering = false;
+  // bool _isHovering = false;
+  bool _isHovering = !kIsWeb && (defaultTargetPlatform == TargetPlatform.iOS || defaultTargetPlatform == TargetPlatform.android);
 
   Widget _avatarBuilder() => widget.avatarBuilder?.call(widget.message.author) ?? UserAvatar(author: widget.message.author);
 
@@ -251,8 +252,7 @@ class _TileTextMessageState extends State<TileTextMessage> {
     );
   }
 
-  Widget _buildExtraBar() {
-    return AnimatedOpacity(
+  Widget _buildExtraBar() => AnimatedOpacity(
       duration: const Duration(milliseconds: 200),
       opacity: _isHovering ? 1.0 : 0.0,
       child: Container(
@@ -261,7 +261,6 @@ class _TileTextMessageState extends State<TileTextMessage> {
         child: widget.msgExtraBarBuild?.call(widget.message, context: context),
       ),
     );
-  }
 
   PreConfig _getPreConfig(bool isDark) {
     final language = RegExp(r'```(.*?)\n', dotAll: true).firstMatch(widget.message.text)?.group(1) ?? 'javascript';
