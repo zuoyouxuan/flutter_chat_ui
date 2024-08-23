@@ -192,29 +192,29 @@ class _TileTextMessageState extends State<TileTextMessage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (!isUserAuthor)
-                    MarkdownWidget(
-                      key: ValueKey('${widget.message.id}_md'),
-                      data: widget.message.text,
-                      shrinkWrap: true,
-                      selectable: true,
-                      padding: EdgeInsets.zero,
-                      config: markdownConfig,
-                    ),
-                  if (isUserAuthor)
-                    if (enlargeEmojis)
-                      SelectableText(widget.message.text, style: emojiTextStyle)
-                    else
-                      Padding(padding: const EdgeInsets.only(top:10), child: SelectionArea(
-                          child: TextMessageText(
-                            bodyLinkTextStyle: bodyLinkTextStyle,
-                            bodyTextStyle: bodyTextStyle,
-                            boldTextStyle: boldTextStyle,
-                            codeTextStyle: codeTextStyle,
-                            options: widget.options,
-                            text: widget.message.text,
-                          ),
-                      ),),
+                  // if (!isUserAuthor)
+                  MarkdownWidget(
+                    key: ValueKey('${widget.message.id}_md'),
+                    data: widget.message.text,
+                    shrinkWrap: true,
+                    selectable: true,
+                    padding: EdgeInsets.zero,
+                    config: markdownConfig,
+                  ),
+                  // if (isUserAuthor)
+                  //   if (enlargeEmojis)
+                  //     SelectableText(widget.message.text, style: emojiTextStyle)
+                  //   else
+                  //     Padding(padding: const EdgeInsets.only(top:10), child: SelectionArea(
+                  //         child: TextMessageText(
+                  //           bodyLinkTextStyle: bodyLinkTextStyle,
+                  //           bodyTextStyle: bodyTextStyle,
+                  //           boldTextStyle: boldTextStyle,
+                  //           codeTextStyle: codeTextStyle,
+                  //           options: widget.options,
+                  //           text: widget.message.text,
+                  //         ),
+                  //     ),),
                   if (widget.message.previewData?.image?.url != null)
                     _buildImagePreview(context),
                 ],
